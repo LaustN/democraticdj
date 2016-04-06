@@ -1,22 +1,54 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="css/fiddle.css" />
+  <link rel="stylesheet" type="text/css" href="/styles/fiddle.css" />
   <script type="text/javascript" src="scripts/fiddle.js"> </script>
 
-  <link rel="stylesheet" type="text/css" href="/css/result-light.css" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://d2c87l0yth4zbw.cloudfront.net/reboot.css" />
+  <style type="text/css">
+    body {
+      padding: 20px;
+    }
+
+    .cover {
+      width: 300px;
+      height: 300px;
+      display: inline-block;
+      background-size: cover;
+      position: relative;
+      border: 2px solid #fff;
+    }
+
+      .cover:hover {
+        cursor: pointer;
+      }
+
+      .cover.playing {
+        border: 2px solid #e45343;
+      }
+
+    .spotify-button {
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>Discography</h2>
-    <p>Click an album cover to hear a 30 second preview, or click the button to play the album on Spotify!</p><br />
+    <p>Click an album cover to hear a 30 second preview, or click the button to play the album on Spotify!</p>
+    <br />
     <div id="results"></div>
   </div>
   <script id="results-template" type="text/x-handlebars-template">
     {{#each albums.items}}
-    <div style="background-image:url({{images.0.url}})" data-album-id="{{id}}" class="cover"><a href="{{external_urls.spotify}}"><div class="spotify-button"><img src="https://developer.spotify.com/wp-content/uploads/2014/06/play_on_spotify-green.png" /></div></a></div>
+    <div style="background-image: url({{images.0.url}})" data-album-id="{{id}}" class="cover"><a href="{{external_urls.spotify}}">
+      <div class="spotify-button">
+        <img src="https://developer.spotify.com/wp-content/uploads/2014/06/play_on_spotify-green.png" /></div>
+    </a></div>
     {{/each}}
   </script>
 </body>
