@@ -62,6 +62,18 @@ var init = function() {
     }
   });
 
+  var timeoutHandle = 0;
+  $("#search-box").keypress(function (event) {
+    if (timeoutHandle) {
+      clearTimeout(timeoutHandle);
+    }
+    var searchTerm = $(event.target).val();
+    timeoutHandle = setTimeout(function() {
+      searchAlbums(searchTerm);
+    }, 500);
+    
+  });
+
   searchAlbums('Leonard Cohen');
 }
 $(document).ready(init);
