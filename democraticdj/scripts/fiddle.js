@@ -40,9 +40,11 @@ var init = function() {
         }
         fetchTracks(target.getAttribute('data-album-id'), function (data) {
           console.log("Search results", data);
+          var targetUrl = "https://open.spotify.com/track/" + data.tracks.items[0].id;
+          
 
-          $("#player-frame").attribute("src", "https://open.spotify.com/track/" + data.tracks.items[0].id);
-
+          var openedWindow = window.open(targetUrl, "SpotifyPlayWindow", "width= 640, height= 480, left=0, top=0, resizable=yes, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no").blur();
+          window.focus();
           return;
           "https://open.spotify.com/track/" + data.tracks.items[0].id 
 
