@@ -37,6 +37,8 @@
   </style>
 </head>
 <body>
+  <iframe id="player-frame" width="200" height="200" >something happens here</iframe>
+
   <div class="container">
     <h2>Discography</h2>
     <p>Click an album cover to hear a 30 second preview, or click the button to play the album on Spotify!</p>
@@ -45,10 +47,13 @@
   </div>
   <script id="results-template" type="text/x-handlebars-template">
     {{#each albums.items}}
-    <div style="background-image: url({{images.0.url}})" data-album-id="{{id}}" class="cover"><a href="{{external_urls.spotify}}">
-      <div class="spotify-button">
-        <img src="https://developer.spotify.com/wp-content/uploads/2014/06/play_on_spotify-green.png" /></div>
-    </a></div>
+    <div style="background-image: url({{images.0.url}})" data-album-id="{{id}}" class="cover">
+      <a href="{{external_urls.spotify}}">
+        <div class="spotify-button">
+          <img src="https://developer.spotify.com/wp-content/uploads/2014/06/play_on_spotify-green.png" />
+        </div>
+      </a>
+    </div>
     {{/each}}
   </script>
 </body>

@@ -40,7 +40,13 @@ var init = function() {
         }
         fetchTracks(target.getAttribute('data-album-id'), function (data) {
           console.log("Search results", data);
-          audioObject = new Audio(data.tracks.items[0].uri);
+
+          $("#player-frame").attribute("src", "https://open.spotify.com/track/" + data.tracks.items[0].id);
+
+          return;
+          "https://open.spotify.com/track/" + data.tracks.items[0].id 
+
+          audioObject = new Audio(data.tracks.items[0].preview_url);
           audioObject.play();
           target.classList.add(playingCssClass);
           audioObject.addEventListener('ended', function() {
