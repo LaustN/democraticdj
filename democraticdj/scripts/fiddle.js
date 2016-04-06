@@ -38,7 +38,8 @@ var init = function() {
         if (audioObject) {
           audioObject.pause();
         }
-        fetchTracks(target.getAttribute('data-album-id'), function(data) {
+        fetchTracks(target.getAttribute('data-album-id'), function (data) {
+          console.log("Search results", data);
           audioObject = new Audio(data.tracks.items[0].preview_url);
           audioObject.play();
           target.classList.add(playingCssClass);
