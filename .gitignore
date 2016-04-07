@@ -1,3 +1,4 @@
 *.suo
 democraticdj/obj/
 democraticdj/bin/
+packages/
