@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Web.Http;
 
 namespace Democraticdj.Services
@@ -13,36 +14,29 @@ namespace Democraticdj.Services
   [RoutePrefix("api")]
   public class RestServicesController : ApiController
   {
-    [HttpGet]
-    [Route("")]
-    public IEnumerable<string> Get()
-    {
-      return new string[] { "value1", "value2" };
-    }
+    private static bool _flag = false;
 
     [HttpGet]
-    [Route("{id}")]
-    public string Get(int id)
+    [Route("")]
+    public string Get()
     {
-      return "value";
+      DateTime start = DateTime.Now;
+      while (!_flag)
+      {
+        Thread.Sleep(20);
+      }
+      _flag = false;
+      DateTime stop = DateTime.Now;
+      return "gotten " + (stop-start);
     }
 
     [HttpPost]
     [Route("")]
-    public void Post([FromBody]string value)
+    //public string Post([FromBody]string value)
+    public string Post()
     {
-    }
-
-    [HttpPut]
-    [Route("")]
-    public void Put(int id, [FromBody]string value)
-    {
-    }
-
-    [HttpDelete]
-    [Route("")]
-    public void Delete(int id)
-    {
+      _flag = true;
+      return "posted";
     }
   }
 }
