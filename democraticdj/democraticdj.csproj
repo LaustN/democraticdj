@@ -76,6 +76,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="authcompleted.aspx" />
     <Content Include="Global.asax" />
     <Content Include="index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -91,6 +92,17 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="authcompleted.aspx.cs">
+      <DependentUpon>authcompleted.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="authcompleted.aspx.designer.cs">
+      <DependentUpon>authcompleted.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\SpotifyTokens.cs" />
+    <Compile Include="Services\StateManager.cs" />
+    <Compile Include="Services\SpotifyAuthProvider.cs" />
     <Compile Include="Services\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
