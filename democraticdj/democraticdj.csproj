@@ -84,6 +84,7 @@
     <Content Include="scripts\fiddle.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="scripts\searchResultExample.js" />
     <Content Include="scripts\syncopath.js" />
     <Content Include="styles\fiddle.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -100,6 +101,7 @@
       <DependentUpon>authcompleted.aspx</DependentUpon>
     </Compile>
     <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\SpotifySearchResponse.cs" />
     <Compile Include="Model\SpotifyTokens.cs" />
     <Compile Include="Services\StateManager.cs" />
     <Compile Include="Services\SpotifyAuthProvider.cs" />
