@@ -31,6 +31,12 @@ namespace Democraticdj.Services
       return result;
     }
 
+    private static string Base64Encode(string plainText)
+    {
+      var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+      return System.Convert.ToBase64String(plainTextBytes);
+    }
+
     public static SpotifyTokens ProcessAuthCode(string authCode, string state)
     {
 
@@ -40,14 +46,24 @@ namespace Democraticdj.Services
       values.Add("grant_type", "authorization_code");
       values.Add("code", authCode);
       values.Add("redirect_uri", RedirectUrl);
-      values.Add("client_id", WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientId]);
-      values.Add("client_secret", WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientSecret]);
+      var idAndSecret = WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientId] + ":" +
+                        WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientSecret];
+      client.Headers.Add("Authorization", "Basic " + Base64Encode(idAndSecret));
 
-      var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
-      string decoded = client.Encoding.GetString(result);
-      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
+      try
+      {
+        var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
+        string decoded = client.Encoding.GetString(result);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
 
-      return deserialized;
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
     }
 
     public static string RedirectUrl
