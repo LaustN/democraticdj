@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Web;
-using System.Web.UI.WebControls.Expressions;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Democraticdj.Model
+namespace Democraticdj.Model.Spotify
 {
   public class SpotifySearchResponse
   {

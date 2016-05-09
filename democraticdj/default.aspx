@@ -22,18 +22,16 @@
       <h1>This might be me starting up a game
       </h1>
       <ul>
-        <li>
-          being prompted a name for the list
-        </li>        <li>
-          choose an existing list
-        </li>        <li>
-          leaving blank to autogenerate list name
+        <li>being prompted a name for the list
+        </li>
+        <li>choose an existing list
+        </li>
+        <li>leaving blank to autogenerate list name
         </li>
       </ul>
     </div>
     <div>
-      <h1>
-        this might be a view of the current game in progress
+      <h1>this might be a view of the current game in progress
       </h1>
 
       there should be a link available for sharing

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Configuration;
 using Democraticdj.Model;
+using Democraticdj.Model.Spotify;
 
 namespace Democraticdj.Services
 {

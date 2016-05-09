@@ -122,8 +122,9 @@
     </Compile>
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Game.cs" />
-    <Compile Include="Model\SpotifySearchResponse.cs" />
-    <Compile Include="Model\SpotifyTokens.cs" />
+    <Compile Include="Model\Spotify\SpotifySearchResponse.cs" />
+    <Compile Include="Model\Spotify\SpotifyTokens.cs" />
+    <Compile Include="Services\DbConnector.cs" />
     <Compile Include="Services\StateManager.cs" />
     <Compile Include="Services\SpotifyAuthProvider.cs" />
     <Compile Include="Services\WebApiConfig.cs" />
