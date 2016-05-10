@@ -25,7 +25,11 @@ namespace Democraticdj.Services
     MongoClient _client = new MongoClient();
     MongoClient Client
     {
-      get { return _client ?? (_client = new MongoClient(ConnectionString)); }
+      get
+      {
+        MongoUrl mongoUrl = new MongoUrl(ConnectionString);
+        return _client ?? (_client = new MongoClient(mongoUrl));
+      }
     }
 
     private IMongoDatabase _database;
