@@ -22,13 +22,12 @@ namespace Democraticdj.Services
       get { return _connectionString ?? (_connectionString = ConfigurationManager.AppSettings["MONGOLAB_URI"]); }
     }
 
-    MongoClient _client = new MongoClient();
+    MongoClient _client;
     MongoClient Client
     {
       get
       {
-        MongoUrl mongoUrl = new MongoUrl(ConnectionString);
-        return _client ?? (_client = new MongoClient(mongoUrl));
+        return _client ?? (_client = new MongoClient(ConnectionString));
       }
     }
 
