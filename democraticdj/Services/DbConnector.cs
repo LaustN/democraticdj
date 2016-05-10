@@ -55,6 +55,29 @@ namespace Democraticdj.Services
     protected IMongoCollection<Session> Sessions
     {
       get { return Database.GetCollection<Session>("sessions"); }
-    } 
+    }
+
+    public User GetUser(string userId)
+    {
+      return Users.Find(user => user.UserId ==  userId).FirstOrDefault();
+    }
+
+    public void SaveUser(User user)
+    {
+      var existingSession = Users.Find(storedUser => storedUser.UserId== user.UserId).FirstOrDefault();
+      if (existingSession == null)
+      {
+        Users.InsertOne(user);
+      }
+      else
+      {
+        Users.ReplaceOne(storedUser => storedUser.UserId== user.UserId, user);
+      }
+    }
+
+    protected IMongoCollection<User> Users
+    {
+      get { return Database.GetCollection<User>("users"); }
+    }
   }
 }

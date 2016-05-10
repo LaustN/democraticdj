@@ -13,6 +13,7 @@
     <div>
       <a href="<%# Democraticdj.Services.SpotifyAuthProvider.GetAuthUrl("anything") %>">click here to authenticate</a>
     </div>
+    <asp:Label runat="server" ID="SessionLabel"></asp:Label>
   </form>
 </body>
 </html>
