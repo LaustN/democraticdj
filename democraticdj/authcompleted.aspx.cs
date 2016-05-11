@@ -20,19 +20,53 @@ namespace Democraticdj
         var tokens = SpotifyAuthProvider.ProcessAuthCode(authResponseCode, responseState);
         if (tokens != null)
         {
+          tokens.ReceivedTime = DateTime.UtcNow;
           using (User currentUser = StateManager.CurrentUser)
           {
             currentUser.SpotifyAuthTokens = tokens;
           }
         }
       }
-
-      this.DataBind();
-
-      using (Session session = StateManager.CurrentSession)
+      using (User user = StateManager.CurrentUser)
       {
-        SessionLabel.Text = session.SessionId;
+        if (IsPostBack)
+        {
+          if (!string.IsNullOrWhiteSpace(NameBox.Value) && NameBox.Value != user.DisplayName)
+          {
+            user.DisplayName = NameBox.Value;
+          }
+
+          if (!string.IsNullOrWhiteSpace(EmailBox.Value) && EmailBox.Value != user.Email)
+          {
+            user.Email = EmailBox.Value;
+          }
+
+          if (!string.IsNullOrWhiteSpace(PasswordBox.Value) && PasswordBox.Value != user.Password)
+          {
+            user.Password = PasswordBox.Value;
+          }
+        }
+        else
+        {
+          NameBox.Value = user.DisplayName;
+          EmailBox.Value = user.Email;
+          PasswordBox.Value = user.Password;
+          PasswordBox.Attributes["type"] = "password";
+
+        }
+
+        if (user.SpotifyAuthTokens != null && !string.IsNullOrWhiteSpace(user.SpotifyAuthTokens.AccessToken))
+        {
+          SpotifyAuthLink.Visible = false;
+          SpotifyInfo.Visible = true;
+        }
+        else
+        {
+          SpotifyAuthLink.Visible = true;
+          SpotifyInfo.Visible = false;
+        }
       }
+      DataBind();
     }
   }
 }

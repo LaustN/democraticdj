@@ -58,6 +58,18 @@ namespace Democraticdj.Services
           }
         }
 
+        if (result.SpotifyAuthTokens != null 
+          && (!result.SpotifyAuthTokens.ReceivedTime.HasValue
+            ||
+            (DateTime.UtcNow - result.SpotifyAuthTokens.ReceivedTime.Value).TotalSeconds > Math.Round(result.SpotifyAuthTokens.ExpiresIn/2.0) //update token if it halfway expired
+            )
+          )
+        {
+          var newTokens = SpotifyAuthProvider.RenewSpotifyTokens(result.SpotifyAuthTokens);
+          result.SpotifyAuthTokens = newTokens;
+
+        }
+
         return result;
       }
     }
@@ -67,7 +79,16 @@ namespace Democraticdj.Services
       get
       {
         string sessionId;
-        var sessionCookie = HttpContext.Current.Request.Cookies[sessionCookieName] ?? HttpContext.Current.Response.Cookies[sessionCookieName];
+        var sessionCookie = HttpContext.Current.Request.Cookies[sessionCookieName];
+        if (sessionCookie == null || string.IsNullOrWhiteSpace(sessionCookie.Value))
+        {
+          sessionCookie = HttpContext.Current.Response.Cookies[sessionCookieName];
+        }
+        if (sessionCookie != null && string.IsNullOrWhiteSpace(sessionCookie.Value))
+        {
+          sessionCookie = null;
+        }
+
         if (sessionCookie == null)
         {
           sessionId = Guid.NewGuid().ToString("N");

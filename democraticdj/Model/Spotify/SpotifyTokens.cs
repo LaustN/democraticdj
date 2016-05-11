@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Democraticdj.Model.Spotify
 {
@@ -15,5 +16,8 @@ namespace Democraticdj.Model.Spotify
 
     [JsonProperty("refresh_token")]
     public string RefreshToken { get; set; }
+
+    [JsonProperty("receivedOn")]
+    public DateTime? ReceivedTime { get; set; }
   }
 }

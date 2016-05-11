@@ -67,6 +67,36 @@ namespace Democraticdj.Services
       return null;
     }
 
+    public static SpotifyTokens RenewSpotifyTokens(SpotifyTokens oldTokens)
+    {
+      var client = new WebClient();
+      NameValueCollection values = new NameValueCollection();
+
+      values.Add("grant_type", "refresh_token");
+      values.Add("refresh_token", oldTokens.RefreshToken);
+
+      var idAndSecret = WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientId] + ":" +
+                        WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientSecret];
+      client.Headers.Add("Authorization", "Basic " + Base64Encode(idAndSecret));
+
+      try
+      {
+        var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
+        string decoded = client.Encoding.GetString(result);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
+
+        deserialized.RefreshToken = oldTokens.RefreshToken;
+        deserialized.ReceivedTime = DateTime.UtcNow;
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
+    }
+
     public static string RedirectUrl
     {
       get

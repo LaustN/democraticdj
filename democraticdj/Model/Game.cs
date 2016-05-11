@@ -33,6 +33,7 @@ namespace Democraticdj.Model
     public string DisplayName { get; set; }
     public string Email { get; set; }
     public string EmailIsVerified { get; set; }
+    public string Password { get; set; }
     public Spotify.SpotifyTokens SpotifyAuthTokens { get; set; }
     public void Dispose()
     {
