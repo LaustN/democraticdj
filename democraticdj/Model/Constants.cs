@@ -8,7 +8,7 @@ namespace Democraticdj.Model
   public class Constants
   {
 
-    public struct Authentication
+    public struct SpotifyUrls
     {
       /// <summary>
       /// placeholders in SpotifyAuthUrlTemplate :
@@ -18,6 +18,9 @@ namespace Democraticdj.Model
       /// 3 = state - will be passed back, see that it matches in order to assert that callback is from correct origin
       /// </summary>
       public const string SpotifyAuthUrlTemplate = "https://accounts.spotify.com/authorize/?client_id={0}&response_type=code&redirect_uri={1}&scope={2}&state={3}";
+
+      public const string SpotifyMyPlaylistsUrl = "https://api.spotify.com/v1/me/playlists";
+      public const string SpotifyMeUrl = "https://api.spotify.com/v1/me";
     }
 
     public struct ConfigurationKeys

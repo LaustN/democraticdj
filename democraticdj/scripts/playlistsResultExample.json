@@ -1,0 +1,337 @@
+﻿{
+  "href" : "https://api.spotify.com/v1/users/1135035805/playlists?offset=0&limit=20",
+  "items" : [ {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/7oLfgyjp8HgjJGwj1gT1XY"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7oLfgyjp8HgjJGwj1gT1XY",
+    "id" : "7oLfgyjp8HgjJGwj1gT1XY",
+    "images" : [ ],
+    "name" : "My Shazam Tracks",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "I8JbcNsKqArcnpNSCHrpE5ev9rONf/g8gEYA7EZLWsR9lAjmPjkdEhUURuuXnew+",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7oLfgyjp8HgjJGwj1gT1XY/tracks",
+      "total" : 0
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:7oLfgyjp8HgjJGwj1gT1XY"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/7Jeeta9Rdng95y2ZIu37Mz"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7Jeeta9Rdng95y2ZIu37Mz",
+    "id" : "7Jeeta9Rdng95y2ZIu37Mz",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://mosaic.scdn.co/640/3a042562175ea172adebe4cbe0152a6e3e2a0d4c0b92e6f9342bcca80644aa6c9bbbdc7854dca3abcd30cefd1d089958ae7681a8bb4ca8d22aebc2dd5c37d9b7e279611d48b5d3d484d017cbed290c42",
+      "width" : 640
+    }, {
+      "height" : 300,
+      "url" : "https://mosaic.scdn.co/300/3a042562175ea172adebe4cbe0152a6e3e2a0d4c0b92e6f9342bcca80644aa6c9bbbdc7854dca3abcd30cefd1d089958ae7681a8bb4ca8d22aebc2dd5c37d9b7e279611d48b5d3d484d017cbed290c42",
+      "width" : 300
+    }, {
+      "height" : 60,
+      "url" : "https://mosaic.scdn.co/60/3a042562175ea172adebe4cbe0152a6e3e2a0d4c0b92e6f9342bcca80644aa6c9bbbdc7854dca3abcd30cefd1d089958ae7681a8bb4ca8d22aebc2dd5c37d9b7e279611d48b5d3d484d017cbed290c42",
+      "width" : 60
+    } ],
+    "name" : "My Shazam Tracks",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "afryZurdURBq3BdnkfAy0PendE6hq4b8TK3vCr6jjx0FetMKfO73sTYSWwleeeuz",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7Jeeta9Rdng95y2ZIu37Mz/tracks",
+      "total" : 5
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:7Jeeta9Rdng95y2ZIu37Mz"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/6Fz49iW5JjInULcb6Yj6Ku"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/6Fz49iW5JjInULcb6Yj6Ku",
+    "id" : "6Fz49iW5JjInULcb6Yj6Ku",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://mosaic.scdn.co/640/a8c8f86ecba9bda55aa1152046101bb6b11072a1d34114e4183a94a90dacd70526e39cab39cbf50945580553bcd3a4f0201cab8dbacce16fe612085e5adab9f13d4dab926fc0128b6e0146077c45f5e6",
+      "width" : 640
+    }, {
+      "height" : 300,
+      "url" : "https://mosaic.scdn.co/300/a8c8f86ecba9bda55aa1152046101bb6b11072a1d34114e4183a94a90dacd70526e39cab39cbf50945580553bcd3a4f0201cab8dbacce16fe612085e5adab9f13d4dab926fc0128b6e0146077c45f5e6",
+      "width" : 300
+    }, {
+      "height" : 60,
+      "url" : "https://mosaic.scdn.co/60/a8c8f86ecba9bda55aa1152046101bb6b11072a1d34114e4183a94a90dacd70526e39cab39cbf50945580553bcd3a4f0201cab8dbacce16fe612085e5adab9f13d4dab926fc0128b6e0146077c45f5e6",
+      "width" : 60
+    } ],
+    "name" : "Foos intro kandidater",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "MgJ6iQuDkJVzRxL+q/tN0d0Avd3Bh8Zf8ycv5yKQzKqZW7tNvTN6q5KQ2AJvZbWH",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/6Fz49iW5JjInULcb6Yj6Ku/tracks",
+      "total" : 8
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:6Fz49iW5JjInULcb6Yj6Ku"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/4wGKMNpqRQP4M4NvQNUupv"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/4wGKMNpqRQP4M4NvQNUupv",
+    "id" : "4wGKMNpqRQP4M4NvQNUupv",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://mosaic.scdn.co/640/011bd700ab6904235c3ff17b1cf839a409be9579ec71cc595ef667de4388037c7682a62af0946c276c57b5357e5ae5a871541e650e8d2102024e1ba1d01421e254453061bead84effce00a204b9e745b",
+      "width" : 640
+    }, {
+      "height" : 300,
+      "url" : "https://mosaic.scdn.co/300/011bd700ab6904235c3ff17b1cf839a409be9579ec71cc595ef667de4388037c7682a62af0946c276c57b5357e5ae5a871541e650e8d2102024e1ba1d01421e254453061bead84effce00a204b9e745b",
+      "width" : 300
+    }, {
+      "height" : 60,
+      "url" : "https://mosaic.scdn.co/60/011bd700ab6904235c3ff17b1cf839a409be9579ec71cc595ef667de4388037c7682a62af0946c276c57b5357e5ae5a871541e650e8d2102024e1ba1d01421e254453061bead84effce00a204b9e745b",
+      "width" : 60
+    } ],
+    "name" : "Liked from Radio",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "kD4Cnb4nb5VRCXTQpBszUhPGqa2WAItRO2Q6lHp4t9zJ9dNsVX3I/PXUC3GqNjhk",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/4wGKMNpqRQP4M4NvQNUupv/tracks",
+      "total" : 23
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:4wGKMNpqRQP4M4NvQNUupv"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/4ukM3KSTiJVzhoMgG09cdj"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/4ukM3KSTiJVzhoMgG09cdj",
+    "id" : "4ukM3KSTiJVzhoMgG09cdj",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://i.scdn.co/image/25f438cf8eec63aaaa7c69292b46aea6ca1def2a",
+      "width" : 640
+    } ],
+    "name" : "99 problems",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "HNRvIyt/smECnZ2BaCHQhcXYsxFgTYk7vlIFIMOTZH7TFWC5pfzQaPGVpEqLvI9L",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/4ukM3KSTiJVzhoMgG09cdj/tracks",
+      "total" : 2
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:4ukM3KSTiJVzhoMgG09cdj"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/7a3ybI3qEliXzzUcY3Vv6f"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7a3ybI3qEliXzzUcY3Vv6f",
+    "id" : "7a3ybI3qEliXzzUcY3Vv6f",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://i.scdn.co/image/ec71cc595ef667de4388037c7682a62af0946c27",
+      "width" : 640
+    } ],
+    "name" : "Cypress Hill – Cypress X Rusko EP 01",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "H/LKiBWtuisYzMZCXbnUpP7Bfx89BMYP3xkTxK/3k1eKOgrrJWuhUc3wxOwVvSRZ",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7a3ybI3qEliXzzUcY3Vv6f/tracks",
+      "total" : 5
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:7a3ybI3qEliXzzUcY3Vv6f"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/digster.dk/playlist/6TJ7j5U9aqYDABHyUAMpDU"
+    },
+    "href" : "https://api.spotify.com/v1/users/digster.dk/playlists/6TJ7j5U9aqYDABHyUAMpDU",
+    "id" : "6TJ7j5U9aqYDABHyUAMpDU",
+    "images" : [ {
+      "height" : null,
+      "url" : "https://u.scdn.co/images/pl/default/96b8cc2cafb2c593ebaad909a0c762deb3f06be3",
+      "width" : null
+    } ],
+    "name" : "Digster HITS NU ✨",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/digster.dk"
+      },
+      "href" : "https://api.spotify.com/v1/users/digster.dk",
+      "id" : "digster.dk",
+      "type" : "user",
+      "uri" : "spotify:user:digster.dk"
+    },
+    "public" : true,
+    "snapshot_id" : "i1BguBXJ9ZDs/UkBnGog1Cj6j6BurAw4IwtxzU9NS9P5/Kw6i//1gCtAHx/73ZTh",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/digster.dk/playlists/6TJ7j5U9aqYDABHyUAMpDU/tracks",
+      "total" : 52
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:digster.dk:playlist:6TJ7j5U9aqYDABHyUAMpDU"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/1qeDDPSYyl0Fx4TBZCcV4L"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/1qeDDPSYyl0Fx4TBZCcV4L",
+    "id" : "1qeDDPSYyl0Fx4TBZCcV4L",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://mosaic.scdn.co/640/e7c7be7b45916a47d646a6a080cccaa8531e873a6a86ca10f1c093d7a2d6f33950e27a3003a92d5dc4f99788014cc8ef189fc99e2aa0963358c56ffb733d45fb18481b44c663c3846dbc30760c1ba328",
+      "width" : 640
+    }, {
+      "height" : 300,
+      "url" : "https://mosaic.scdn.co/300/e7c7be7b45916a47d646a6a080cccaa8531e873a6a86ca10f1c093d7a2d6f33950e27a3003a92d5dc4f99788014cc8ef189fc99e2aa0963358c56ffb733d45fb18481b44c663c3846dbc30760c1ba328",
+      "width" : 300
+    }, {
+      "height" : 60,
+      "url" : "https://mosaic.scdn.co/60/e7c7be7b45916a47d646a6a080cccaa8531e873a6a86ca10f1c093d7a2d6f33950e27a3003a92d5dc4f99788014cc8ef189fc99e2aa0963358c56ffb733d45fb18481b44c663c3846dbc30760c1ba328",
+      "width" : 60
+    } ],
+    "name" : "Coldplay opvarmning",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "0zuUFGTNVzULE2uWvOlF/XqAs60dk8skfLRdo7uFWgHDbKnk/lw6qf368wsw1+2H",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/1qeDDPSYyl0Fx4TBZCcV4L/tracks",
+      "total" : 9
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:1qeDDPSYyl0Fx4TBZCcV4L"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/1135035805/playlist/7CbX4OE5U5NbGxnNiPQ3x4"
+    },
+    "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7CbX4OE5U5NbGxnNiPQ3x4",
+    "id" : "7CbX4OE5U5NbGxnNiPQ3x4",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://i.scdn.co/image/a8c8f86ecba9bda55aa1152046101bb6b11072a1",
+      "width" : 640
+    } ],
+    "name" : "The Hill for The Cousin",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/1135035805"
+      },
+      "href" : "https://api.spotify.com/v1/users/1135035805",
+      "id" : "1135035805",
+      "type" : "user",
+      "uri" : "spotify:user:1135035805"
+    },
+    "public" : true,
+    "snapshot_id" : "Df1yovQSq0c5dutCBWNteumQb+5UFcqrHVUFTY6iESLmnz7gwlT2xTOtV/SRjGAe",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/1135035805/playlists/7CbX4OE5U5NbGxnNiPQ3x4/tracks",
+      "total" : 5
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:1135035805:playlist:7CbX4OE5U5NbGxnNiPQ3x4"
+  }, {
+    "collaborative" : false,
+    "external_urls" : {
+      "spotify" : "http://open.spotify.com/user/fredrikharjonor/playlist/1qLoaHJbJmqQPyK2AwHGU2"
+    },
+    "href" : "https://api.spotify.com/v1/users/fredrikharjonor/playlists/1qLoaHJbJmqQPyK2AwHGU2",
+    "id" : "1qLoaHJbJmqQPyK2AwHGU2",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://i.scdn.co/image/a8c8f86ecba9bda55aa1152046101bb6b11072a1",
+      "width" : 640
+    } ],
+    "name" : "Cypress Hill - Greatest Hits From The Bong",
+    "owner" : {
+      "external_urls" : {
+        "spotify" : "http://open.spotify.com/user/fredrikharjonor"
+      },
+      "href" : "https://api.spotify.com/v1/users/fredrikharjonor",
+      "id" : "fredrikharjonor",
+      "type" : "user",
+      "uri" : "spotify:user:fredrikharjonor"
+    },
+    "public" : true,
+    "snapshot_id" : "7VvhLbbEV8rcmEOeXDYg5UzeyQpM0pyqfZUYfRB7+Jprf03/y552U65uekaiLvHy",
+    "tracks" : {
+      "href" : "https://api.spotify.com/v1/users/fredrikharjonor/playlists/1qLoaHJbJmqQPyK2AwHGU2/tracks",
+      "total" : 44
+    },
+    "type" : "playlist",
+    "uri" : "spotify:user:fredrikharjonor:playlist:1qLoaHJbJmqQPyK2AwHGU2"
+  } ],
+  "limit" : 20,
+  "next" : null,
+  "offset" : 0,
+  "previous" : null,
+  "total" : 10
+}

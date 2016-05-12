@@ -17,7 +17,7 @@ namespace Democraticdj
       var responseState = Request.QueryString["state"];
       if (!string.IsNullOrEmpty(authResponseCode))
       {
-        var tokens = SpotifyAuthProvider.ProcessAuthCode(authResponseCode, responseState);
+        var tokens = SpotifyServices.ProcessAuthCode(authResponseCode, responseState);
         if (tokens != null)
         {
           tokens.ReceivedTime = DateTime.UtcNow;

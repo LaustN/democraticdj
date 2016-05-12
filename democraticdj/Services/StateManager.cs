@@ -65,7 +65,7 @@ namespace Democraticdj.Services
             )
           )
         {
-          var newTokens = SpotifyAuthProvider.RenewSpotifyTokens(result.SpotifyAuthTokens);
+          var newTokens = SpotifyServices.RenewSpotifyTokens(result.SpotifyAuthTokens);
           result.SpotifyAuthTokens = newTokens;
 
         }

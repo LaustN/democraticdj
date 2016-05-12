@@ -25,7 +25,7 @@
       </label>
       <input type="submit" value="Save" />
       <asp:PlaceHolder runat="server" ID="SpotifyAuthLink">
-        <a href="<%# Democraticdj.Services.SpotifyAuthProvider.GetAuthUrl("anything") %>">click here to authenticate</a>
+        <a href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("anything") %>">click here to authenticate</a>
       </asp:PlaceHolder>
       <asp:PlaceHolder runat="server" ID="SpotifyInfo">
         You are authenticated with spotify 

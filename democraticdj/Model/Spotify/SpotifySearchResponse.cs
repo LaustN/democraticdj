@@ -50,7 +50,6 @@ namespace Democraticdj.Model.Spotify
     [JsonProperty("track_number")]
     public int TrackNumber { get; set; }
 
-
   }
 
   public class ItemBase
@@ -91,9 +90,9 @@ namespace Democraticdj.Model.Spotify
   public class ImageReference
   {
     [JsonProperty("height")]
-    public int Height;
+    public int? Height;
     [JsonProperty("width")]
-    public int Width;
+    public int? Width;
     [JsonProperty("url")]
     public string Url { get; set; }
   }

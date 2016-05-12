@@ -11,7 +11,7 @@ using Democraticdj.Model.Spotify;
 
 namespace Democraticdj.Services
 {
-  public class SpotifyAuthProvider
+  public class SpotifyServices
   {
     public static string GetAuthUrl(string state)
     {
@@ -23,7 +23,7 @@ namespace Democraticdj.Services
       // 3 = state - will be passed back, see that it matches in order to assert that callback is from correct origin
 
       var result = string.Format(
-        Constants.Authentication.SpotifyAuthUrlTemplate, 
+        Constants.SpotifyUrls.SpotifyAuthUrlTemplate, 
         spotifyClientId,
         HttpUtility.UrlEncode(RedirectUrl),
         "playlist-modify-public",
@@ -103,6 +103,43 @@ namespace Democraticdj.Services
       {
         return "http://" + HttpContext.Current.Request.Url.Host + "/authcompleted.aspx";
       }
+    }
+
+    public SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
+    {
+      var client = new WebClient();
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
+
+      try
+      {
+        var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMyPlaylistsUrl);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyPlaylistsResponse>(result);
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
+    }
+    public SpotifyUser SpotifyUserGetAuthenticatedUser(SpotifyTokens spotifyTokens)
+    {
+      var client = new WebClient();
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
+
+      try
+      {
+        var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMeUrl);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyUser>(result);
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
     }
   }
 }
