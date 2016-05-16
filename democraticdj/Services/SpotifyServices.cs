@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using Democraticdj.Model;
@@ -41,7 +42,7 @@ namespace Democraticdj.Services
     public static SpotifyTokens ProcessAuthCode(string authCode, string state)
     {
 
-      var client = new WebClient();
+      var client = GetClient();
       NameValueCollection values = new NameValueCollection();
 
       values.Add("grant_type", "authorization_code");
@@ -69,7 +70,7 @@ namespace Democraticdj.Services
 
     public static SpotifyTokens RenewSpotifyTokens(SpotifyTokens oldTokens)
     {
-      var client = new WebClient();
+      var client = GetClient();
       NameValueCollection values = new NameValueCollection();
 
       values.Add("grant_type", "refresh_token");
@@ -101,13 +102,13 @@ namespace Democraticdj.Services
     {
       get
       {
-        return "http://" + HttpContext.Current.Request.Url.Host + "/authcompleted.aspx";
+        return "http://" + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx";
       }
     }
 
-    public SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
+    public static SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
     {
-      var client = new WebClient();
+      var client = GetClient();
       client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
 
       try
@@ -123,9 +124,9 @@ namespace Democraticdj.Services
       }
       return null;
     }
-    public SpotifyUser SpotifyUserGetAuthenticatedUser(SpotifyTokens spotifyTokens)
+    public static SpotifyUser GetAuthenticatedUser(SpotifyTokens spotifyTokens)
     {
-      var client = new WebClient();
+      var client = GetClient();
       client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
 
       try
@@ -140,6 +141,13 @@ namespace Democraticdj.Services
         System.Diagnostics.Debug.WriteLine(e.ToString());
       }
       return null;
+    }
+
+    private static WebClient GetClient()
+    {
+        var client = new WebClient();
+        client.Encoding = Encoding.UTF8;
+        return client;
     }
   }
 }

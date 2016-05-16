@@ -24,9 +24,8 @@ namespace Democraticdj
         {
           if (currentUser.SpotifyAuthTokens == null)
             return Enumerable.Empty<Democraticdj.Model.Spotify.Playlist>();
-          var spotifyService = new SpotifyServices();
-          var spotifyUser = spotifyService.SpotifyUserGetAuthenticatedUser(currentUser.SpotifyAuthTokens);
-          results = spotifyService.GetPlaylists(currentUser.SpotifyAuthTokens).PlayLists.Where(playlist => playlist.IsPublic && playlist.Owner.Id == spotifyUser.Id).ToArray();
+          var spotifyUser = SpotifyServices.GetAuthenticatedUser(currentUser.SpotifyAuthTokens);
+          results = SpotifyServices.GetPlaylists(currentUser.SpotifyAuthTokens).PlayLists.Where(playlist => playlist.IsPublic && playlist.Owner.Id == spotifyUser.Id).ToArray();
         }
         return results;
       }

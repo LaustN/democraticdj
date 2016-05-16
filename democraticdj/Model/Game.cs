@@ -9,8 +9,7 @@ namespace Democraticdj.Model
 {
   public class Game
   {
-    public string SpotifyUserId;
-    public string SpotifyUserName;
+    public string UserId;
     public string SpotifyPlaylistId;
 
 
@@ -35,6 +34,7 @@ namespace Democraticdj.Model
     public string EmailIsVerified { get; set; }
     public string Password { get; set; }
     public Spotify.SpotifyTokens SpotifyAuthTokens { get; set; }
+    public Spotify.SpotifyUser SpotifyUser { get; set; }
     public void Dispose()
     {
       StateManager.SetUser(this);

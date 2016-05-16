@@ -9,7 +9,7 @@ using Democraticdj.Services;
 
 namespace Democraticdj
 {
-  public partial class Authcompleted : System.Web.UI.Page
+  public partial class UserManagement : System.Web.UI.Page
   {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -21,9 +21,20 @@ namespace Democraticdj
         if (tokens != null)
         {
           tokens.ReceivedTime = DateTime.UtcNow;
+
+          Model.Spotify.SpotifyUser spotifyUser = SpotifyServices.GetAuthenticatedUser(tokens);
+          var spotifyAuthenticatedUser = StateManager.Db.FindExistingUser(spotifyUser);
+          if (spotifyAuthenticatedUser != null)
+          {
+            using (var session= StateManager.CurrentSession)
+            {
+              session.UserId = spotifyAuthenticatedUser.UserId;
+            }
+          }
           using (User currentUser = StateManager.CurrentUser)
           {
             currentUser.SpotifyAuthTokens = tokens;
+            currentUser.SpotifyUser = spotifyUser;
           }
         }
       }
@@ -67,6 +78,17 @@ namespace Democraticdj
         }
       }
       DataBind();
+    }
+
+    public IEnumerable<Game> ExistingGames
+    {
+      get
+      {
+        using (var user = StateManager.CurrentUser)
+        {
+          return StateManager.Db.FindGamesForUser(user.UserId);
+        }
+      }
     }
   }
 }

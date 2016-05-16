@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="authcompleted.aspx.cs" Inherits="Democraticdj.Authcompleted"  ViewStateMode="Disabled"%>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="Democraticdj.UserManagement"  ViewStateMode="Disabled"%>
 
 <%@ Import Namespace="System.Web.Http.Controllers" %>
 
@@ -10,7 +10,7 @@
 </head>
 <body>
   <form id="form1" runat="server">
-    <div>
+    <div class="user-management">
       <label>
         <span class="user-label">Shown name</span>
         <input type="text" runat="server" id="NameBox" />
@@ -31,6 +31,17 @@
         You are authenticated with spotify 
       </asp:PlaceHolder>
     </div>
+    <div>
+      <a href="/CreateGame.aspx">Create new game</a>
+    </div>
+    <div class="existing-games">
+      <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
+        <ItemTemplate>
+          
+        </ItemTemplate>
+      </asp:Repeater>
+    </div>
+
   </form>
 </body>
 </html>

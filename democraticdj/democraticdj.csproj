@@ -88,7 +88,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="authcompleted.aspx" />
+    <Content Include="styles\democraticdj.css" />
+    <Content Include="UserManagement.aspx" />
     <Content Include="CreateGame.aspx" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
@@ -108,12 +109,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="authcompleted.aspx.cs">
-      <DependentUpon>authcompleted.aspx</DependentUpon>
+    <Compile Include="UserManagement.aspx.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="authcompleted.aspx.designer.cs">
-      <DependentUpon>authcompleted.aspx</DependentUpon>
+    <Compile Include="UserManagement.aspx.designer.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="CreateGame.aspx.cs">
       <DependentUpon>CreateGame.aspx</DependentUpon>

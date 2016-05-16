@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using Democraticdj.Model;
+using Democraticdj.Model.Spotify;
 using MongoDB.Driver;
 
 namespace Democraticdj.Services
@@ -81,6 +82,22 @@ namespace Democraticdj.Services
     protected IMongoCollection<User> Users
     {
       get { return Database.GetCollection<User>("users"); }
+    }
+
+    protected IMongoCollection<Game> Games
+    {
+      get { return Database.GetCollection<Game>("games"); }
+    }
+
+    public User FindExistingUser(SpotifyUser spotifyUser)
+    {
+      var existingUser = Users.Find(user => user.SpotifyUser.Id == spotifyUser.Id).FirstOrDefault();
+      return existingUser;
+    }
+
+    public IEnumerable<Game> FindGamesForUser(string userId)
+    {
+      return Games.Find(game => game.UserId == userId).ToEnumerable();
     }
   }
 }
