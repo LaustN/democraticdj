@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Democraticdj.Model;
 using Democraticdj.Services;
 
 namespace Democraticdj
@@ -12,6 +13,31 @@ namespace Democraticdj
   {
     protected void Page_Load(object sender, EventArgs e)
     {
+      var createFromListId = Request.QueryString["createfromlistid"];
+      if (!string.IsNullOrWhiteSpace(createFromListId))
+      {
+
+        using (var user = StateManager.CurrentUser)
+        {
+          var playlist =
+            SpotifyServices.GetPlaylists(user.SpotifyAuthTokens)
+              .PlayLists.FirstOrDefault(playList => playList.Id == createFromListId);
+          if (playlist != null)
+          {
+            var game = new Model.Game
+            {
+              GameId = Guid.NewGuid().ToString("N"),
+              SpotifyPlaylistId = createFromListId,
+              SpotifyPlaylistUri = playlist.Uri,
+              UserId = user.UserId,
+              GameName = playlist.Name + " - " + (user.DisplayName ?? user.SpotifyUser.DisplayName)
+            };
+            StateManager.Db.SaveGame(game);
+            Response.Redirect("/Game.aspx?gameid=" + game.GameId);
+          }
+        }
+
+      }
       DataBind();
     }
 

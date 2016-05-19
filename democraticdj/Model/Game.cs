@@ -9,10 +9,12 @@ namespace Democraticdj.Model
 {
   public class Game
   {
+    public MongoDB.Bson.ObjectId Id { get; set; }
     public string UserId;
     public string SpotifyPlaylistId;
-
-
+    public string SpotifyPlaylistUri;
+    public string GameId;
+    public string GameName;
   }
 
   public class Player

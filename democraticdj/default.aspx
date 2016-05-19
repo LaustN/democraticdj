@@ -40,6 +40,7 @@
       a search form thingy
       a search result
     </div>
+    <a href="UserManagement.aspx">Go to user management</a>
 
 
   </form>

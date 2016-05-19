@@ -37,7 +37,11 @@
     <div class="existing-games">
       <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
         <ItemTemplate>
-          
+          <div>
+            <a href="Game.aspx?gameid=<%# Item.GameId %>">
+              <%# Item.GameName %>
+            </a>
+          </div>
         </ItemTemplate>
       </asp:Repeater>
     </div>

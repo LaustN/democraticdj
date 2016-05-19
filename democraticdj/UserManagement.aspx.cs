@@ -36,6 +36,7 @@ namespace Democraticdj
             currentUser.SpotifyAuthTokens = tokens;
             currentUser.SpotifyUser = spotifyUser;
           }
+          Response.Redirect("UserManagement.aspx");
         }
       }
       using (User user = StateManager.CurrentUser)
@@ -80,7 +81,7 @@ namespace Democraticdj
       DataBind();
     }
 
-    public IEnumerable<Game> ExistingGames
+    public IEnumerable<Model.Game> ExistingGames
     {
       get
       {

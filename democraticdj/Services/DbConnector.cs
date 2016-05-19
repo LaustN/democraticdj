@@ -84,9 +84,9 @@ namespace Democraticdj.Services
       get { return Database.GetCollection<User>("users"); }
     }
 
-    protected IMongoCollection<Game> Games
+    protected IMongoCollection<Model.Game> Games
     {
-      get { return Database.GetCollection<Game>("games"); }
+      get { return Database.GetCollection<Model.Game>("games"); }
     }
 
     public User FindExistingUser(SpotifyUser spotifyUser)
@@ -95,9 +95,28 @@ namespace Democraticdj.Services
       return existingUser;
     }
 
-    public IEnumerable<Game> FindGamesForUser(string userId)
+    public IEnumerable<Model.Game> FindGamesForUser(string userId)
     {
       return Games.Find(game => game.UserId == userId).ToEnumerable();
+    }
+
+    public void SaveGame(Model.Game game)
+    {
+      var existingGame = Games.Find(storedGame => storedGame.GameId == game.GameId).FirstOrDefault();
+      if (existingGame == null)
+      {
+        Games.InsertOne(game);
+      }
+      else
+      {
+        Games.ReplaceOne(storedGame => storedGame.GameId == game.GameId, game);
+      }
+      
+    }
+
+    public Model.Game GetGame(string gameid)
+    {
+      return Games.Find(game => game.GameId == gameid).FirstOrDefault();
     }
   }
 }

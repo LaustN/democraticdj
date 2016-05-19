@@ -110,6 +110,5 @@ namespace Democraticdj.Services
         return session;
       }
     }
-
   }
 }
