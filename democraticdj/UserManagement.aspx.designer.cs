@@ -13,7 +13,7 @@ namespace Democraticdj {
     public partial class UserManagement {
         
         /// <summary>
-        /// form1 control.
+        /// MainForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.

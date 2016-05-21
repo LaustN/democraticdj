@@ -8,7 +8,9 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Web;
 using System.Web.Http;
+using Democraticdj.Logic;
 using Democraticdj.Model;
+using Democraticdj.Model.Spotify;
 using MongoDB.Bson.IO;
 using Newtonsoft.Json;
 
@@ -31,7 +33,7 @@ namespace Democraticdj.Services
       }
       _flag = false;
       DateTime stop = DateTime.Now;
-      return "gotten " + (stop-start);
+      return "gotten " + (stop - start);
     }
 
     [HttpPost]
@@ -52,5 +54,60 @@ namespace Democraticdj.Services
       _flag = true;
       return "posted";
     }
+
+    [HttpPost]
+    [Route("search")]
+    public SpotifySearchResponse Search([FromBody]SearchRequest request)
+    {
+      var game = StateManager.Db.GetGame(request.GameId);
+      return SpotifyServices.SearchForTracks(game, request.Query);
+    }
+
+    [HttpPost]
+    [Route("select")]
+    public void SelectFromSearchResult([FromBody]SelectRequest request)
+    {
+      var game = StateManager.Db.GetGame(request.GameId);
+      using (var user = StateManager.CurrentUser)
+      {
+        GameLogic.SelectTrack(game,user.UserId,request.TrackId);
+      }
+
+      StateManager.Db.SaveGame(game);
+    }
+
+    [HttpPost]
+    [Route("vote")]
+    public void PlaceVote([FromBody]SelectRequest request)
+    {
+      var game = StateManager.Db.GetGame(request.GameId);
+      using (var user = StateManager.CurrentUser)
+      {
+        GameLogic.SelectTrack(game,user.UserId,request.TrackId);
+      }
+
+      StateManager.Db.SaveGame(game);
+    }
+
+
   }
+
+  public class SelectRequest
+  {
+    [JsonProperty("gameid")]
+    public string GameId { get; set; }
+
+    [JsonProperty("trackid")]
+    public string TrackId { get; set; }
+  }
+
+  public class SearchRequest
+  {
+    [JsonProperty("gameid")]
+    public string GameId { get; set; }
+
+    [JsonProperty("query")]
+    public string Query { get; set; }
+  }
+
 }

@@ -106,6 +106,32 @@ namespace Democraticdj.Services
       }
     }
 
+    public static SpotifySearchResponse SearchForTracks(Model.Game game, string query)
+    {
+      User user = StateManager.Db.GetUser(game.UserId);
+
+      var client = GetClient();
+      client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken) ;
+
+      var searchUrl = string.Format(
+        Constants.SpotifyUrls.SpotifySearchUrl, 
+        HttpUtility.UrlEncode(query)
+        );
+
+      try
+      {
+        var result = client.DownloadString(searchUrl);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifySearchResponse>(result);
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
+    }
+
     public static SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
     {
       var client = GetClient();

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Democraticdj.Services;
 using Newtonsoft.Json;
 
 namespace Democraticdj.Model
@@ -15,44 +13,26 @@ namespace Democraticdj.Model
     public string SpotifyPlaylistUri;
     public string GameId;
     public string GameName;
-  }
 
-  public class Player
-  {
-    public string PlayerId;
+    private List<Nominee> _nominees;
 
-    public List<string> SelectedTracks; //just a set of spotify track IDs
-
-    public int Points;
-
-  }
-
-  public class User : IDisposable
-  {
-    public MongoDB.Bson.ObjectId Id { get; set; }
-    public string UserId { get; set; }
-    public string DisplayName { get; set; }
-    public string Email { get; set; }
-    public string EmailIsVerified { get; set; }
-    public string Password { get; set; }
-    public Spotify.SpotifyTokens SpotifyAuthTokens { get; set; }
-    public Spotify.SpotifyUser SpotifyUser { get; set; }
-    public void Dispose()
+    public List<Nominee> Nominees
     {
-      StateManager.SetUser(this);
+      get { return _nominees ?? (_nominees = new List<Nominee>()); }
+      set { _nominees = value; }
     }
-  }
 
-  public class Session :IDisposable
-  {
-    public MongoDB.Bson.ObjectId Id { get; set; }
-    public string SessionId { get; set; }
-    public string GameId { get; set; }
-    public string UserId { get; set; }
-
-    public void Dispose()
+    private List<Player> _players;
+    public List<Player> Players
     {
-      StateManager.SetSession(this);
+      get { return _players ?? (_players = new List<Player>()); }
+      set { _players = value; }
     }
+
+    private List<Vote> _votes;
+    public List<Vote> Votes
+    {
+      get { return _votes ?? (_votes = new List<Vote>()); }
+    } 
   }
 }

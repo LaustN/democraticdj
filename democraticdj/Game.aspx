@@ -5,9 +5,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
   <title>Democratic DJ</title>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script type="text/javascript" src="/scripts/game.js"></script>
 </head>
 <body>
-  <form id="form1" runat="server">
+  <form id="MainForm" runat="server">
     <div>
       <asp:PlaceHolder runat="server" ID="GameNotKnownPlaceholder" Visible="False">
         <h1>Oh no!</h1>
@@ -24,7 +26,8 @@
           here the current ballot will render
         </div>
         <div class="search">
-          here I'll implement search with clickable songs
+          <input type="text" class="search-box-js"/>
+          <div class="search-result-js"></div>
         </div>
         <div class="mylist">
           here the list of "my songs" will render

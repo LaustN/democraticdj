@@ -19,6 +19,7 @@ namespace Democraticdj
       if (CurrentGame != null)
       {
         this.GameFoundPlaceholder.Visible = true;
+        MainForm.Attributes.Add("data-gameid",gameid);
       }
       else
       {

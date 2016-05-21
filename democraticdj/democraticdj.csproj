@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.aspx" />
+    <Content Include="scripts\game.js" />
     <Content Include="styles\democraticdj.css" />
     <Content Include="UserManagement.aspx" />
     <Content Include="CreateGame.aspx" />
@@ -117,6 +118,12 @@
     <Compile Include="Game.aspx.designer.cs">
       <DependentUpon>Game.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Logic\GameLogic.cs" />
+    <Compile Include="Model\Nominee.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Session.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\Vote.cs" />
     <Compile Include="UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
