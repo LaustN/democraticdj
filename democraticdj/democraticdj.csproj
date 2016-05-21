@@ -90,6 +90,7 @@
   <ItemGroup>
     <Content Include="Game.aspx" />
     <Content Include="scripts\game.js" />
+    <Content Include="scripts\tracksresponse.js" />
     <Content Include="styles\democraticdj.css" />
     <Content Include="UserManagement.aspx" />
     <Content Include="CreateGame.aspx" />
@@ -124,6 +125,7 @@
     <Compile Include="Model\Session.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Vote.cs" />
+    <Compile Include="Model\GameState.cs" />
     <Compile Include="UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

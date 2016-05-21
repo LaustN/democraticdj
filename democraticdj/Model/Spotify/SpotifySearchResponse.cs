@@ -20,6 +20,12 @@ namespace Democraticdj.Model.Spotify
     
   }
 
+  public class SpotifyGetTracksResponse
+  {
+    [JsonProperty("tracks")]
+    public Track[] Tracks { get; set; }
+  }
+
   public class Track : ItemBase
 
   {

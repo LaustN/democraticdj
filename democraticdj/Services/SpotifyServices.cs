@@ -24,7 +24,7 @@ namespace Democraticdj.Services
       // 3 = state - will be passed back, see that it matches in order to assert that callback is from correct origin
 
       var result = string.Format(
-        Constants.SpotifyUrls.SpotifyAuthUrlTemplate, 
+        Constants.SpotifyUrls.SpotifyAuthUrlTemplate,
         spotifyClientId,
         HttpUtility.UrlEncode(RedirectUrl),
         "playlist-modify-public",
@@ -106,15 +106,42 @@ namespace Democraticdj.Services
       }
     }
 
+    public static SpotifyGetTracksResponse GetTracks(Model.Game game, string[] trackIds)
+    {
+      var client = GetClient();
+
+
+      var tracksUrl = string.Format(
+        Constants.SpotifyUrls.SpotifyTracksUrl,
+        string.Join(",", trackIds)
+        );
+      try
+      {
+        var result = client.DownloadString(tracksUrl);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyGetTracksResponse>(result);
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
+
+
+    }
+
     public static SpotifySearchResponse SearchForTracks(Model.Game game, string query)
     {
-      User user = StateManager.Db.GetUser(game.UserId);
-
       var client = GetClient();
-      client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken) ;
+      using (User user = StateManager.Db.GetUser(game.UserId))
+      {
+        client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken);
+      }
+
 
       var searchUrl = string.Format(
-        Constants.SpotifyUrls.SpotifySearchUrl, 
+        Constants.SpotifyUrls.SpotifySearchUrl,
         HttpUtility.UrlEncode(query)
         );
 
@@ -132,10 +159,12 @@ namespace Democraticdj.Services
       return null;
     }
 
+
+
     public static SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
     {
       var client = GetClient();
-      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
 
       try
       {
@@ -153,7 +182,7 @@ namespace Democraticdj.Services
     public static SpotifyUser GetAuthenticatedUser(SpotifyTokens spotifyTokens)
     {
       var client = GetClient();
-      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken) ;
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
 
       try
       {
@@ -171,9 +200,9 @@ namespace Democraticdj.Services
 
     private static WebClient GetClient()
     {
-        var client = new WebClient();
-        client.Encoding = Encoding.UTF8;
-        return client;
+      var client = new WebClient();
+      client.Encoding = Encoding.UTF8;
+      return client;
     }
   }
 }

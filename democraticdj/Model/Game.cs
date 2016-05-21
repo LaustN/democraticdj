@@ -33,6 +33,23 @@ namespace Democraticdj.Model
     public List<Vote> Votes
     {
       get { return _votes ?? (_votes = new List<Vote>()); }
-    } 
+    }
+
+    private List<Winner> _previousWinners;
+    public List<Winner> PreviousWinners
+    {
+      get { return _previousWinners ?? (_previousWinners = new List<Winner>()); }
+      set { _previousWinners = value; }
+    }
+  }
+
+  public class Winner
+  {
+    public string TrackId;
+    private List<string> _selectingPlayerIds;
+    public List<string> SelectingPlayerIds { get
+    {
+      return _selectingPlayerIds ?? (_selectingPlayerIds = new List<string>());
+    } set { _selectingPlayerIds = value; } } 
   }
 }

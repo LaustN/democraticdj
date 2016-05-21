@@ -1,2 +1,36 @@
 ﻿body {
 }
+
+.track {
+  display: inline-block;
+  max-width: 300px;
+  clear: both;
+  vertical-align: top;
+}
+
+img {
+  max-width: 100%;
+}
+
+.track-image {
+  width: 30%;
+  float: left;
+}
+
+.section-header {
+  width: 100%;
+  display: block;
+  clear: both;
+}
+
+.track-name {
+  
+}
+
+.track-artist {
+  
+}
+
+.track-album {
+  
+}

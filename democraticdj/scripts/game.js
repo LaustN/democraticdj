@@ -2,53 +2,55 @@
   SearchSelectionTimeout: null,
   SearchDelayTimeout: null,
   Search: function (event) {
-    if (Game.SearchDelayTimeout!=null) {
+    if (Game.SearchDelayTimeout != null) {
       clearTimeout(Game.SearchDelayTimeout);
       Game.SearchDelayTimeout = null;
     }
 
-    Game.SearchDelayTimeout = setTimeout(function() {
+    Game.SearchDelayTimeout = setTimeout(function () {
       Game.SearchDelayTimeout = null;
       var val = $(event.target).val();
       console.log(val);
 
       $.ajax({
-          url: "/api/search",
-          contentType: "application/json",
-          data: JSON.stringify({
-            query: val,
-            gameid: $(document.forms[0]).data("gameid")
-          }),
-          method: "POST",
-          success: Game.SearchResultHandler
-        }
+        url: "/api/search",
+        contentType: "application/json",
+        data: JSON.stringify({
+          query: val,
+          gameid: $(document.forms[0]).data("gameid")
+        }),
+        method: "POST",
+        success: Game.SearchResultHandler
+      }
       );
-    },500);
+    }, 500);
   },
   SearchResultHandler: function (data) {
-    console.log(data);
-    var result = Game.RenderTracklist(data);
-    $(".search-result-js").html(result);
-
+    if (data && data.tracks && data.tracks.items) {
+      var result = Game.RenderTracklist(data.tracks.items);
+      $(".search-result-js").html(result);
+    }
   },
 
-  RenderTracklist: function(data) {
-    if (data && data.tracks && data.tracks.items) {
+  RenderTracklist: function (tracks) {
+    if (tracks) {
       var renderBuffer = [];
-      $.each(data.tracks.items, function (index, track) {
-        renderBuffer.push("<div class=\"found-track\" data-trackid=\"" + track.id + "\">");
+      $.each(tracks, function (index, track) {
+        renderBuffer.push("<div class=\"track\" data-trackid=\"" + track.id + "\">");
+
+        if (track.album && track.album.images && track.album.images.length > 0) {
+          renderBuffer.push("<div class=\"track-image\"><img src=\"" + track.album.images[0].url + "\"></div>");
+        }
 
         renderBuffer.push("<div class=\"track-name\">" + track.name + "</div>");
+
+        if (track.album) {
+          renderBuffer.push("<div class=\"track-album\">" + track.album.name + "</div>");
+        }
 
         if (track.artists) {
           renderBuffer.push("<div class=\"track-artist\">" + track.artists[0].name + "</div>");
         }
-
-        if (track.album && track.album.images && track.album.images.length > 0) {
-          renderBuffer.push("<div class=\"track-album\">" + track.album.name + "</div>");
-          renderBuffer.push("<div class=\"track-image\"><img src=\"" + track.album.images[0].url + "\"></div>");
-        }
-
         renderBuffer.push("</div>");
 
       });
@@ -67,7 +69,7 @@
     Game.SearchSelectionTimeout = setTimeout(function () {
       Game.SearchSelectionTimeout = null;
 
-      var clickedTrackId = $(event.target).closest(".found-track").data("trackid");
+      var clickedTrackId = $(event.target).closest(".track").data("trackid");
       console.log(clickedTrackId);
 
       $.ajax({
@@ -78,15 +80,67 @@
           gameid: $(document.forms[0]).data("gameid")
         }),
         method: "POST",
-        success: Game.SearchResultHandler
+        success: Game.RefreshGameData
       }
       );
     }, 500);
   },
+
+  RefreshGameData: function () {
+    $.ajax({
+      url: "/api/game?gameid=" + $(document.forms[0]).data("gameid"),
+      method: "GET",
+      success: Game.RenderLists
+    });
+
+
+  },
+
+  RenderLists: function (data) {
+
+    $.ajax({
+      url: "/api/tracks",
+      contentType: "application/json",
+      data: JSON.stringify({
+        tracks: data.Nominees,
+        gameid: $(document.forms[0]).data("gameid")
+      }),
+      method: "POST",
+      success: Game.UpdateNominees
+    });
+
+    $.ajax({
+      url: "/api/tracks",
+      contentType: "application/json",
+      data: JSON.stringify({
+        tracks: data.PlayerSelectionList,
+        gameid: $(document.forms[0]).data("gameid")
+      }),
+      method: "POST",
+      success: Game.UpdatePlayerList
+    });
+
+
+  },
+
+  UpdateNominees: function (data) {
+    if (data && data.tracks) {
+      var result = Game.RenderTracklist(data.tracks);
+      $(".nominees-list-js").html(result);
+    }
+  },
+  UpdatePlayerList: function (data) {
+    if (data && data.tracks) {
+      var result = Game.RenderTracklist(data.tracks);
+      $(".player-list-js").html(result);
+    }
+  },
+
   Init: function () {
 
     $(".search-box-js").keyup(Game.Search);
     $(".search-result-js").click(Game.SearchResultSelection);
+    Game.RefreshGameData();
   }
 
 

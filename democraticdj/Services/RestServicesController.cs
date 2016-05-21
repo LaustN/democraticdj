@@ -55,12 +55,44 @@ namespace Democraticdj.Services
       return "posted";
     }
 
+    [HttpGet]
+    [Route("game")]
+    public GameState GetGameState(string gameid)
+    {
+      using (User currentUser= StateManager.CurrentUser)
+      {
+        var game = StateManager.Db.GetGame(gameid);
+        var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId); 
+        var gameState = new GameState
+        {
+          Nominees = game.Nominees.Select(nominee=> nominee.TrackId).ToArray(),
+          PlayerSelectionList = player!=null ? player.SelectedTracks.ToArray() : null
+        };
+        var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
+
+        if (playersVote != null)
+        {
+          gameState.CurrentVote = playersVote.TrackId;
+        }
+        return gameState;
+        
+      }
+    }
+
     [HttpPost]
     [Route("search")]
     public SpotifySearchResponse Search([FromBody]SearchRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
       return SpotifyServices.SearchForTracks(game, request.Query);
+    }
+
+    [HttpPost]
+    [Route("tracks")]
+    public SpotifyGetTracksResponse GetTracks([FromBody]GetTracksRequest request)
+    {
+      var game = StateManager.Db.GetGame(request.GameId);
+      return SpotifyServices.GetTracks(game, request.Tracks);
     }
 
     [HttpPost]
@@ -108,6 +140,15 @@ namespace Democraticdj.Services
 
     [JsonProperty("query")]
     public string Query { get; set; }
+  }
+
+  public class GetTracksRequest
+  {
+    [JsonProperty("gameid")]
+    public string GameId { get; set; }
+
+    [JsonProperty("tracks")]
+    public string[] Tracks { get; set; }
   }
 
 }
