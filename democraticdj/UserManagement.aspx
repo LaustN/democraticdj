@@ -1,14 +1,19 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UserManagement.aspx.cs" Inherits="Democraticdj.UserManagement"  ViewStateMode="Disabled"%>
 
 <%@ Import Namespace="System.Web.Http.Controllers" %>
+<%@ Register Src="~/Controls/HeaderContent.ascx" TagPrefix="uc1" TagName="HeaderContent" %>
+<%@ Register Src="~/Controls/PageTop.ascx" TagPrefix="uc1" TagName="PageTop" %>
+
+
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-  <title></title>
+  <uc1:HeaderContent runat="server" ID="HeaderContent" />
 </head>
 <body>
+  <uc1:PageTop runat="server" id="PageTop" />
   <form id="form1" runat="server">
     <div class="user-management">
       <label>

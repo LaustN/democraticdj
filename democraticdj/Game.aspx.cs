@@ -26,6 +26,13 @@ namespace Democraticdj
         this.GameNotKnownPlaceholder.Visible = true;
       }
 
+      using (var currentUser = StateManager.CurrentUser)
+      {
+        bool userIsAuthenticated = currentUser.IsLoggedIn;
+        AuthenticatedUserControls.Visible = userIsAuthenticated;
+        UnauthenticatedUser.Visible = !userIsAuthenticated;
+      }
+
       DataBind();
     }
   }

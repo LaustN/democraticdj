@@ -36,6 +36,10 @@ namespace Democraticdj
             currentUser.SpotifyAuthTokens = tokens;
             currentUser.SpotifyUser = spotifyUser;
           }
+          if (!string.IsNullOrWhiteSpace(responseState))
+          {
+            Response.Redirect(responseState);
+          }
           Response.Redirect("UserManagement.aspx");
         }
       }
@@ -48,10 +52,10 @@ namespace Democraticdj
             user.DisplayName = NameBox.Value;
           }
 
-          if (!string.IsNullOrWhiteSpace(EmailBox.Value) && EmailBox.Value != user.Email)
-          {
-            user.Email = EmailBox.Value;
-          }
+          //if (!string.IsNullOrWhiteSpace(EmailBox.Value) && EmailBox.Value != user.Email)
+          //{
+          //  user.Email = EmailBox.Value;
+          //}
 
           if (!string.IsNullOrWhiteSpace(PasswordBox.Value) && PasswordBox.Value != user.Password)
           {
@@ -61,7 +65,7 @@ namespace Democraticdj
         else
         {
           NameBox.Value = user.DisplayName;
-          EmailBox.Value = user.Email;
+          // EmailBox.Value = user.Email;
           PasswordBox.Value = user.Password;
           PasswordBox.Attributes["type"] = "password";
 

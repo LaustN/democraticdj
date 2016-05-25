@@ -1,11 +1,17 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CreateGame.aspx.cs" Inherits="Democraticdj.CreateGame" ResponseEncoding="UTF-8" %>
 
+<%@ Register Src="~/Controls/HeaderContent.ascx" TagPrefix="uc1" TagName="HeaderContent" %>
+<%@ Register Src="~/Controls/PageTop.ascx" TagPrefix="uc1" TagName="PageTop" %>
+
+
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-  <title>Create new game</title>
+  <uc1:HeaderContent runat="server" ID="HeaderContent" />
 </head>
 <body>
+  <uc1:PageTop runat="server" ID="PageTop" />
   <form id="form1" runat="server">
     <div>
       <label>

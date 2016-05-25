@@ -88,8 +88,12 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Controls\HeaderContent.ascx" />
+    <Content Include="Controls\PageTop.ascx" />
     <Content Include="Game.aspx" />
+    <Content Include="graphics\mediaplayer.png" />
     <Content Include="scripts\game.js" />
+    <Content Include="scripts\PageTop.js" />
     <Content Include="scripts\tracksresponse.js" />
     <Content Include="styles\democraticdj.css" />
     <Content Include="UserManagement.aspx" />
@@ -112,6 +116,20 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HeaderContent.ascx.cs">
+      <DependentUpon>HeaderContent.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\HeaderContent.ascx.designer.cs">
+      <DependentUpon>HeaderContent.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PageTop.ascx.cs">
+      <DependentUpon>PageTop.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PageTop.ascx.designer.cs">
+      <DependentUpon>PageTop.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Game.aspx.cs">
       <DependentUpon>Game.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -124,6 +142,7 @@
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Session.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserEmail.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Model\GameState.cs" />
     <Compile Include="UserManagement.aspx.cs">

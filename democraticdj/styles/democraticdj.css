@@ -1,4 +1,75 @@
 ﻿body {
+  padding: 0;
+  margin: 0;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
+}
+
+.page-top ul {
+  display: block;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.page-top ul li{
+  list-style: none;
+  display: inline-block;
+
+  vertical-align: top;  
+}
+
+.page-top ul li.burger{
+  float: right;
+}
+
+.page-top ul li.antiburger{
+  width: 100%;
+  text-align: right;
+}
+
+.page-top .header-logo{
+  max-width: 35%;
+}
+
+.page-top .menu {
+  width: 65%;
+  background-color: white;
+  transition: width 0.5s;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+.page-top .menu.hidden {
+  width: 0%;
+}
+
+.page-top .inner-burger {
+  width: 65vw;
+}
+
+.page-top .menu-line {
+  display: block;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .page-top .menu , .page-top .menu.hidden {
+    width: 100%;
+    position: relative;
+  }  
+  .page-top .inner-burger {
+    width: 100%;
+  }
+  .page-top .menu-line {
+    display: inline-block;
+    width: auto;
+  }
+  .page-top .burger, .page-top .antiburger {
+    display: none;
+  }
 }
 
 .track {

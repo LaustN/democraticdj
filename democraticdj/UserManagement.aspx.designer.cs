@@ -13,7 +13,25 @@ namespace Democraticdj {
     public partial class UserManagement {
         
         /// <summary>
-        /// MainForm control.
+        /// HeaderContent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Democraticdj.Controls.HeaderContent HeaderContent;
+        
+        /// <summary>
+        /// PageTop control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Democraticdj.Controls.PageTop PageTop;
+        
+        /// <summary>
+        /// form1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.

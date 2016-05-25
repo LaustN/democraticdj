@@ -13,6 +13,24 @@ namespace Democraticdj {
     public partial class Game {
         
         /// <summary>
+        /// HeaderContent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Democraticdj.Controls.HeaderContent HeaderContent;
+        
+        /// <summary>
+        /// PageTop control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Democraticdj.Controls.PageTop PageTop;
+        
+        /// <summary>
         /// MainForm control.
         /// </summary>
         /// <remarks>
@@ -38,5 +56,23 @@ namespace Democraticdj {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel GameFoundPlaceholder;
+        
+        /// <summary>
+        /// AuthenticatedUserControls control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder AuthenticatedUserControls;
+        
+        /// <summary>
+        /// UnauthenticatedUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder UnauthenticatedUser;
     }
 }

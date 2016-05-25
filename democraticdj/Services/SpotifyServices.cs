@@ -109,7 +109,10 @@ namespace Democraticdj.Services
     public static SpotifyGetTracksResponse GetTracks(Model.Game game, string[] trackIds)
     {
       var client = GetClient();
-
+      if (trackIds==null || trackIds.Length == 0)
+      {
+        return null;
+      }
 
       var tracksUrl = string.Format(
         Constants.SpotifyUrls.SpotifyTracksUrl,
