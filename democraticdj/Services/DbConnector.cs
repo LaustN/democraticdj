@@ -89,6 +89,16 @@ namespace Democraticdj.Services
       get { return Database.GetCollection<Model.Game>("games"); }
     }
 
+    public User FindExistingUser(string usernameOrEmail)
+    {
+      var existingUser = Users.Find(
+        user => 
+          user.UserName == usernameOrEmail 
+          || user.Emails.Any(email=> email.Address == usernameOrEmail)
+        ).FirstOrDefault();
+      return existingUser;
+    }
+
     public User FindExistingUser(SpotifyUser spotifyUser)
     {
       var existingUser = Users.Find(user => user.SpotifyUser.Id == spotifyUser.Id).FirstOrDefault();

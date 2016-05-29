@@ -40,6 +40,42 @@ namespace Democraticdj {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
+        /// UnknownUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl UnknownUser;
+        
+        /// <summary>
+        /// KnownUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl KnownUser;
+        
+        /// <summary>
+        /// UserNameAsLabelWrapper control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl UserNameAsLabelWrapper;
+        
+        /// <summary>
+        /// UserNameAsLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label UserNameAsLabel;
+        
+        /// <summary>
         /// NameBox control.
         /// </summary>
         /// <remarks>
@@ -49,22 +85,22 @@ namespace Democraticdj {
         protected global::System.Web.UI.HtmlControls.HtmlInputText NameBox;
         
         /// <summary>
-        /// EmailBox control.
+        /// PasswordUpdate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl EmailBox;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword PasswordUpdate;
         
         /// <summary>
-        /// PasswordBox control.
+        /// PasswordRepeat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText PasswordBox;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword PasswordRepeat;
         
         /// <summary>
         /// SpotifyAuthLink control.

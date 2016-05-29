@@ -26,7 +26,7 @@ namespace Democraticdj
           var spotifyAuthenticatedUser = StateManager.Db.FindExistingUser(spotifyUser);
           if (spotifyAuthenticatedUser != null)
           {
-            using (var session= StateManager.CurrentSession)
+            using (var session = StateManager.CurrentSession)
             {
               session.UserId = spotifyAuthenticatedUser.UserId;
             }
@@ -45,42 +45,98 @@ namespace Democraticdj
       }
       using (User user = StateManager.CurrentUser)
       {
-        if (IsPostBack)
+        if (user.IsLoggedIn)
         {
-          if (!string.IsNullOrWhiteSpace(NameBox.Value) && NameBox.Value != user.DisplayName)
+          KnownUser.Visible = true;
+          UnknownUser.Visible = false;
+
+          if (IsPostBack)
           {
-            user.DisplayName = NameBox.Value;
+            if (!string.IsNullOrWhiteSpace(NameBox.Value) && NameBox.Value != user.DisplayName)
+            {
+              user.DisplayName = NameBox.Value;
+            }
+
+            var newPassword = PasswordUpdate.Value;
+            var repeatPassword = PasswordRepeat.Value;
+
+            if (!string.IsNullOrWhiteSpace(newPassword) && !string.IsNullOrWhiteSpace(repeatPassword) && newPassword == repeatPassword)
+            {
+              user.Password = newPassword;
+            }
+          }
+          else
+          {
+            if (string.IsNullOrWhiteSpace(user.UserName))
+            {
+              UserNameAsLabelWrapper.Visible = false;
+            }
+            else
+            {
+              UserNameAsLabel.Text = user.UserName;
+            }
+            NameBox.Value = user.DisplayName;
           }
 
-          //if (!string.IsNullOrWhiteSpace(EmailBox.Value) && EmailBox.Value != user.Email)
-          //{
-          //  user.Email = EmailBox.Value;
-          //}
-
-          if (!string.IsNullOrWhiteSpace(PasswordBox.Value) && PasswordBox.Value != user.Password)
+          if (user.SpotifyAuthTokens != null && !string.IsNullOrWhiteSpace(user.SpotifyAuthTokens.AccessToken))
           {
-            user.Password = PasswordBox.Value;
+            SpotifyAuthLink.Visible = false;
+            SpotifyInfo.Visible = true;
           }
+          else
+          {
+            SpotifyAuthLink.Visible = true;
+            SpotifyInfo.Visible = false;
+          }
+
         }
         else
         {
-          NameBox.Value = user.DisplayName;
-          // EmailBox.Value = user.Email;
-          PasswordBox.Value = user.Password;
-          PasswordBox.Attributes["type"] = "password";
+          KnownUser.Visible = false;
+          UnknownUser.Visible = true;
 
+          var existingUserEmailOrName = Request.Form["existingUserEmailOrUsername"];
+          var existingUserPassword = Request.Form["existingUserPassword"];
+
+          if (!string.IsNullOrWhiteSpace(existingUserEmailOrName) && !string.IsNullOrWhiteSpace(existingUserPassword))
+          {
+            var foundUser = StateManager.Db.FindExistingUser(existingUserEmailOrName);
+
+            if (foundUser != null && foundUser.Password == existingUserPassword)
+            {
+              using (var session = StateManager.CurrentSession)
+              {
+                session.UserId = foundUser.UserId;
+              }
+              Response.Redirect("UserManagement.aspx");
+            }
+            else
+            {
+              //TODO: print error stating that login failed
+            }
+          }
+
+          var newUserEmail = Request.Form["newUserEmail"];
+          var newUserName = Request.Form["newUserName"];
+          var newPassword = Request.Form["newPassword"];
+          if (!string.IsNullOrWhiteSpace(newUserEmail) && !string.IsNullOrWhiteSpace(newUserName) && !string.IsNullOrWhiteSpace(newPassword))
+          {
+            var existingUser =
+              StateManager.Db.FindExistingUser(newUserEmail) ??
+              StateManager.Db.FindExistingUser(newUserName);
+            if (existingUser != null)
+            {
+              //TODO: say that the email or username is taken
+            }
+            else
+            {
+              user.UserName = newUserName;
+              user.Password = newPassword;
+              user.Emails.Add(new UserEmail { Address = newUserEmail });
+            }
+          }
         }
 
-        if (user.SpotifyAuthTokens != null && !string.IsNullOrWhiteSpace(user.SpotifyAuthTokens.AccessToken))
-        {
-          SpotifyAuthLink.Visible = false;
-          SpotifyInfo.Visible = true;
-        }
-        else
-        {
-          SpotifyAuthLink.Visible = true;
-          SpotifyInfo.Visible = false;
-        }
       }
       DataBind();
     }

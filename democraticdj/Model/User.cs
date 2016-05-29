@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using Democraticdj.Services;
 using Newtonsoft.Json;
 
@@ -24,9 +25,16 @@ namespace Democraticdj.Model
     public string Password { get; set; }
     public Spotify.SpotifyTokens SpotifyAuthTokens { get; set; }
     public Spotify.SpotifyUser SpotifyUser { get; set; }
+
+    [JsonIgnore]
+    public bool ShouldAutoSave { get; set; }
+
     public void Dispose()
     {
-      StateManager.SetUser(this);
+      if (ShouldAutoSave)
+      {
+        StateManager.SetUser(this);
+      }
     }
 
     [JsonIgnore]

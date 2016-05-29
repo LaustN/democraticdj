@@ -69,6 +69,7 @@ namespace Democraticdj.Services
           result.SpotifyAuthTokens = newTokens;
 
         }
+        result.ShouldAutoSave = true;
 
         return result;
       }
