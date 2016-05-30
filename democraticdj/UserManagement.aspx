@@ -84,7 +84,7 @@
           <ItemTemplate>
             <div>
               <a href="Game.aspx?gameid=<%# Item.GameId %>">
-                <%# Item.GameName %>
+                <%# Item.GameName %> - Game ID: <%# Item.GameId %>
               </a>
             </div>
           </ItemTemplate>

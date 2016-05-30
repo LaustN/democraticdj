@@ -20,6 +20,8 @@ namespace Democraticdj
       {
         this.GameFoundPlaceholder.Visible = true;
         MainForm.Attributes.Add("data-gameid",gameid);
+        GameTitle.Text = CurrentGame.GameName;
+        GameID.Text = CurrentGame.GameId;
       }
       else
       {

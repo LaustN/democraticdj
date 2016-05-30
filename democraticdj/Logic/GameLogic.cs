@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Democraticdj.Model;
+using Democraticdj.Services;
 
 namespace Democraticdj.Logic
 {
@@ -10,38 +11,38 @@ namespace Democraticdj.Logic
   {
     public static void CreateBallot(Model.Game game)
     {
-      game.Nominees = null; //resets list to empty, since first get() creates new list
+      game.BallotCreationTime = DateTime.UtcNow;
 
-      foreach (var player in game.Players)
+      game.Nominees = new List<Nominee>();
+      foreach (Player player in game.Players.Where(player => player.SelectedTracks.Any()))
       {
-        if (player.SelectedTracks.Any())
+        var selectedTrack = player.SelectedTracks[0];
+        player.SelectedTracks.RemoveAt(0);
+        Nominee nominee = game.Nominees.FirstOrDefault(existingNominee => existingNominee.TrackId == selectedTrack);
+        if (nominee != null)
         {
-          var trackId = player.SelectedTracks.First();
-          var existingNominee =
-            game.Nominees.FirstOrDefault(nominee => nominee.TrackId == trackId);
-          if (existingNominee != null)
-          {
-            existingNominee.NominatingPlayerIds.Add(player.UserId);
-          }
-          else
-          {
-            game.Nominees.Add(new Nominee
-            {
-              TrackId = trackId,
-              NominatingPlayerIds = new List<string> { player.UserId }
-            });
-          }
-          player.SelectedTracks.RemoveAt(0);
+          nominee.NominatingPlayerIds.Add(player.UserId);
         }
+        else
+        {
+          game.Nominees.Add(new Nominee { TrackId = selectedTrack, NominatingPlayerIds = new List<string> { player.UserId } });
+        }
+      }
+
+      Random random = new Random();
+      for (int shuffleCount = 0; shuffleCount < game.Nominees.Count; shuffleCount++)
+      {
+        int pickedIndex = random.Next(game.Nominees.Count);
+        var pickedNominee = game.Nominees[pickedIndex];
+        game.Nominees.RemoveAt(pickedIndex);
+        game.Nominees.Add(pickedNominee);
       }
     }
 
     public static void ResolveRound(Model.Game game)
     {
-      //TODO: implement described logic
-
       //find the track with the most votes
-      Dictionary<string, List<string>> votesTally = game.Nominees.ToDictionary(nominee => nominee.TrackId, nominee => new List<string>( nominee.NominatingPlayerIds));
+      Dictionary<string, List<string>> votesTally = game.Nominees.ToDictionary(nominee => nominee.TrackId, nominee => new List<string>(nominee.NominatingPlayerIds));
 
       foreach (Vote vote in game.Votes)
       {
@@ -68,7 +69,7 @@ namespace Democraticdj.Logic
       game.PreviousWinners.Add(winner);
 
       //add that track to the playlist
-      //TODO: call service
+      SpotifyServices.AppendTrackToPlaylist(game, bestTrackId);
 
       //add all other tracks back onto the end of their nominators lists
       foreach (Nominee nominee in game.Nominees)
@@ -77,7 +78,7 @@ namespace Democraticdj.Logic
           continue;
         foreach (var nominatingPlayerId in nominee.NominatingPlayerIds)
         {
-          game.Players.First(player=> player.UserId == nominatingPlayerId).SelectedTracks.Add(nominee.TrackId);
+          game.Players.First(player => player.UserId == nominatingPlayerId).SelectedTracks.Add(nominee.TrackId);
         }
       }
 
@@ -94,6 +95,9 @@ namespace Democraticdj.Logic
           player.Points += votesTally[nominee.TrackId].Count;
         }
       }
+
+      game.Nominees = null;
+      game.Votes = null;
     }
 
     public static void PlaceVote(Model.Game game, string playerId, string trackId)
@@ -107,14 +111,18 @@ namespace Democraticdj.Logic
           return;
         }
 
+        if (game.Votes.Count == 0)
+        {
+          game.FirstVoteCastTime = DateTime.UtcNow;
+        }
+
         //remove previous votes by same player, if any
         game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
 
         //add vote to matching track
         game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
+        UpdateGameState(game);
       }
-
-
     }
 
     public static void SelectTrack(Model.Game game, string userId, string trackId)
@@ -132,6 +140,29 @@ namespace Democraticdj.Logic
         selectingPlayer.SelectedTracks.Remove(trackId);
       }
       selectingPlayer.SelectedTracks.Insert(0, trackId);
+
+
+      UpdateGameState(game);
     }
+
+    public static void UpdateGameState(Model.Game game)
+    {
+      //if enough votes have been cast and enough time has passed, resolve winner
+      if (game.Votes.Count >= 3 //TODO: might need to be per game configurable
+            && game.FirstVoteCastTime.HasValue 
+            && (DateTime.UtcNow - game.FirstVoteCastTime.Value).TotalMinutes > 3 //TODO: might need to be per game configurable
+        )
+      {
+        ResolveRound(game);
+      }
+
+      //if no ballot exists and 3 tracks can be chosen from, make a new ballot
+      if (game.Players.Count(player => player.SelectedTracks.Any()) >= 3 && game.Nominees.Count == 0)
+      {
+        CreateBallot(game);
+      }
+
+    }
+
   }
 }

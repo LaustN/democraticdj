@@ -109,7 +109,7 @@ namespace Democraticdj.Services
     public static SpotifyGetTracksResponse GetTracks(Model.Game game, string[] trackIds)
     {
       var client = GetClient();
-      if (trackIds==null || trackIds.Length == 0)
+      if (trackIds == null || trackIds.Length == 0)
       {
         return null;
       }
@@ -206,6 +206,38 @@ namespace Democraticdj.Services
       var client = new WebClient();
       client.Encoding = Encoding.UTF8;
       return client;
+    }
+
+    public static void AppendTrackToPlaylist(Model.Game game, string bestTrackId)
+    {
+      var client = GetClient();
+
+      string spotifyUserId = null;
+      using (User user = StateManager.Db.GetUser(game.UserId))
+      {
+        client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken);
+        spotifyUserId = user.SpotifyUser.Id;
+
+      }
+
+
+      var addTrackToPlaylistUrl = string.Format(
+        Constants.SpotifyUrls.SpotifyAddToPlaylistUrl,
+        spotifyUserId,
+        game.SpotifyPlaylistId,
+        bestTrackId
+        );
+
+      try
+      {
+        var result = client.UploadData(new Uri(addTrackToPlaylistUrl), new byte[0]);
+        var stringifiedResult = client.Encoding.GetString(result);
+        return;
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
     }
   }
 }

@@ -99,7 +99,7 @@ namespace Democraticdj.Services
         {
           sessionId = sessionCookie.Value;
         }
-        sessionCookie.Expires = DateTime.Now.AddMinutes(20.0);
+        sessionCookie.Expires = DateTime.Now.AddDays(30);
         HttpContext.Current.Response.Cookies.Add(sessionCookie);
 
         var session = GetSession(sessionId);

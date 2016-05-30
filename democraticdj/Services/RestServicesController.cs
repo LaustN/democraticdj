@@ -115,7 +115,7 @@ namespace Democraticdj.Services
       var game = StateManager.Db.GetGame(request.GameId);
       using (var user = StateManager.CurrentUser)
       {
-        GameLogic.SelectTrack(game,user.UserId,request.TrackId);
+        GameLogic.PlaceVote(game,user.UserId,request.TrackId);
       }
 
       StateManager.Db.SaveGame(game);

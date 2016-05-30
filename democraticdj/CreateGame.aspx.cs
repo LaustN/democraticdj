@@ -13,10 +13,26 @@ namespace Democraticdj
   {
     protected void Page_Load(object sender, EventArgs e)
     {
+      string newGameId = null;
+      bool newGameIdVerified = false;
+      int idLength = 4;
+      while (!newGameIdVerified)
+      {
+        newGameId = GetRandomString(idLength);
+        var previousGame = StateManager.Db.GetGame(newGameId);
+        if (previousGame == null)
+        {
+          newGameIdVerified = true;
+        }
+        else
+        {
+          idLength++;
+        }
+      }
+
       var createFromListId = Request.QueryString["createfromlistid"];
       if (!string.IsNullOrWhiteSpace(createFromListId))
       {
-
         using (var user = StateManager.CurrentUser)
         {
           var playlist =
@@ -26,7 +42,7 @@ namespace Democraticdj
           {
             var game = new Model.Game
             {
-              GameId = Guid.NewGuid().ToString("N"),
+              GameId = newGameId,
               SpotifyPlaylistId = createFromListId,
               SpotifyPlaylistUri = playlist.Uri,
               UserId = user.UserId,
@@ -39,6 +55,18 @@ namespace Democraticdj
 
       }
       DataBind();
+    }
+
+    private string GetRandomString(int lenght)
+    {
+      char[] validChars = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+      Random random = new Random();
+      List<char> result = new List<char>();
+      while (result.Count<lenght)
+      {
+        result.Add(validChars[random.Next(0,validChars.Length)]);
+      }
+      return string.Join("", result);
     }
 
     public IEnumerable<Democraticdj.Model.Spotify.Playlist> PlaylistsSource

@@ -12,29 +12,34 @@
   <uc1:HeaderContent runat="server" ID="HeaderContent" />
 </head>
 <body>
-  <uc1:PageTop runat="server" id="PageTop" />
+  <uc1:PageTop runat="server" ID="PageTop" />
   <form id="form1" runat="server">
-    <div>
-      This might be the initial state, where I am not part of a game yet
-    
-      prompt me for a game ID to join
-       - OR - 
-      start a game, authorizing with spotify as needed
-       - OR - 
-      "See my games", authorizing with spotify as needed
+    <div runat="server" id="UnauthenticatedUser">
+      Welcome to the democratic DJ!
+      <br />
+      The goal of this game is to become the best DJ of te party, by selecting the spotify tracks that the most people want to hear.<br />
+      In order to participate, you need to log in.<br />
+      You can create a profile using <a href="/UserManagement.aspx">username, e-mail and password</a>
+      , or you can simplify everything by <a href="<%# RenderSpotifyAuthUrl() %>">logging in with spotify</a> right away. 
     </div>
-
-    <div>
-      <h1>This might be me starting up a game
-      </h1>
-      <ul>
-        <li>being prompted a name for the list
-        </li>
-        <li>choose an existing list
-        </li>
-        <li>leaving blank to autogenerate list name
-        </li>
-      </ul>
+    <div runat="server" id="AuthenticatedUser">
+      <h2>Join a game!</h2>
+      <input type="text" name="joinGameId" placeholder="Type the ID of the game you wish to join"/>
+      <input type="submit" value="join"/>
+      <asp:Label runat="server" ID="NoSuchGame" Visible="False">I'm sorry, I could not find that game</asp:Label>
+      
+      <h2>Your current games</h2>
+      <div class="existing-games">
+        <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
+          <ItemTemplate>
+            <div>
+              <a href="Game.aspx?gameid=<%# Item.GameId %>">
+                <%# Item.GameName %> - Game ID: <%# Item.GameId %>
+              </a>
+            </div>
+          </ItemTemplate>
+        </asp:Repeater>
+      </div>
     </div>
     <div>
       <h1>this might be a view of the current game in progress

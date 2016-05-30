@@ -1,13 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Game.aspx.cs" Inherits="Democraticdj.Game" %>
-
 <%@ Register Src="~/Controls/HeaderContent.ascx" TagPrefix="uc1" TagName="HeaderContent" %>
 <%@ Register Src="~/Controls/PageTop.ascx" TagPrefix="uc1" TagName="PageTop" %>
-
-
-
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head runat="server">
 
   <uc1:HeaderContent runat="server" ID="HeaderContent" />
@@ -24,6 +19,8 @@
         </div>
       </asp:PlaceHolder>
       <asp:Panel runat="server" ID="GameFoundPlaceholder" Visible="False" CssClass="game">
+        <h1><asp:Label runat="server" ID="GameTitle" /></h1>
+        <h2>Game ID: <asp:Label runat="server" ID="GameID" /></h2>
         <div class="ballot">
           <div class="section-header">
             here the current ballot will render

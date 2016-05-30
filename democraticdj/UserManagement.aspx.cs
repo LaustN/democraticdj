@@ -108,7 +108,7 @@ namespace Democraticdj
               {
                 session.UserId = foundUser.UserId;
               }
-              Response.Redirect("UserManagement.aspx");
+              Response.Redirect("/");
             }
             else
             {
@@ -147,7 +147,7 @@ namespace Democraticdj
       {
         using (var user = StateManager.CurrentUser)
         {
-          return StateManager.Db.FindGamesForUser(user.UserId);
+          return StateManager.Db.FindGamesStartedByUser(user.UserId);
         }
       }
     }

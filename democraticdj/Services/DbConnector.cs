@@ -105,9 +105,14 @@ namespace Democraticdj.Services
       return existingUser;
     }
 
-    public IEnumerable<Model.Game> FindGamesForUser(string userId)
+    public IEnumerable<Model.Game> FindGamesStartedByUser(string userId)
     {
       return Games.Find(game => game.UserId == userId).ToEnumerable();
+    }
+
+    public IEnumerable<Model.Game> FindGamesByParticipatingUser(string userId)
+    {
+      return Games.Find(game => game.Players.Any(player => player.UserId == userId)).ToEnumerable();
     }
 
     public void SaveGame(Model.Game game)

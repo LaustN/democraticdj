@@ -60,6 +60,24 @@
     return "";
   },
 
+  PlaceVote: function(event) {
+    var clickedTrackId = $(event.target).closest(".track").data("trackid");
+    console.log(clickedTrackId);
+
+    $.ajax({
+      url: "/api/vote",
+      contentType: "application/json",
+      data: JSON.stringify({
+        trackid: clickedTrackId,
+        gameid: $(document.forms[0]).data("gameid")
+      }),
+      method: "POST",
+      success: Game.RefreshGameData
+    }
+    );
+
+  },
+
   SearchResultSelection: function (event) {
     if (Game.SearchSelectionTimeout != null) {
       clearTimeout(Game.SearchSelectionTimeout);
@@ -120,8 +138,11 @@
       success: Game.UpdatePlayerList
     });
 
+    Game.CurrentVote = data.CurrentVote;
 
   },
+
+  CurrentVote : null,
 
   UpdateNominees: function (data) {
     if (data && data.tracks) {
@@ -140,6 +161,8 @@
 
     $(".search-box-js").keyup(Game.Search);
     $(".search-result-js").click(Game.SearchResultSelection);
+    $(".nominees-list-js").click(Game.PlaceVote);
+
     Game.RefreshGameData();
   }
 

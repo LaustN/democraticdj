@@ -33,7 +33,7 @@
           </li>
           <asp:PlaceHolder runat="server" ID="SpotifyReauthentication" Visible="False">
             <li class="menu-line">
-              <a href="<%# RenderSpotifyAuthUrl()%>">Reauthenticate spotify</a>
+              <a href="<%# RenderSpotifyAuthUrl()%>">Spotify login</a>
             </li>
           </asp:PlaceHolder>
         </asp:PlaceHolder>

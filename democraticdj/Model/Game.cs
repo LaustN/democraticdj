@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
@@ -13,9 +14,10 @@ namespace Democraticdj.Model
     public string SpotifyPlaylistUri;
     public string GameId;
     public string GameName;
+    public DateTime? BallotCreationTime { get; set; }
+    public DateTime? FirstVoteCastTime { get; set; }
 
     private List<Nominee> _nominees;
-
     public List<Nominee> Nominees
     {
       get { return _nominees ?? (_nominees = new List<Nominee>()); }
@@ -33,6 +35,7 @@ namespace Democraticdj.Model
     public List<Vote> Votes
     {
       get { return _votes ?? (_votes = new List<Vote>()); }
+      set { _votes = value; }
     }
 
     private List<Winner> _previousWinners;
@@ -41,15 +44,5 @@ namespace Democraticdj.Model
       get { return _previousWinners ?? (_previousWinners = new List<Winner>()); }
       set { _previousWinners = value; }
     }
-  }
-
-  public class Winner
-  {
-    public string TrackId;
-    private List<string> _selectingPlayerIds;
-    public List<string> SelectingPlayerIds { get
-    {
-      return _selectingPlayerIds ?? (_selectingPlayerIds = new List<string>());
-    } set { _selectingPlayerIds = value; } } 
   }
 }
