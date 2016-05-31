@@ -60,7 +60,7 @@
     return "";
   },
 
-  PlaceVote: function(event) {
+  PlaceVote: function (event) {
     var clickedTrackId = $(event.target).closest(".track").data("trackid");
     console.log(clickedTrackId);
 
@@ -104,6 +104,20 @@
       $(".search-box-js").val("");
 
     }, 500);
+  },
+
+  AutoRefresh: function () {
+    $.ajax({
+      url: "/api/game/isupdated?gameid=" + $(document.forms[0]).data("gameid"),
+      method: "GET",
+      success: Game.AutoRefreshCallback
+    });
+  },
+  AutoRefreshCallback: function (data) {
+    if (data) {
+      Game.RefreshGameData();
+    }
+    Game.AutoRefresh();
   },
 
   RefreshGameData: function () {
@@ -155,7 +169,7 @@
 
   },
 
-  CurrentVote : null,
+  CurrentVote: null,
 
   UpdateNominees: function (data) {
     if (data && data.tracks) {
@@ -184,6 +198,7 @@
     $(".nominees-list-js").click(Game.PlaceVote);
 
     Game.RefreshGameData();
+    Game.AutoRefresh();
   }
 
 

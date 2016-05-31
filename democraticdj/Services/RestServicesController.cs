@@ -56,6 +56,24 @@ namespace Democraticdj.Services
     }
 
     [HttpGet]
+    [Route("game/isupdated")]
+    public bool CheckGameState(string gameid)
+    {
+      long initialTick = StateManager.GetGameTick(gameid);
+      DateTime initialTime = DateTime.Now;
+      while ((DateTime.Now - initialTime).TotalMinutes < 1.0)
+      {
+        long currentTick = StateManager.GetGameTick(gameid);
+        if (currentTick != 0 && currentTick != initialTick)
+        {
+          return true;
+        }
+        Thread.Sleep(1000);
+      }
+      return false;
+    }
+
+    [HttpGet]
     [Route("game")]
     public GameState GetGameState(string gameid)
     {
@@ -66,6 +84,8 @@ namespace Democraticdj.Services
         {
           StateManager.Db.SaveGame(game);
         }
+
+        StateManager.UpdateGameTick(game);
 
         var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId);
         var gameState = new GameState
@@ -106,12 +126,17 @@ namespace Democraticdj.Services
     public void SelectFromSearchResult([FromBody]SelectRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
+      bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        GameLogic.SelectTrack(game, user.UserId, request.TrackId);
+        tickShouldBeUpdated = GameLogic.SelectTrack(game, user.UserId, request.TrackId);
       }
 
       StateManager.Db.SaveGame(game);
+      if (tickShouldBeUpdated)
+      {
+        StateManager.UpdateGameTick(game);
+      }
     }
 
     [HttpPost]
@@ -119,12 +144,15 @@ namespace Democraticdj.Services
     public void PlaceVote([FromBody]SelectRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
+      bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        GameLogic.PlaceVote(game, user.UserId, request.TrackId);
+        tickShouldBeUpdated = GameLogic.PlaceVote(game, user.UserId, request.TrackId);
       }
 
       StateManager.Db.SaveGame(game);
+
+      StateManager.UpdateGameTick(game);
     }
 
 

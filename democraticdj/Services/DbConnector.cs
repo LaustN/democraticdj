@@ -89,6 +89,11 @@ namespace Democraticdj.Services
       get { return Database.GetCollection<Model.Game>("games"); }
     }
 
+    protected IMongoCollection<GameUpdateTick> GameUpdateTicks
+    {
+      get { return Database.GetCollection<GameUpdateTick>("gameupdateticks"); }
+    }
+
     public User FindExistingUser(string usernameOrEmail)
     {
       var existingUser = Users.Find(
@@ -132,6 +137,34 @@ namespace Democraticdj.Services
     public Model.Game GetGame(string gameid)
     {
       return Games.Find(game => game.GameId == gameid).FirstOrDefault();
+    }
+
+    public long GetGameUpdateTick(string gameId)
+    {
+      var gameTick = GameUpdateTicks.Find(storedTick => storedTick.GameId == gameId).FirstOrDefault();
+      if (gameTick==null)
+      {
+        return 0;
+      }
+      return gameTick.GameTick;
+    }
+
+    public void SetGameUpdateTick(string gameId, long tick)
+    {
+      var gameTick = GameUpdateTicks.Find(storedTick => storedTick.GameId == gameId).FirstOrDefault();
+      if (gameTick==null)
+      {
+        GameUpdateTicks.InsertOne(new GameUpdateTick
+        {
+          GameId = gameId,
+          GameTick = tick
+        });
+      }
+      else
+      {
+        gameTick.GameTick = tick;
+        GameUpdateTicks.ReplaceOne(storedGameTick => storedGameTick.GameId == gameId, gameTick);
+      }
     }
   }
 }

@@ -111,5 +111,30 @@ namespace Democraticdj.Services
         return session;
       }
     }
+
+    public static long GetGameTick(string gameId)
+    {
+      return Db.GetGameUpdateTick(gameId);
+    }
+    public static void UpdateGameTick(Model.Game game)
+    {
+      long newTick = 0;
+      if (game.BallotCreationTime.HasValue && game.FirstVoteCastTime.HasValue)
+      {
+        newTick = (game.BallotCreationTime.Value > game.FirstVoteCastTime.Value
+          ? game.BallotCreationTime.Value
+          : game.FirstVoteCastTime.Value).Ticks;
+      }
+      else if (game.BallotCreationTime.HasValue)
+      {
+        newTick = game.BallotCreationTime.Value.Ticks;
+      }
+      else if(game.FirstVoteCastTime.HasValue)
+      {
+        newTick = game.FirstVoteCastTime.Value.Ticks;
+      }
+
+      Db.SetGameUpdateTick(game.GameId,newTick);
+    }
   }
 }

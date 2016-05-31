@@ -104,7 +104,7 @@ namespace Democraticdj.Logic
       game.Votes = null;
     }
 
-    public static void PlaceVote(Model.Game game, string playerId, string trackId)
+    public static bool PlaceVote(Model.Game game, string playerId, string trackId)
     {
       var trackToUpvote = game.Nominees.FirstOrDefault(nomineeItem => nomineeItem.TrackId == trackId);
       if (trackToUpvote != null)
@@ -112,7 +112,7 @@ namespace Democraticdj.Logic
         //ensure that vote is not for track nominated by player
         if (trackToUpvote.NominatingPlayerIds.Contains(playerId))
         {
-          return;
+          return false;
         }
 
         if (game.Votes.Count == 0)
@@ -125,11 +125,13 @@ namespace Democraticdj.Logic
 
         //add vote to matching track
         game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
-        UpdateGameState(game);
+        return UpdateGameState(game);
       }
+
+      return false;
     }
 
-    public static void SelectTrack(Model.Game game, string userId, string trackId)
+    public static bool SelectTrack(Model.Game game, string userId, string trackId)
     {
       Player selectingPlayer = game.Players.FirstOrDefault(player => player.UserId == userId);
 
@@ -146,7 +148,7 @@ namespace Democraticdj.Logic
       selectingPlayer.SelectedTracks.Insert(0, trackId);
 
 
-      UpdateGameState(game);
+      return UpdateGameState(game);
     }
 
     public static bool UpdateGameState(Model.Game game)
