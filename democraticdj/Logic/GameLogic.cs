@@ -13,11 +13,15 @@ namespace Democraticdj.Logic
     {
       game.BallotCreationTime = DateTime.UtcNow;
 
+      //resetting votes when a new ballot is created
+      game.FirstVoteCastTime = null;
+      game.Votes = new List<Vote>();
+
       game.Nominees = new List<Nominee>();
       foreach (Player player in game.Players.Where(player => player.SelectedTracks.Any()))
       {
         var selectedTrack = player.SelectedTracks[0];
-        player.SelectedTracks.RemoveAt(0);
+        player.SelectedTracks.Remove(selectedTrack);
         Nominee nominee = game.Nominees.FirstOrDefault(existingNominee => existingNominee.TrackId == selectedTrack);
         if (nominee != null)
         {
@@ -145,8 +149,9 @@ namespace Democraticdj.Logic
       UpdateGameState(game);
     }
 
-    public static void UpdateGameState(Model.Game game)
+    public static bool UpdateGameState(Model.Game game)
     {
+      bool result = false;
       //if enough votes have been cast and enough time has passed, resolve winner
       if (game.Votes.Count >= 3 //TODO: might need to be per game configurable
             && game.FirstVoteCastTime.HasValue 
@@ -154,14 +159,17 @@ namespace Democraticdj.Logic
         )
       {
         ResolveRound(game);
+        result = true;
       }
 
       //if no ballot exists and 3 tracks can be chosen from, make a new ballot
       if (game.Players.Count(player => player.SelectedTracks.Any()) >= 3 && game.Nominees.Count == 0)
       {
         CreateBallot(game);
-      }
+        result = true;
 
+      }
+      return result;
     }
 
   }

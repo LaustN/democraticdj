@@ -88,7 +88,6 @@
       Game.SearchSelectionTimeout = null;
 
       var clickedTrackId = $(event.target).closest(".track").data("trackid");
-      console.log(clickedTrackId);
 
       $.ajax({
         url: "/api/select",
@@ -101,6 +100,9 @@
         success: Game.RefreshGameData
       }
       );
+      $(".search-result-js").html("");
+      $(".search-box-js").val("");
+
     }, 500);
   },
 
@@ -138,6 +140,17 @@
       success: Game.UpdatePlayerList
     });
 
+    $.ajax({
+      url: "/api/tracks",
+      contentType: "application/json",
+      data: JSON.stringify({
+        tracks: data.Winners,
+        gameid: $(document.forms[0]).data("gameid")
+      }),
+      method: "POST",
+      success: Game.UpdateWinnersList
+    });
+
     Game.CurrentVote = data.CurrentVote;
 
   },
@@ -154,6 +167,13 @@
     if (data && data.tracks) {
       var result = Game.RenderTracklist(data.tracks);
       $(".player-list-js").html(result);
+    }
+  },
+
+  UpdateWinnersList: function (data) {
+    if (data && data.tracks) {
+      var result = Game.RenderTracklist(data.tracks);
+      $(".winners-list-js").html(result);
     }
   },
 

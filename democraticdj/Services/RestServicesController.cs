@@ -59,14 +59,20 @@ namespace Democraticdj.Services
     [Route("game")]
     public GameState GetGameState(string gameid)
     {
-      using (User currentUser= StateManager.CurrentUser)
+      using (User currentUser = StateManager.CurrentUser)
       {
         var game = StateManager.Db.GetGame(gameid);
-        var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId); 
+        if (GameLogic.UpdateGameState(game))
+        {
+          StateManager.Db.SaveGame(game);
+        }
+
+        var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId);
         var gameState = new GameState
         {
-          Nominees = game.Nominees.Select(nominee=> nominee.TrackId).ToArray(),
-          PlayerSelectionList = player!=null ? player.SelectedTracks.ToArray() : null
+          Nominees = game.Nominees.Select(nominee => nominee.TrackId).ToList(),
+          PlayerSelectionList = player != null ? player.SelectedTracks.ToList() : null,
+          Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList()
         };
         var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
 
@@ -75,7 +81,7 @@ namespace Democraticdj.Services
           gameState.CurrentVote = playersVote.TrackId;
         }
         return gameState;
-        
+
       }
     }
 
@@ -102,7 +108,7 @@ namespace Democraticdj.Services
       var game = StateManager.Db.GetGame(request.GameId);
       using (var user = StateManager.CurrentUser)
       {
-        GameLogic.SelectTrack(game,user.UserId,request.TrackId);
+        GameLogic.SelectTrack(game, user.UserId, request.TrackId);
       }
 
       StateManager.Db.SaveGame(game);
@@ -115,7 +121,7 @@ namespace Democraticdj.Services
       var game = StateManager.Db.GetGame(request.GameId);
       using (var user = StateManager.CurrentUser)
       {
-        GameLogic.PlaceVote(game,user.UserId,request.TrackId);
+        GameLogic.PlaceVote(game, user.UserId, request.TrackId);
       }
 
       StateManager.Db.SaveGame(game);
