@@ -92,9 +92,17 @@ namespace Democraticdj.Services
         {
           Nominees = game.Nominees.Select(nominee => nominee.TrackId).ToList(),
           PlayerSelectionList = player != null ? player.SelectedTracks.ToList() : null,
-          Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList()
+          Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList(),
+          PlayersWinners = game.PreviousWinners.Where(previousWinner => previousWinner.SelectingPlayerIds.Contains(currentUser.UserId)).Select(winner => winner.TrackId).ToList()
         };
         var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
+
+        var playerSelectedNominee = game.Nominees.FirstOrDefault(nominee => nominee.NominatingPlayerIds.Contains(currentUser.UserId));
+
+        if (playerSelectedNominee != null)
+        {
+          gameState.PlayersSelection = playerSelectedNominee.TrackId;
+        }
 
         if (playersVote != null)
         {

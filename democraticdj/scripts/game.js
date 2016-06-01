@@ -26,17 +26,26 @@
     }, 500);
   },
   SearchResultHandler: function (data) {
+    var $searchresults = $(".search-result-js");
     if (data && data.tracks && data.tracks.items) {
       var result = Game.RenderTracklist(data.tracks.items);
-      $(".search-result-js").html(result);
+      $searchresults.html(result);
+    } else {
+      $searchresults.html("Your search did not yield any tracks");
     }
+
   },
 
-  RenderTracklist: function (tracks) {
+  RenderTracklist: function (tracks, idToClassMap) {
     if (tracks) {
       var renderBuffer = [];
       $.each(tracks, function (index, track) {
-        renderBuffer.push("<div class=\"track\" data-trackid=\"" + track.id + "\">");
+        renderBuffer.push("<div class=\"track ");
+        if (idToClassMap && idToClassMap[track.id]) {
+          renderBuffer.push(" ");
+          renderBuffer.push(idToClassMap[track.id]);
+        }
+        renderBuffer.push("\" data-trackid=\"" + track.id + "\">");
 
         if (track.album && track.album.images && track.album.images.length > 0) {
           renderBuffer.push("<div class=\"track-image\"><img src=\"" + track.album.images[0].url + "\"></div>");
@@ -61,8 +70,9 @@
   },
 
   PlaceVote: function (event) {
-    var clickedTrackId = $(event.target).closest(".track").data("trackid");
-    console.log(clickedTrackId);
+    var $clickedTrack = $(event.target).closest(".track");
+    var clickedTrackId = $clickedTrack.data("trackid");
+    $clickedTrack.addClass("spinner");
 
     $.ajax({
       url: "/api/vote",
@@ -130,7 +140,11 @@
 
   },
 
+  GameState: {},
+
   RenderLists: function (data) {
+
+    Game.GameState = data;
 
     $.ajax({
       url: "/api/tracks",
@@ -172,22 +186,49 @@
   CurrentVote: null,
 
   UpdateNominees: function (data) {
+    var $nominees = $(".nominees-list-js");
     if (data && data.tracks) {
-      var result = Game.RenderTracklist(data.tracks);
-      $(".nominees-list-js").html(result);
+
+      var idToClassMap = {};
+      if (Game.GameState.CurrentVote) {
+        idToClassMap[Game.GameState.CurrentVote] = "current-vote";
+      }
+      if (Game.GameState.PlayersSelection) {
+        idToClassMap[Game.GameState.PlayersSelection] = "players-selection";
+      }
+
+      var result = Game.RenderTracklist(data.tracks, idToClassMap);
+      $nominees.html(result);
+    } else {
+      $nominees.html("once enough players have nominated a track, the list of nominees will render here");
     }
   },
   UpdatePlayerList: function (data) {
+
+    var $playerList = $(".player-list-js"); 
     if (data && data.tracks) {
       var result = Game.RenderTracklist(data.tracks);
-      $(".player-list-js").html(result);
+      $playerList.html(result);
+    } else {
+      $playerList.html("search for some track, then select some ");
     }
   },
 
   UpdateWinnersList: function (data) {
+    var idToClassMap = {};
+
+    if (Game.GameState.PlayersWinners) {
+      $.each(Game.GameState.PlayersWinners, function (index, winner) {
+        idToClassMap[winner] = "players-winner";
+      });
+    }
+
+    var $winnersList = $(".winners-list-js"); 
     if (data && data.tracks) {
-      var result = Game.RenderTracklist(data.tracks);
-      $(".winners-list-js").html(result);
+      var result = Game.RenderTracklist(data.tracks, idToClassMap);
+      $winnersList.html(result);
+    } else {
+      $winnersList.html("the winners will be rendered here");
     }
   },
 

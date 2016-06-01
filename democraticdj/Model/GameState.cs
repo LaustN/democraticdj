@@ -6,9 +6,17 @@ namespace Democraticdj.Model
   {
     private List<string> _nominees;
     private List<string> _playerSelectionList;
-    private List<string> _winners;
     public string CurrentVote { get; set; }
+    public string PlayersSelection { get; set; }
 
+    private List<string> _playersWinners;
+    public List<string> PlayersWinners
+    {
+      get { return _playersWinners ?? (_playersWinners = new List<string>()); }
+      set { _playersWinners = value; }
+    }
+
+    private List<string> _winners;
     public List<string> Winners
     {
       get { return _winners ?? (_winners = new List<string>()); }

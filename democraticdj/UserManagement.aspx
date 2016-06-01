@@ -12,7 +12,7 @@
   <uc1:PageTop runat="server" ID="PageTop" />
   <form id="form1" runat="server">
     <div runat="server" class="unknown-user" id="UnknownUser">
-      <div class="use-login">
+      <fieldset class="use-login">
         <h2>Login using... 
         </h2>
         <label>
@@ -24,14 +24,15 @@
           <input type="password" name="existingUserPassword" />
         </label>
         <input type="submit" value="OK" />
-      </div>
+      </fieldset>
 
       <div class="use-spotify">
         <h2>Use your Spotify account</h2>
         <a href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">Click here to sign up with you Spotify account</a>
       </div>
 
-      <div class="create-login">
+      <fieldset class="create-login">
+        
         <label>
           <span class="user-label">Email</span>
           <input type="text" name="newUserEmail" />
@@ -45,12 +46,12 @@
           <input type="password" name="newPassword" />
         </label>
         <input type="submit" value="OK" />
-      </div>
+      </fieldset>
     </div>
 
 
     <div class="known-user" runat="server" ID="KnownUser">
-      <div>
+      <fieldset>
         <label runat="server" id="UserNameAsLabelWrapper">
           <span class="user-label">User name</span>
           <asp:Label runat="server" ID="UserNameAsLabel" />
@@ -60,24 +61,25 @@
           <input type="text" runat="server" id="NameBox" />
         </label>
         <label>
-          <span class="user-label">Password</span>
+          <span class="user-label">Change password</span>
           <input type="password" runat="server" id="PasswordUpdate" />
         </label>
         <label>
-          <span class="user-label">Password</span>
+          <span class="user-label">Change password, repeat</span>
           <input type="password" runat="server" id="PasswordRepeat" />
         </label>
         <input type="submit" value="Save" />
-      </div>
+      </fieldset>
       <div>
         <asp:PlaceHolder runat="server" ID="SpotifyAuthLink">
-          <a href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">click here to authenticate</a>
+          <a class="fake-button" href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">click here to authenticate</a>
         </asp:PlaceHolder>
-        <asp:PlaceHolder runat="server" ID="SpotifyInfo">You are authenticated with spotify 
+        <asp:PlaceHolder runat="server" ID="SpotifyInfo">
+          <h3>You are authenticated with spotify </h3>
         </asp:PlaceHolder>
       </div>
       <div>
-        <a href="/CreateGame.aspx">Create new game</a>
+        <a class="fake-button" href="/CreateGame.aspx">Create new game</a>
       </div>
       <div class="existing-games">
         <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
