@@ -108,6 +108,10 @@ namespace Democraticdj.Services
         {
           gameState.CurrentVote = playersVote.TrackId;
         }
+
+        gameState.SecondsUntillVoteCloses = game.MinimumVotesCastTime.HasValue
+          ? (int)(game.MinimumVotesCastTime.Value.AddSeconds(game.VoteClosingDelay) - DateTime.UtcNow).TotalSeconds
+          : -1;
         return gameState;
 
       }
@@ -157,10 +161,8 @@ namespace Democraticdj.Services
       {
         tickShouldBeUpdated = GameLogic.PlaceVote(game, user.UserId, request.TrackId);
       }
-
-      StateManager.Db.SaveGame(game);
-
       StateManager.UpdateGameTick(game);
+      StateManager.Db.SaveGame(game);
     }
 
 

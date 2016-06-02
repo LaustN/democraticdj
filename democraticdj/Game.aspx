@@ -29,6 +29,7 @@
           <div class="section-header">
             Voting ballot
           </div>
+          <div class="voting-countdown-js">80</div>
           <div class="nominees-list-js"></div>
         </div>
         <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">

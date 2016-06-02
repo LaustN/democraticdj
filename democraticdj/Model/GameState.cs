@@ -34,5 +34,7 @@ namespace Democraticdj.Model
       get { return _playerSelectionList ?? (_playerSelectionList = new List<string>()); }
       set { _playerSelectionList = value; }
     }
+
+    public int SecondsUntillVoteCloses;
   }
 }

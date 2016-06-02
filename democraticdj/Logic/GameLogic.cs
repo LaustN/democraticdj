@@ -14,7 +14,7 @@ namespace Democraticdj.Logic
       game.BallotCreationTime = DateTime.UtcNow;
 
       //resetting votes when a new ballot is created
-      game.FirstVoteCastTime = null;
+      game.MinimumVotesCastTime = null;
       game.Votes = new List<Vote>();
 
       game.Nominees = new List<Nominee>();
@@ -114,17 +114,18 @@ namespace Democraticdj.Logic
         {
           return false;
         }
-
-        if (game.Votes.Count == 0)
-        {
-          game.FirstVoteCastTime = DateTime.UtcNow;
-        }
+        int oldVoteCount = game.Votes.Count;
 
         //remove previous votes by same player, if any
         game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
 
         //add vote to matching track
         game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
+
+        if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
+        {
+          game.MinimumVotesCastTime = DateTime.UtcNow;
+        }
         return UpdateGameState(game);
       }
 
@@ -155,17 +156,17 @@ namespace Democraticdj.Logic
     {
       bool result = false;
       //if enough votes have been cast and enough time has passed, resolve winner
-      if (game.Votes.Count >= 3 //TODO: might need to be per game configurable
-            && game.FirstVoteCastTime.HasValue 
-            && (DateTime.UtcNow - game.FirstVoteCastTime.Value).TotalMinutes > 3 //TODO: might need to be per game configurable
+      if (game.Votes.Count >= game.MinimumVotes 
+            && game.MinimumVotesCastTime.HasValue 
+            && (DateTime.UtcNow - game.MinimumVotesCastTime.Value).TotalSeconds >= game.VoteClosingDelay 
         )
       {
         ResolveRound(game);
         result = true;
       }
 
-      //if no ballot exists and 3 tracks can be chosen from, make a new ballot
-      if (game.Players.Count(player => player.SelectedTracks.Any()) >= 3 && game.Nominees.Count == 0)
+      //if no ballot exists and 2 tracks can be chosen from, make a new ballot
+      if (game.Players.Count(player => player.SelectedTracks.Any()) >= 2 && game.Nominees.Count == 0)
       {
         CreateBallot(game);
         result = true;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.Net;
 using System.Web;
@@ -112,29 +113,37 @@ namespace Democraticdj.Services
       }
     }
 
+    protected static ConcurrentDictionary<string,long> FakeGameTicks = new ConcurrentDictionary<string, long>();
+
     public static long GetGameTick(string gameId)
     {
-      return Db.GetGameUpdateTick(gameId);
+      if (FakeGameTicks.ContainsKey(gameId))
+        return FakeGameTicks[gameId];
+      return 0;
+
+      //return Db.GetGameUpdateTick(gameId);
     }
     public static void UpdateGameTick(Model.Game game)
     {
       long newTick = 0;
-      if (game.BallotCreationTime.HasValue && game.FirstVoteCastTime.HasValue)
+      if (game.BallotCreationTime.HasValue && game.MinimumVotesCastTime.HasValue)
       {
-        newTick = (game.BallotCreationTime.Value > game.FirstVoteCastTime.Value
+        newTick = (game.BallotCreationTime.Value > game.MinimumVotesCastTime.Value
           ? game.BallotCreationTime.Value
-          : game.FirstVoteCastTime.Value).Ticks;
+          : game.MinimumVotesCastTime.Value).Ticks;
       }
       else if (game.BallotCreationTime.HasValue)
       {
         newTick = game.BallotCreationTime.Value.Ticks;
       }
-      else if(game.FirstVoteCastTime.HasValue)
+      else if(game.MinimumVotesCastTime.HasValue)
       {
-        newTick = game.FirstVoteCastTime.Value.Ticks;
+        newTick = game.MinimumVotesCastTime.Value.Ticks;
       }
 
-      Db.SetGameUpdateTick(game.GameId,newTick);
+      FakeGameTicks[game.GameId] = newTick;
+      return;
+      //Db.SetGameUpdateTick(game.GameId,newTick);
     }
   }
 }

@@ -116,7 +116,7 @@ namespace Democraticdj.Services
 
       var tracksUrl = string.Format(
         Constants.SpotifyUrls.SpotifyTracksUrl,
-        string.Join(",", trackIds)
+        string.Join(",", trackIds.Where(trackId=>!string.IsNullOrWhiteSpace(trackId)))
         );
       try
       {

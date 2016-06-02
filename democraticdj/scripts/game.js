@@ -142,9 +142,28 @@
 
   GameState: {},
 
+  CountDownInterval: 0,
+  Countdown : function() {
+    console.log(Game.GameState.SecondsUntillVoteCloses);
+    $(".voting-countdown-js").html("" + Game.GameState.SecondsUntillVoteCloses + "seconds");
+    Game.GameState.SecondsUntillVoteCloses--;
+    if (Game.GameState.SecondsUntillVoteCloses<1) {
+      clearInterval(Game.CountDownInterval);
+      Game.RefreshGameData();
+    }
+  },
+
   RenderLists: function (data) {
 
     Game.GameState = data;
+
+    if (Game.GameState.SecondsUntillVoteCloses > 0) {
+      if (Game.CountDownInterval) {
+        clearInterval(Game.CountDownInterval);
+      }
+      Game.Countdown();
+      Game.CountDownInterval = setInterval(Game.Countdown,1000);
+    }
 
     $.ajax({
       url: "/api/tracks",
