@@ -200,6 +200,9 @@
 
     Game.CurrentVote = data.CurrentVote;
 
+    //render the winners list
+    Game.RenderLeaderBoard();
+
   },
 
   CurrentVote: null,
@@ -249,6 +252,58 @@
     } else {
       $winnersList.html("the winners will be rendered here");
     }
+  },
+
+  Players: {},
+
+  RenderLeaderBoard: function() {
+    if (Game.GameState && Game.GameState.Scores && Game.GameState.Scores.length > 0) {
+      var newPlayers = [];
+      $.each(Game.GameState.Scores, function(index, item) {
+        if (!Game.Players[item.PlayerId]) {
+          newPlayers.push(item.PlayerId);
+        }
+      });
+      if (newPlayers.length>0) {
+        $.ajax({
+          url: "/api/users",
+          contentType: "application/json",
+          data: JSON.stringify(newPlayers),
+          method: "POST",
+          success: Game.GetUsersCallback
+        });
+      } else {
+        var $scores = $(".player-scores-js");
+        var renderBuffer = [];
+        //the actual rendering
+        $.each(Game.GameState.Scores, function (index, item) {
+          var currentPlayer = Game.Players[item.PlayerId];
+          renderBuffer.push("<div class=\"player\">");
+
+          renderBuffer.push("<div class=\"player-name\">");
+          renderBuffer.push(currentPlayer.Name);
+          renderBuffer.push("</div>");
+
+          renderBuffer.push("<div class=\"player-icon\">");
+          renderBuffer.push(currentPlayer.AvatarUrl);
+          renderBuffer.push("</div>");
+
+          renderBuffer.push("<div class=\"player-points\">");
+          renderBuffer.push(item.Points);
+          renderBuffer.push("</div>");
+
+          renderBuffer.push("</div>");
+        });
+        $scores.html(renderBuffer.join(""));
+      }
+    }
+  },
+
+  GetUsersCallback: function(data) {
+    $.each(data, function(index, item) {
+      Game.Players[item.UserId] = item;
+    });
+    Game.RenderLeaderBoard();
   },
 
   Init: function () {

@@ -25,11 +25,12 @@
           <asp:Label runat="server" ID="GameTitle" /></h1>
         <h3>Game ID:</h3>
         <h2><asp:Label runat="server" ID="GameID" /></h2>
+        <div class="player-scores-js"></div>
         <div class="ballot">
           <div class="section-header">
             Voting ballot
           </div>
-          <div class="voting-countdown-js">80</div>
+          <div class="voting-countdown-js"></div>
           <div class="nominees-list-js"></div>
         </div>
         <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">

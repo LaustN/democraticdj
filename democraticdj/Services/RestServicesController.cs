@@ -93,7 +93,14 @@ namespace Democraticdj.Services
           Nominees = game.Nominees.Select(nominee => nominee.TrackId).ToList(),
           PlayerSelectionList = player != null ? player.SelectedTracks.ToList() : null,
           Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList(),
-          PlayersWinners = game.PreviousWinners.Where(previousWinner => previousWinner.SelectingPlayerIds.Contains(currentUser.UserId)).Select(winner => winner.TrackId).ToList()
+          PlayersWinners = game.PreviousWinners.Where(previousWinner => previousWinner.SelectingPlayerIds.Contains(currentUser.UserId)).Select(winner => winner.TrackId).ToList(),
+          Scores = game.Players
+            .OrderBy(aPlayer => -aPlayer.Points)
+            .Select(aPlayer=> new PlayerScore
+            {
+              PlayerId = aPlayer.UserId,Points = aPlayer.Points
+            })
+            .ToList()
         };
         var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
 
@@ -165,8 +172,37 @@ namespace Democraticdj.Services
       StateManager.Db.SaveGame(game);
     }
 
+    [HttpPost]
+    [Route("users")]
+    public IEnumerable<PublicUser> GetUsers([FromBody]IEnumerable<string> userIds)
+    {
+      foreach (string userId in userIds)
+      {
+        var user = StateManager.Db.GetUser(userId);
+        var publicUser = new PublicUser
+        {
+          UserId = user.UserId,
+          AvatarUrl = user.AvatarUrl,
+          Name = "Guest"
+        };
+        if (!string.IsNullOrWhiteSpace(user.DisplayName))
+        {
+          publicUser.Name = user.DisplayName;
+        }
+        else if (!string.IsNullOrWhiteSpace(user.UserName))
+        {
+          publicUser.Name = user.UserName;
+        }
+        else if(user.SpotifyUser != null && !string.IsNullOrWhiteSpace(user.SpotifyUser.DisplayName))
+        {
+          publicUser.Name = user.SpotifyUser.DisplayName;
+        }
 
+        yield return publicUser;
+      }
+    }
   }
+
 
   public class SelectRequest
   {

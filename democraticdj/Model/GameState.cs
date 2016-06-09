@@ -6,6 +6,7 @@ namespace Democraticdj.Model
   {
     private List<string> _nominees;
     private List<string> _playerSelectionList;
+    private List<PlayerScore> _scores;
     public string CurrentVote { get; set; }
     public string PlayersSelection { get; set; }
 
@@ -36,5 +37,17 @@ namespace Democraticdj.Model
     }
 
     public int SecondsUntillVoteCloses;
+
+    public List<PlayerScore> Scores
+    {
+      get { return _scores??(_scores = new List<PlayerScore>()); }
+      set { _scores = value; }
+    }
+  }
+
+  public class PlayerScore
+  {
+    public string PlayerId { get; set; }
+    public int Points { get; set; }
   }
 }

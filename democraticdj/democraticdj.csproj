@@ -150,6 +150,7 @@
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Model\GameState.cs" />
     <Compile Include="Model\Winner.cs" />
+    <Compile Include="Model\PublicUser.cs" />
     <Compile Include="UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
