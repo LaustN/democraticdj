@@ -48,8 +48,17 @@ namespace Democraticdj.Controls
     {
       Uri originalUri = new Uri(Request.Url.AbsoluteUri);
 
-      string modifiedUrl = originalUri.GetLeftPart(UriPartial.Authority) + originalUri.LocalPath + 
-                           originalUri.Query;
+      UriBuilder uriBuilder = new UriBuilder(Request.Url.AbsoluteUri);
+      if (originalUri.Port > 80)
+      {
+        uriBuilder.Port = 443;
+      }
+      else
+      {
+        uriBuilder.Port = 80;
+      }
+
+      string modifiedUrl = uriBuilder.Uri.ToString();
 
       return Democraticdj.Services.SpotifyServices.GetAuthUrl(modifiedUrl);
     }
