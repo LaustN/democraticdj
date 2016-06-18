@@ -9,37 +9,46 @@ namespace Democraticdj.Logic
 {
   public class GameLogic
   {
+    public static object GameLogicLock = new object();
+
     public static void CreateBallot(Model.Game game)
     {
-      game.BallotCreationTime = DateTime.UtcNow;
-
-      //resetting votes when a new ballot is created
-      game.MinimumVotesCastTime = null;
-      game.Votes = new List<Vote>();
-
-      game.Nominees = new List<Nominee>();
-      foreach (Player player in game.Players.Where(player => player.SelectedTracks.Any()))
+      lock (GameLogicLock)
       {
-        var selectedTrack = player.SelectedTracks[0];
-        player.SelectedTracks.Remove(selectedTrack);
-        Nominee nominee = game.Nominees.FirstOrDefault(existingNominee => existingNominee.TrackId == selectedTrack);
-        if (nominee != null)
-        {
-          nominee.NominatingPlayerIds.Add(player.UserId);
-        }
-        else
-        {
-          game.Nominees.Add(new Nominee { TrackId = selectedTrack, NominatingPlayerIds = new List<string> { player.UserId } });
-        }
-      }
+        game.BallotCreationTime = DateTime.UtcNow;
 
-      Random random = new Random();
-      for (int shuffleCount = 0; shuffleCount < game.Nominees.Count; shuffleCount++)
-      {
-        int pickedIndex = random.Next(game.Nominees.Count);
-        var pickedNominee = game.Nominees[pickedIndex];
-        game.Nominees.RemoveAt(pickedIndex);
-        game.Nominees.Add(pickedNominee);
+        //resetting votes when a new ballot is created
+        game.MinimumVotesCastTime = null;
+        game.Votes = new List<Vote>();
+
+        game.Nominees = new List<Nominee>();
+        foreach (Player player in game.Players.Where(player => player.SelectedTracks.Any()))
+        {
+          var selectedTrack = player.SelectedTracks[0];
+          player.SelectedTracks.Remove(selectedTrack);
+          Nominee nominee = game.Nominees.FirstOrDefault(existingNominee => existingNominee.TrackId == selectedTrack);
+          if (nominee != null)
+          {
+            nominee.NominatingPlayerIds.Add(player.UserId);
+          }
+          else
+          {
+            game.Nominees.Add(new Nominee
+            {
+              TrackId = selectedTrack,
+              NominatingPlayerIds = new List<string> {player.UserId}
+            });
+          }
+        }
+
+        Random random = new Random();
+        for (int shuffleCount = 0; shuffleCount < game.Nominees.Count; shuffleCount++)
+        {
+          int pickedIndex = random.Next(game.Nominees.Count);
+          var pickedNominee = game.Nominees[pickedIndex];
+          game.Nominees.RemoveAt(pickedIndex);
+          game.Nominees.Add(pickedNominee);
+        }
       }
     }
 

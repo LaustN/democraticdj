@@ -41,18 +41,7 @@
         </asp:Repeater>
       </div>
     </div>
-    <div>
-      <h1>this might be a view of the current game in progress
-      </h1>
-
-      there should be a link available for sharing
-      current standings
-      a play button with the list loaded
-      a search form thingy
-      a search result
-    </div>
     <a href="UserManagement.aspx">Go to user management</a>
-
 
   </form>
 </body>

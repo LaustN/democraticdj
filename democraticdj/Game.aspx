@@ -23,8 +23,10 @@
         <h3>Game name:</h3>
         <h1>
           <asp:Label runat="server" ID="GameTitle" /></h1>
+        <br/>
         <h3>Game ID:</h3>
         <h2><asp:Label runat="server" ID="GameID" /></h2>
+        <br/>
         <div class="player-scores-js"></div>
         <div class="ballot">
           <div class="section-header">

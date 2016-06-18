@@ -72,16 +72,21 @@
       </fieldset>
       <div>
         <asp:PlaceHolder runat="server" ID="SpotifyAuthLink">
-          <a class="fake-button" href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">click here to authenticate</a>
+          <a class="fake-button" href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">Authenticate with Spotify</a>
+          <div>
+            You need to be authenticated with Spotify, if you want to start a new game.<br/>
+            You may join other games without logging in with spotify - just ask another participant (or the game owner) about the game id or a link to their game.
+          </div>
         </asp:PlaceHolder>
         <asp:PlaceHolder runat="server" ID="SpotifyInfo">
           <h3>You are authenticated with spotify </h3>
+          <div>
+            <a class="fake-button" href="/CreateGame.aspx">Create new game</a>
+          </div>
         </asp:PlaceHolder>
       </div>
-      <div>
-        <a class="fake-button" href="/CreateGame.aspx">Create new game</a>
-      </div>
       <div class="existing-games">
+        <h3>Your games</h3>
         <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
           <ItemTemplate>
             <div>
@@ -91,6 +96,7 @@
             </div>
           </ItemTemplate>
         </asp:Repeater>
+        <div runat="server" Visible="<%# !ExistingGames.Any() %>">You are not currently part of any games.</div>
       </div>
     </div>
 

@@ -7,7 +7,6 @@
 }
 
 a, a:visited, a:focus {
-  text-decoration: none;
   color: white;
   cursor: pointer;
 }
@@ -27,6 +26,7 @@ ul, li {
     list-style: none;
     display: inline-block;
     vertical-align: top;
+    padding: 5px;
   }
 
     .page-top ul li.burger {
@@ -57,23 +57,31 @@ ul, li {
 
 .page-top .inner-burger {
   width: 65vw;
+  background-color: #334200
 }
 
 .page-top .menu-line {
   display: block;
   width: 100%;
+  padding: 5px;
+  text-decoration: underline;
 }
 
 .game h3 {
-    font-weight: bold;
+  display: inline-block;
+  font-weight: bold;
   text-decoration: underline;
-  padding: 0;
+  padding: 5px;
   margin: 0;
+  font-size: 1.2em;
+
 }
 
-h1, h2 {
-  padding: 0 0 1em;
+.game h1, .game h2 {
+  display: inline-block;
+  padding: 5px;
   margin: 0;
+  font-size: 1.2em;
 }
 
 .section-header {
@@ -88,22 +96,22 @@ h1, h2 {
   position: relative;
 }
 
-.track.spinner::after {
-  content: "";
-  background: url(/graphics/spinner.svg) no-repeat center center;
-  width: 100%;
-  height: 100px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+  .track.spinner::after {
+    content: "";
+    background: url(/graphics/spinner.svg) no-repeat center center;
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 
   .track .track-album,
   .track .track-artist,
   .track .track-name {
     width: 70%;
     overflow-x: hidden;
-    white-space: nowrap; 
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 
@@ -151,12 +159,12 @@ label {
   margin-bottom: 1em;
 }
 
-label .user-label {
-  clear: both;
-  display: block;
-}
+  label .user-label {
+    clear: both;
+    display: block;
+  }
 
-input[type='text'],input[type='password'] {
+input[type='text'], input[type='password'] {
   width: 100%;
 }
 
@@ -164,18 +172,21 @@ input[type='text'],input[type='password'] {
   display: inline-block;
   background-color: #525752;
   padding: 0.3em;
-  margin: 0 0 1em 0;
+  margin: 5px;
   border-radius: 0.3em;
 }
 
 @media screen and (min-width: 768px) {
   .page-top .menu, .page-top .menu.hidden {
-    width: 100%;
+    width: auto;
     position: relative;
+    display: inline-block;
   }
 
-  .page-top .inner-burger {
-    width: 100%;
+  .page-top ul {
+    display: inline-block;
+    width: auto;
+    vertical-align: top;
   }
 
   .page-top .menu-line {
@@ -188,10 +199,9 @@ input[type='text'],input[type='password'] {
   }
 
   .track {
-    
-  max-width: 300px;
-  clear: both;
-  vertical-align: top;
-
+    max-width: 300px;
+    clear: both;
+    vertical-align: top;
   }
+   
 }
