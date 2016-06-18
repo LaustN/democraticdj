@@ -7,6 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
   <uc1:HeaderContent runat="server" ID="HeaderContent" />
+  <script type="text/javascript" src="/scripts/userManagement.js"></script>
 </head>
 <body>
   <uc1:PageTop runat="server" ID="PageTop" />
@@ -32,7 +33,6 @@
       </div>
 
       <fieldset class="create-login">
-        
         <label>
           <span class="user-label">Email</span>
           <input type="text" name="newUserEmail" />
@@ -70,6 +70,15 @@
         </label>
         <input type="submit" value="Save" />
       </fieldset>
+      <div class="emails">
+        <asp:Repeater runat="server" DataSource="<%# Emails %>" ItemType="Democraticdj.Model.UserEmail">
+          <ItemTemplate>
+            <div data-address="<%# Item.Address %>" class="email <%# Item.IsVerified ? "verified" : "notverified" %>">
+              <%# Item.Address %>
+            </div>
+          </ItemTemplate>
+        </asp:Repeater>
+      </div>
       <div>
         <asp:PlaceHolder runat="server" ID="SpotifyAuthLink">
           <a class="fake-button" href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">Authenticate with Spotify</a>

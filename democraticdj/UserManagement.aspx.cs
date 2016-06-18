@@ -17,7 +17,6 @@ namespace Democraticdj
   {
     protected void Page_Load(object sender, EventArgs e)
     {
-
       var authResponseCode = Request.QueryString["code"];
       var responseState = Request.QueryString["state"];
       if (!string.IsNullOrEmpty(authResponseCode))
@@ -54,6 +53,17 @@ namespace Democraticdj
         {
           KnownUser.Visible = true;
           UnknownUser.Visible = false;
+
+          var verifyingEmailId = Request.QueryString["emailverification"];
+          if (!string.IsNullOrWhiteSpace(verifyingEmailId))
+          {
+            var userEmailToVerify = user.Emails.FirstOrDefault(item => item.PendingVerificationId == verifyingEmailId);
+            if (userEmailToVerify != null)
+            {
+              userEmailToVerify.IsVerified = true;
+              Response.Redirect("/UserManagement.aspx");
+            }
+          }
 
           if (IsPostBack)
           {
@@ -154,6 +164,19 @@ namespace Democraticdj
         {
           return StateManager.Db.FindGamesStartedByUser(user.UserId);
         }
+      }
+    }
+
+    public IEnumerable<UserEmail> Emails
+    {
+      get
+      {
+        using (var user = StateManager.CurrentUser)
+        {
+          user.ShouldAutoSave = false;
+          return user.Emails;
+        }
+
       }
     }
   }

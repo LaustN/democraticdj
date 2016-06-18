@@ -99,6 +99,7 @@
     <Content Include="graphics\mediaplayer.png" />
     <Content Include="graphics\spinner.gif" />
     <Content Include="graphics\spinner.svg" />
+    <Content Include="scripts\userManagement.js" />
     <Content Include="scripts\game.js" />
     <Content Include="scripts\PageTop.js" />
     <Content Include="scripts\tracksresponse.js" />

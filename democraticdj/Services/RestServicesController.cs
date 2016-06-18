@@ -201,6 +201,47 @@ namespace Democraticdj.Services
         yield return publicUser;
       }
     }
+
+    [HttpPost]
+    [Route("verifyemail")]
+    public bool VerifyEmail([FromBody]VerifyEmailRequest request)
+    {
+      using (var user = StateManager.CurrentUser)
+      {
+        var userEmail =
+          user.Emails.FirstOrDefault(
+            item => item.Address.Equals(request.Email, StringComparison.InvariantCultureIgnoreCase) && !item.IsVerified);
+        if (userEmail != null)
+        {
+          string newVerificationId = Guid.NewGuid().ToString("N");
+          userEmail.PendingVerificationId = newVerificationId;
+          
+
+          string handlerUrl =  "http://" + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx?emailverification=" + newVerificationId;
+
+          string mailBodyTemplate = @"
+<html>
+<body>
+Hi {0},<br/>
+<a href='{1}'>click here to verify your email: {2}</a>
+</body>
+</html>
+";
+          var mailBody = string.Format(mailBodyTemplate, user.DisplayName, handlerUrl, request.Email);
+          MailSender.Send("Verify your Democratic DJ email address", mailBody, request.Email, true);
+          return true;
+        }
+
+      }
+
+      return false;
+    }
+  }
+
+  public class VerifyEmailRequest
+  {
+    [JsonProperty("email")]
+    public string Email { get; set; }
   }
 
 

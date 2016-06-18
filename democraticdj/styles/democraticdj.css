@@ -176,6 +176,18 @@ input[type='text'], input[type='password'] {
   border-radius: 0.3em;
 }
 
+.email.notverified:after {
+  content: " - click to request verification email";
+}
+
+.email.verified:after {
+  content: " - verified";
+}
+
+.email.verifying:after {
+  content: " - check your email, you should receive a verification link soon";
+}
+
 @media screen and (min-width: 768px) {
   .page-top .menu, .page-top .menu.hidden {
     width: auto;

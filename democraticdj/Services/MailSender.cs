@@ -13,19 +13,29 @@ namespace Democraticdj.Services
     {
       string reachMailAccountKey = "ReachMail.AccountKey";
       string reachMailUserName = "ReachMail.UserName";
+      string reachMailPassword = "ReachMail.Password";
 
       var mailAccountKey = ConfigurationManager.AppSettings[reachMailAccountKey];
       var mailUserName = ConfigurationManager.AppSettings[reachMailUserName];
+      var mailPassword = ConfigurationManager.AppSettings[reachMailPassword];
 
-      var reachMailApiClient = Reachmail.Api.Create(mailAccountKey, mailUserName, "AMOKAMOK");
-      var postResponse = reachMailApiClient.Easysmtp.Post(new DeliveryRequest
+      var reachMailApiClient = Reachmail.Api.Create(mailAccountKey, mailUserName, mailPassword);
+      var postRequest = new DeliveryRequest
       {
-        BodyText = body,
-        FooterAddress = "laustn@gmail.com",
-        FromAddress = "laustn@gmail.com",
-        Recipients = new Recipients() { new Recipient { Address = recipientAddress } },
+        FooterAddress = "noreply@democraticdj.apphb.com",
+        FromAddress = "noreply@democraticdj.apphb.com",
+        Recipients = new Recipients() {new Recipient {Address = recipientAddress}},
         Subject = subject
-      });
+      };
+      if (isBodyHtml)
+      {
+        postRequest.BodyHtml = body;
+      }
+      else
+      {
+        postRequest.BodyText = body;
+      }
+      var postResponse = reachMailApiClient.Easysmtp.Post(postRequest);
 
       return !postResponse.Failures;
     }
