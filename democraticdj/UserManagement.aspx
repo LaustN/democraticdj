@@ -50,7 +50,7 @@
     </div>
 
 
-    <div class="known-user" runat="server" ID="KnownUser">
+    <div class="known-user" runat="server" id="KnownUser">
       <fieldset>
         <label runat="server" id="UserNameAsLabelWrapper">
           <span class="user-label">User name</span>
@@ -79,11 +79,19 @@
           </ItemTemplate>
         </asp:Repeater>
       </div>
+      <div runat="server" Visible="<%# GravatarOptions.Any() %>">
+        
+        <asp:Repeater runat="server" DataSource="<%# GravatarOptions %>" ItemType="System.String">
+          <ItemTemplate>
+            <img src="<%# Item %>"/>
+          </ItemTemplate>
+        </asp:Repeater>
+      </div>
       <div>
         <asp:PlaceHolder runat="server" ID="SpotifyAuthLink">
           <a class="fake-button" href="<%# Democraticdj.Services.SpotifyServices.GetAuthUrl("/usermanagement.aspx") %>">Authenticate with Spotify</a>
           <div>
-            You need to be authenticated with Spotify, if you want to start a new game.<br/>
+            You need to be authenticated with Spotify, if you want to start a new game.<br />
             You may join other games without logging in with spotify - just ask another participant (or the game owner) about the game id or a link to their game.
           </div>
         </asp:PlaceHolder>
@@ -105,7 +113,7 @@
             </div>
           </ItemTemplate>
         </asp:Repeater>
-        <div runat="server" Visible="<%# !ExistingGames.Any() %>">You are not currently part of any games.</div>
+        <div runat="server" visible="<%# !ExistingGames.Any() %>">You are not currently part of any games.</div>
       </div>
     </div>
 

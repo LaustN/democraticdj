@@ -11,10 +11,14 @@ namespace Democraticdj.Logic
   {
     public static object GameLogicLock = new object();
 
-    public static void CreateBallot(Model.Game game)
+    public static void CreateBallot(string gameId)
     {
       lock (GameLogicLock)
       {
+        Model.Game game = StateManager.Db.GetGame(gameId);
+        if (game == null)
+          return;
+
         game.BallotCreationTime = DateTime.UtcNow;
 
         //resetting votes when a new ballot is created
@@ -49,139 +53,181 @@ namespace Democraticdj.Logic
           game.Nominees.RemoveAt(pickedIndex);
           game.Nominees.Add(pickedNominee);
         }
+        StateManager.Db.SaveGame(game);
       }
     }
 
-    public static void ResolveRound(Model.Game game)
+    public static void ResolveRound(string gameId)
     {
-      //find the track with the most votes
-      Dictionary<string, List<string>> votesTally = game.Nominees.ToDictionary(nominee => nominee.TrackId, nominee => new List<string>(nominee.NominatingPlayerIds));
-
-      foreach (Vote vote in game.Votes)
+      lock (GameLogicLock)
       {
-        votesTally[vote.TrackId].Add(vote.PlayerId);
-      }
+        Model.Game game = StateManager.Db.GetGame(gameId);
+        if (game == null)
+          return;
 
-      string bestTrackId = string.Empty;
-      int bestTrackVotes = 0;
-      foreach (var trackId in votesTally.Keys)
-      {
-        if (votesTally[trackId].Count > bestTrackVotes)
+        //find the track with the most votes
+        Dictionary<string, List<string>> votesTally = game.Nominees.ToDictionary(nominee => nominee.TrackId,
+          nominee => new List<string>(nominee.NominatingPlayerIds));
+
+        foreach (Vote vote in game.Votes)
         {
-          bestTrackVotes = votesTally[trackId].Count;
-          bestTrackId = trackId;
+          votesTally[vote.TrackId].Add(vote.PlayerId);
         }
-      }
 
-      //add track to game history with playerIds + votes
-      var winner = new Winner
-      {
-        SelectingPlayerIds = game.Nominees.First(nominee => nominee.TrackId == bestTrackId).NominatingPlayerIds,
-        TrackId = bestTrackId
-      };
-      game.PreviousWinners.Add(winner);
-
-      //add that track to the playlist
-      SpotifyServices.AppendTrackToPlaylist(game, bestTrackId);
-
-      //add all other tracks back onto the end of their nominators lists
-      foreach (Nominee nominee in game.Nominees)
-      {
-        if (nominee.TrackId == bestTrackId)
-          continue;
-        foreach (var nominatingPlayerId in nominee.NominatingPlayerIds)
+        string bestTrackId = string.Empty;
+        int bestTrackVotes = 0;
+        foreach (var trackId in votesTally.Keys)
         {
-          game.Players.First(player => player.UserId == nominatingPlayerId).SelectedTracks.Add(nominee.TrackId);
+          if (votesTally[trackId].Count > bestTrackVotes)
+          {
+            bestTrackVotes = votesTally[trackId].Count;
+            bestTrackId = trackId;
+          }
         }
-      }
 
-      //award points for selected tracks
-      foreach (var nominee in game.Nominees)
-      {
-        var currentNominee = nominee;
-
-        var playersThatNominatedThisNominee =
-          game.Players.Where(player => currentNominee.NominatingPlayerIds.Contains(player.UserId));
-
-        foreach (Player player in playersThatNominatedThisNominee)
+        //add track to game history with playerIds + votes
+        var winner = new Winner
         {
-          player.Points += votesTally[nominee.TrackId].Count;
-        }
-      }
+          SelectingPlayerIds = game.Nominees.First(nominee => nominee.TrackId == bestTrackId).NominatingPlayerIds,
+          TrackId = bestTrackId
+        };
+        game.PreviousWinners.Add(winner);
 
-      game.Nominees = null;
-      game.Votes = null;
+        //add that track to the playlist
+        SpotifyServices.AppendTrackToPlaylist(game, bestTrackId);
+
+        //add all other tracks back onto the end of their nominators lists
+        foreach (Nominee nominee in game.Nominees)
+        {
+          if (nominee.TrackId == bestTrackId)
+            continue;
+          foreach (var nominatingPlayerId in nominee.NominatingPlayerIds)
+          {
+            game.Players.First(player => player.UserId == nominatingPlayerId).SelectedTracks.Add(nominee.TrackId);
+          }
+        }
+
+        //award points for selected tracks
+        foreach (var nominee in game.Nominees)
+        {
+          var currentNominee = nominee;
+
+          var playersThatNominatedThisNominee =
+            game.Players.Where(player => currentNominee.NominatingPlayerIds.Contains(player.UserId));
+
+          foreach (Player player in playersThatNominatedThisNominee)
+          {
+            player.Points += votesTally[nominee.TrackId].Count;
+          }
+        }
+
+        game.Nominees = null;
+        game.Votes = null;
+        StateManager.Db.SaveGame(game);
+      }
     }
 
-    public static bool PlaceVote(Model.Game game, string playerId, string trackId)
+    public static bool PlaceVote(string gameId, string playerId, string trackId)
     {
-      var trackToUpvote = game.Nominees.FirstOrDefault(nomineeItem => nomineeItem.TrackId == trackId);
-      if (trackToUpvote != null)
+      lock (GameLogicLock)
       {
-        //ensure that vote is not for track nominated by player
-        if (trackToUpvote.NominatingPlayerIds.Contains(playerId))
-        {
+        Model.Game game = StateManager.Db.GetGame(gameId);
+        if (game == null)
           return false;
-        }
-        int oldVoteCount = game.Votes.Count;
 
-        //remove previous votes by same player, if any
-        game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
 
-        //add vote to matching track
-        game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
-
-        if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
+        var trackToUpvote = game.Nominees.FirstOrDefault(nomineeItem => nomineeItem.TrackId == trackId);
+        if (trackToUpvote != null)
         {
-          game.MinimumVotesCastTime = DateTime.UtcNow;
+          //ensure that vote is not for track nominated by player
+          if (trackToUpvote.NominatingPlayerIds.Contains(playerId))
+          {
+            return false;
+          }
+          int oldVoteCount = game.Votes.Count;
+
+          //remove previous votes by same player, if any
+          game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
+
+          //add vote to matching track
+          game.Votes.Add(new Vote {PlayerId = playerId, TrackId = trackId});
+
+          if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
+          {
+            game.MinimumVotesCastTime = DateTime.UtcNow;
+          }
+          StateManager.Db.SaveGame(game);
+          return UpdateGameState(gameId);
         }
-        return UpdateGameState(game);
-      }
 
-      return false;
+        return false;
+      }
     }
 
-    public static bool SelectTrack(Model.Game game, string userId, string trackId)
+    private static readonly object _selectTrackLock = new object();
+
+    public static bool SelectTrack(string gameId, string userId, string trackId)
     {
-      Player selectingPlayer = game.Players.FirstOrDefault(player => player.UserId == userId);
-
-      if (selectingPlayer == null)
+      lock (_selectTrackLock)
       {
-        selectingPlayer = new Player { UserId = userId };
-        game.Players.Add(selectingPlayer);
+        Model.Game game = StateManager.Db.GetGame(gameId);
+        if (game == null)
+          return false;
+
+
+        Player selectingPlayer = game.Players.FirstOrDefault(player => player.UserId == userId);
+
+        if (selectingPlayer == null)
+        {
+          selectingPlayer = new Player {UserId = userId};
+          game.Players.Add(selectingPlayer);
+        }
+
+        if (selectingPlayer.SelectedTracks.Contains(trackId))
+        {
+          selectingPlayer.SelectedTracks.Remove(trackId);
+        }
+        selectingPlayer.SelectedTracks.Insert(0, trackId);
+
+        StateManager.Db.SaveGame(game);
+
+        return UpdateGameState(gameId);
       }
-
-      if (selectingPlayer.SelectedTracks.Contains(trackId))
-      {
-        selectingPlayer.SelectedTracks.Remove(trackId);
-      }
-      selectingPlayer.SelectedTracks.Insert(0, trackId);
-
-
-      return UpdateGameState(game);
     }
 
-    public static bool UpdateGameState(Model.Game game)
+    private static readonly object _updateGameStateLock = new object();
+    public static bool UpdateGameState(string gameId)
     {
-      bool result = false;
-      //if enough votes have been cast and enough time has passed, resolve winner
-      if (game.Votes.Count >= game.MinimumVotes 
-            && game.MinimumVotesCastTime.HasValue 
-            && (DateTime.UtcNow - game.MinimumVotesCastTime.Value).TotalSeconds >= game.VoteClosingDelay 
-        )
+      lock (_updateGameStateLock)
       {
-        ResolveRound(game);
-        result = true;
-      }
+        Model.Game game = StateManager.Db.GetGame(gameId);
+        if (game == null)
+          return false;
 
-      //if no ballot exists and 2 tracks can be chosen from, make a new ballot
-      if (game.Players.Count(player => player.SelectedTracks.Any()) >= 2 && game.Nominees.Count == 0)
-      {
-        CreateBallot(game);
-        result = true;
 
+
+        bool result = false;
+        //if enough votes have been cast and enough time has passed, resolve winner
+        if (game.Votes.Count >= game.MinimumVotes
+            && game.MinimumVotesCastTime.HasValue
+            && (DateTime.UtcNow - game.MinimumVotesCastTime.Value).TotalSeconds >= game.VoteClosingDelay
+          )
+        {
+          ResolveRound(gameId);
+          result = true;
+        }
+
+        //if no ballot exists and 2 tracks can be chosen from, make a new ballot
+        if (game.Players.Count(player => player.SelectedTracks.Any()) >= 2 && game.Nominees.Count == 0)
+        {
+          CreateBallot(gameId);
+          result = true;
+
+        }
+
+        StateManager.UpdateGameTick(game);
+        return result;
       }
-      return result;
     }
 
   }

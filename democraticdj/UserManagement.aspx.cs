@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -177,6 +179,30 @@ namespace Democraticdj
           return user.Emails;
         }
 
+      }
+    }
+
+    public IEnumerable<string> GravatarOptions
+    {
+      get
+      {
+        if(!Emails.Any(email=>email.IsVerified))
+          yield break;
+
+        yield return  "http://" + HttpContext.Current.Request.Url.Host + "/graphics/mediaplayer.png";
+
+        var hashEngine = MD5.Create();
+        foreach (var verifiedEmail in Emails.Where(email=>email.IsVerified))
+        {
+          byte[] data = hashEngine.ComputeHash(Encoding.UTF8.GetBytes(verifiedEmail.Address));
+          StringBuilder sBuilder = new StringBuilder();
+          for (int i = 0; i < data.Length; i++)
+          {
+            sBuilder.Append(data[i].ToString("x2"));
+          }
+          string hash = sBuilder.ToString();
+          yield return "https://www.gravatar.com/avatar/" + hash  + "?d=retro";
+        }
       }
     }
   }

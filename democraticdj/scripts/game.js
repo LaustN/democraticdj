@@ -120,14 +120,12 @@
     $.ajax({
       url: "/api/game/isupdated?gameid=" + $(document.forms[0]).data("gameid"),
       method: "GET",
-      success: Game.AutoRefreshCallback
+      success: Game.AutoRefreshCallback,
+      complete: Game.AutoRefresh
     });
   },
   AutoRefreshCallback: function (data) {
-    if (data) {
-      Game.RefreshGameData();
-    }
-    Game.AutoRefresh();
+    Game.RefreshGameData();
   },
 
   RefreshGameData: function () {
@@ -145,11 +143,13 @@
   CountDownInterval: 0,
   Countdown : function() {
     console.log(Game.GameState.SecondsUntillVoteCloses);
-    $(".voting-countdown-js").html("" + Game.GameState.SecondsUntillVoteCloses + "seconds");
+    var $votingCountdownHolder = $(".voting-countdown-js");
+    $votingCountdownHolder.html("" + Game.GameState.SecondsUntillVoteCloses + " seconds untill voting closes");
     Game.GameState.SecondsUntillVoteCloses--;
     if (Game.GameState.SecondsUntillVoteCloses<1) {
       clearInterval(Game.CountDownInterval);
       Game.RefreshGameData();
+      $votingCountdownHolder.html("");
     }
   },
 

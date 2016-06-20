@@ -63,6 +63,11 @@ namespace Democraticdj.Services
       DateTime initialTime = DateTime.Now;
       while ((DateTime.Now - initialTime).TotalMinutes < 1.0)
       {
+        var game = StateManager.Db.GetGame(gameid);
+        if (GameLogic.UpdateGameState(gameid))
+        {
+          StateManager.Db.SaveGame(game);
+        }
         long currentTick = StateManager.GetGameTick(gameid);
         if (currentTick != 0 && currentTick != initialTick)
         {
@@ -70,6 +75,8 @@ namespace Democraticdj.Services
         }
         Thread.Sleep(1000);
       }
+
+
       return false;
     }
 
@@ -80,10 +87,7 @@ namespace Democraticdj.Services
       using (User currentUser = StateManager.CurrentUser)
       {
         var game = StateManager.Db.GetGame(gameid);
-        if (GameLogic.UpdateGameState(game))
-        {
-          StateManager.Db.SaveGame(game);
-        }
+        GameLogic.UpdateGameState(gameid);
 
         StateManager.UpdateGameTick(game);
 
@@ -148,10 +152,9 @@ namespace Democraticdj.Services
       bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        tickShouldBeUpdated = GameLogic.SelectTrack(game, user.UserId, request.TrackId);
+        tickShouldBeUpdated = GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId);
       }
 
-      StateManager.Db.SaveGame(game);
       if (tickShouldBeUpdated)
       {
         StateManager.UpdateGameTick(game);
@@ -166,10 +169,9 @@ namespace Democraticdj.Services
       bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        tickShouldBeUpdated = GameLogic.PlaceVote(game, user.UserId, request.TrackId);
+        tickShouldBeUpdated = GameLogic.PlaceVote(request.GameId, user.UserId, request.TrackId);
       }
       StateManager.UpdateGameTick(game);
-      StateManager.Db.SaveGame(game);
     }
 
     [HttpPost]
