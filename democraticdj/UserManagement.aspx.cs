@@ -63,8 +63,22 @@ namespace Democraticdj
             if (userEmailToVerify != null)
             {
               userEmailToVerify.IsVerified = true;
-              Response.Redirect("/UserManagement.aspx");
+              Response.Redirect(SpotifyServices.RedirectUrl,false);
+              return;
             }
+          }
+
+          var useIcon = Request.QueryString["useIcon"];
+          if (!string.IsNullOrEmpty(useIcon))
+          {
+            int parsedIconIdndex;
+            if (int.TryParse(useIcon, out parsedIconIdndex) && GravatarOptions.Count()>parsedIconIdndex)
+            {
+              user.AvatarUrl = GravatarOptions.Skip(parsedIconIdndex).First().Url;
+              Response.Redirect(SpotifyServices.RedirectUrl, false);
+              return;
+            }
+
           }
 
           if (IsPostBack)
@@ -182,17 +196,23 @@ namespace Democraticdj
       }
     }
 
-    public IEnumerable<string> GravatarOptions
+    public IEnumerable<IconOption> GravatarOptions
     {
       get
       {
-        if(!Emails.Any(email=>email.IsVerified))
+        if (!Emails.Any(email => email.IsVerified))
           yield break;
 
-        yield return  "http://" + HttpContext.Current.Request.Url.Host + "/graphics/mediaplayer.png";
+        int iconIdex = 0;
+        yield return
+          new IconOption
+          {
+            Url = "/graphics/mediaplayer.png",
+            Index = iconIdex++
+          };
 
         var hashEngine = MD5.Create();
-        foreach (var verifiedEmail in Emails.Where(email=>email.IsVerified))
+        foreach (var verifiedEmail in Emails.Where(email => email.IsVerified))
         {
           byte[] data = hashEngine.ComputeHash(Encoding.UTF8.GetBytes(verifiedEmail.Address));
           StringBuilder sBuilder = new StringBuilder();
@@ -201,7 +221,11 @@ namespace Democraticdj
             sBuilder.Append(data[i].ToString("x2"));
           }
           string hash = sBuilder.ToString();
-          yield return "https://www.gravatar.com/avatar/" + hash  + "?d=retro";
+          yield return new IconOption
+          {
+            Url = "https://www.gravatar.com/avatar/" + hash + "?d=retro",
+            Index = iconIdex++
+          };
         }
       }
     }

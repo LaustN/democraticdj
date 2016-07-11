@@ -79,12 +79,21 @@
           </ItemTemplate>
         </asp:Repeater>
       </div>
-      <div runat="server" Visible="<%# GravatarOptions.Any() %>">
-        
-        <asp:Repeater runat="server" DataSource="<%# GravatarOptions %>" ItemType="System.String">
+      <div runat="server" visible="<%# GravatarOptions.Any() %>">
+
+        <asp:Repeater runat="server" DataSource="<%# GravatarOptions %>" ItemType="Democraticdj.IconOption">
+          <HeaderTemplate>
+            <div class="iconoptions">
+              <h2>Choose an icon</h2>
+          </HeaderTemplate>
           <ItemTemplate>
-            <img src="<%# Item %>"/>
+            <a href="<%# "?useIcon=" + Item.Index %>">
+              <img src="<%# Item.Url %>" />
+            </a>
           </ItemTemplate>
+          <FooterTemplate>
+            </div>
+          </FooterTemplate>
         </asp:Repeater>
       </div>
       <div>

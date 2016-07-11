@@ -145,6 +145,7 @@
     <Compile Include="Game.aspx.designer.cs">
       <DependentUpon>Game.aspx</DependentUpon>
     </Compile>
+    <Compile Include="IconOption.cs" />
     <Compile Include="Logic\GameLogic.cs" />
     <Compile Include="Model\GameUpdateTick.cs" />
     <Compile Include="Model\Nominee.cs" />

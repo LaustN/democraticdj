@@ -280,17 +280,24 @@
           var currentPlayer = Game.Players[item.PlayerId];
           renderBuffer.push("<div class=\"player\">");
 
+          renderBuffer.push("<div class=\"player-icon\">");
+          renderBuffer.push("<img src=\"");
+          if (currentPlayer.AvatarUrl && currentPlayer.AvatarUrl.length > 0) {
+            renderBuffer.push(currentPlayer.AvatarUrl);
+          } else {
+            renderBuffer.push("/graphics/mediaplayer.png");
+          }
+          renderBuffer.push("\" />");
+          renderBuffer.push("</div>");
+
           renderBuffer.push("<div class=\"player-name\">");
           renderBuffer.push(currentPlayer.Name);
           renderBuffer.push("</div>");
 
-          renderBuffer.push("<div class=\"player-icon\">");
-          renderBuffer.push(currentPlayer.AvatarUrl);
-          renderBuffer.push("</div>");
 
           renderBuffer.push("<div class=\"player-points\">");
           renderBuffer.push(item.Points);
-          renderBuffer.push("</div>");
+          renderBuffer.push(" points</div>");
 
           renderBuffer.push("</div>");
         });

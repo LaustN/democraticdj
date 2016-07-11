@@ -23,11 +23,17 @@
         <h3>Game name:</h3>
         <h1>
           <asp:Label runat="server" ID="GameTitle" /></h1>
-        <br/>
+        <br />
         <h3>Game ID:</h3>
-        <h2><asp:Label runat="server" ID="GameID" /></h2>
-        <br/>
-        <div class="player-scores-js"></div>
+        <h2>
+          <asp:Label runat="server" ID="GameID" /></h2>
+        <br />
+        <div class="leaderboard">
+          <div class="section-header">
+            Leaderboard
+          </div>
+          <div class="player-scores-js"/>
+        </div>
         <div class="ballot">
           <div class="section-header">
             Voting ballot
@@ -43,9 +49,9 @@
             <div class="player-list-js"></div>
           </div>
           <div class="search">
-          <div class="section-header">
-            Search for tracks
-          </div>
+            <div class="section-header">
+              Search for tracks
+            </div>
             <input type="text" class="search-box-js" placeholder="Search Spotify for great tracks" />
             <div class="search-result-js"></div>
           </div>
