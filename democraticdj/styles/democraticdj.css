@@ -57,7 +57,7 @@ ul, li {
 
 .page-top .inner-burger {
   width: 65vw;
-  background-color: #334200
+  background-color: #334200;
 }
 
 .page-top .menu-line {
@@ -74,7 +74,6 @@ ul, li {
   padding: 5px;
   margin: 0;
   font-size: 1.2em;
-
 }
 
 .game h1, .game h2 {
@@ -109,32 +108,39 @@ ul, li {
   .track .track-album,
   .track .track-artist,
   .track .track-name {
-    width: 70%;
+    width: 66%;
+    margin-top: 2%;
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
 
-  .track.current-vote {
-    background-color: #38d664;
-  }
+.current-vote {
+  background-color: #38d664;
+}
 
-  .track.players-winner {
-    background-color: #7b9e00;
-  }
+.players-winner {
+  background-color: #7b9e00;
+}
 
-  .track.players-selection {
-    background-color: #898989;
-  }
+.players-selection {
+  background-color: #898989;
+}
 
 img {
   max-width: 100%;
+  width: 100%;
+  vertical-align: middle;
 }
 
 .track-image {
   width: 30%;
+  height: 0;
+  padding-bottom: 30%;
   float: left;
+  margin: 2%;
+
 }
 
 .section-header {
@@ -165,7 +171,8 @@ label {
   }
 
 input[type='text'], input[type='password'] {
-  width: 100%;
+  width: 25em;
+  margin: 2%;
 }
 
 .fake-button {
@@ -188,7 +195,35 @@ input[type='text'], input[type='password'] {
   content: " - check your email, you should receive a verification link soon";
 }
 
+.player-icon {
+  float: left;
+  width: 30%;
+  margin: 2%;
+}
+
+.player {
+  display: inline-block;
+  width: 100%;
+}
+
+.player-name, .player-points {
+  margin: 2%;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.player-name {
+  margin-top: 8%;
+}
+
 @media screen and (min-width: 768px) {
+
+  .body-sizer {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .page-top .menu, .page-top .menu.hidden {
     width: auto;
     position: relative;
@@ -210,10 +245,20 @@ input[type='text'], input[type='password'] {
     display: none;
   }
 
+  .page-top .inner-burger {
+    background-color: inherit;
+    width: auto;
+  }
+
   .track {
     max-width: 300px;
     clear: both;
     vertical-align: top;
   }
-   
+
+  .player {
+    max-width: 300px;
+    clear: both;
+    vertical-align: top;
+  }
 }
