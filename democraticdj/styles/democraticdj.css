@@ -140,7 +140,6 @@ img {
   padding-bottom: 30%;
   float: left;
   margin: 2%;
-
 }
 
 .section-header {
@@ -201,9 +200,9 @@ input[type='text'], input[type='password'] {
   display: inline-block;
 }
 
-.iconoptions .icon-option.active {
-  background-color: #38d664;
-}
+  .iconoptions .icon-option.active {
+    background-color: #38d664;
+  }
 
 .player-icon {
   float: left;
@@ -225,6 +224,36 @@ input[type='text'], input[type='password'] {
 .player-name {
   margin-top: 8%;
 }
+
+/* begin "create game" */
+.existing-list {
+  display: inline-block;
+  width: 40%;
+  margin: 4%;
+  background-color: #38d664;
+}
+
+.existing-list a {
+  text-decoration: none;
+}
+
+.existing-list-name {
+  text-align: center;
+  font-size: 150%;
+  min-height: 4em;
+  margin: 5px;
+  display: table;
+}
+.existing-list-name-verticalizer {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.existing-list-image {
+  margin: 5px;
+}
+/* end "create game" */
 
 @media screen and (min-width: 768px) {
 
@@ -271,4 +300,12 @@ input[type='text'], input[type='password'] {
     clear: both;
     vertical-align: top;
   }
+
+  /* begin "create game"*/
+
+  .existing-list {
+    width: 20%;
+    margin: 2%
+  }
+  /* end "create game"*/
 }
