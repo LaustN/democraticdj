@@ -87,7 +87,7 @@
               <h2>Choose an icon</h2>
           </HeaderTemplate>
           <ItemTemplate>
-            <a href="<%# "?useIcon=" + Item.Index %>">
+            <a class="icon-option<%# Item.Url == CurrentUserAvatarUrl ? " active": "" %>" href="<%# "?useIcon=" + Item.Index %>">
               <img src="<%# Item.Url %>" />
             </a>
           </ItemTemplate>

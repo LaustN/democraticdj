@@ -20,6 +20,7 @@ namespace Democraticdj.Model
       public const string SpotifyAuthUrlTemplate = "https://accounts.spotify.com/authorize/?client_id={0}&response_type=code&redirect_uri={1}&scope={2}&state={3}";
 
       public const string SpotifyMyPlaylistsUrl = "https://api.spotify.com/v1/me/playlists";
+      public const string SpotifyUsersPlaylistsUrlWithPlaceholder = "https://api.spotify.com/v1/users/{0}/playlists";
       public const string SpotifyMeUrl = "https://api.spotify.com/v1/me";
       public const string SpotifySearchUrl = "https://api.spotify.com/v1/search?type=track&q={0}";
       public const string SpotifyTracksUrl = "https://api.spotify.com/v1/tracks?ids={0}";

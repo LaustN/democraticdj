@@ -46,4 +46,12 @@ namespace Democraticdj.Model.Spotify
     public int TrackCount { get; set; }
   }
 
+  public class CreatePlaylistRequest
+  {
+    [JsonProperty("name")]
+    public string Name { get; set; }
+
+    [JsonProperty("public")]
+    public bool Public { get; set; }
+  }
 }

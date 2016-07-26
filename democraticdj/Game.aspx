@@ -64,17 +64,17 @@
               If you log in, you can add songs to the voting ballot
             </div>
           </asp:PlaceHolder>
+          <div>
+            <div class="section-header">
+              <a href="<%# CurrentGame.SpotifyPlaylistUri %>">Launch the playlist in Spotify</a>
+            </div>
+            <iframe src="https://embed.spotify.com/?uri=<%# CurrentGame != null ? CurrentGame.SpotifyPlaylistUri : string.Empty %>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
+          </div>
           <div class="winners">
             <div class="section-header">
               Winning tracks of this game <span class="players-winner">(Your winning tracks)</span>
             </div>
             <div class="winners-list-js">None yet</div>
-          </div>
-          <div>
-            <div class="section-header">
-              Launch the playlist in Spotify
-            </div>
-            <iframe src="https://embed.spotify.com/?uri=<%# CurrentGame != null ? CurrentGame.SpotifyPlaylistUri : string.Empty %>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
           </div>
         </asp:Panel>
 

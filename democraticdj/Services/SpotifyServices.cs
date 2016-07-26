@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using Democraticdj.Model;
 using Democraticdj.Model.Spotify;
+using Newtonsoft.Json;
 
 namespace Democraticdj.Services
 {
@@ -163,6 +164,33 @@ namespace Democraticdj.Services
     }
 
 
+    public static Playlist CreatePlayList(SpotifyTokens spotifyTokens, string userId, string listName)
+    {
+      var client = GetClient();
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
+      client.Headers.Add("Content-Type", "application/json");
+
+      var request = new CreatePlaylistRequest
+      {
+        Name = listName,
+        Public = true
+      };
+      var serializedRequest = JsonConvert.SerializeObject(request);
+      var urlToCall = string.Format(Constants.SpotifyUrls.SpotifyUsersPlaylistsUrlWithPlaceholder, userId);
+
+      try
+      {
+        var result = client.UploadString(urlToCall, serializedRequest);
+        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<Playlist>(result);
+        return deserialized;
+
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+      return null;
+    }
 
     public static SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
     {

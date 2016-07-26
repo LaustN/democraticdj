@@ -196,6 +196,19 @@ namespace Democraticdj
       }
     }
 
+    public string CurrentUserAvatarUrl
+    {
+      get
+      {
+        using (var user = StateManager.CurrentUser)
+        {
+          user.ShouldAutoSave = false;
+          return user.AvatarUrl;
+        }
+        
+      }
+    }
+
     public IEnumerable<IconOption> GravatarOptions
     {
       get

@@ -195,6 +195,16 @@ input[type='text'], input[type='password'] {
   content: " - check your email, you should receive a verification link soon";
 }
 
+.iconoptions .icon-option {
+  width: 75px;
+  padding: 5px;
+  display: inline-block;
+}
+
+.iconoptions .icon-option.active {
+  background-color: #38d664;
+}
+
 .player-icon {
   float: left;
   width: 30%;

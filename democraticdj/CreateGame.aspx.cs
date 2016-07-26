@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Democraticdj.Model;
+using Democraticdj.Model.Spotify;
 using Democraticdj.Services;
 
 namespace Democraticdj
@@ -31,13 +32,24 @@ namespace Democraticdj
       }
 
       var createFromListId = Request.QueryString["createfromlistid"];
-      if (!string.IsNullOrWhiteSpace(createFromListId))
+      var createFromListName = Request.Form["ListName"];
+      if (!string.IsNullOrWhiteSpace(createFromListId) || !string.IsNullOrWhiteSpace(createFromListName))
       {
         using (var user = StateManager.CurrentUser)
         {
-          var playlist =
-            SpotifyServices.GetPlaylists(user.SpotifyAuthTokens)
+          Playlist playlist = null;
+
+          if (!string.IsNullOrWhiteSpace(createFromListId))
+          {
+            playlist = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens)
               .PlayLists.FirstOrDefault(playList => playList.Id == createFromListId);
+          }
+
+          if (!string.IsNullOrWhiteSpace(createFromListName))
+          {
+            playlist = SpotifyServices.CreatePlayList(user.SpotifyAuthTokens, user.SpotifyUser.Id, createFromListName);
+          }
+
           if (playlist != null)
           {
             var game = new Model.Game
@@ -46,7 +58,7 @@ namespace Democraticdj
               SpotifyPlaylistId = createFromListId,
               SpotifyPlaylistUri = playlist.Uri,
               UserId = user.UserId,
-              GameName = playlist.Name + " - " + (user.DisplayName ?? user.SpotifyUser.DisplayName)
+              GameName = playlist.Name
             };
             StateManager.Db.SaveGame(game);
             Response.Redirect("/Game.aspx?gameid=" + game.GameId);
@@ -54,6 +66,7 @@ namespace Democraticdj
         }
 
       }
+
       DataBind();
     }
 
