@@ -66,9 +66,8 @@
           </asp:PlaceHolder>
           <div>
             <div class="section-header">
-              <a href="<%# CurrentGame.SpotifyPlaylistUri %>">Launch the playlist in Spotify</a>
+              <a href="<%# CurrentGame.SpotifyPlaylistUri %>">Click here to launch the playlist in Spotify</a>
             </div>
-            <iframe src="https://embed.spotify.com/?uri=<%# CurrentGame != null ? CurrentGame.SpotifyPlaylistUri : string.Empty %>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
           </div>
           <div class="winners">
             <div class="section-header">

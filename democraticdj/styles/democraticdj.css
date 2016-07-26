@@ -70,10 +70,10 @@ ul, li {
 .game h3 {
   display: inline-block;
   font-weight: bold;
-  text-decoration: underline;
   padding: 5px;
   margin: 0;
   font-size: 1.2em;
+  font-style: italic;
 }
 
 .game h1, .game h2 {
@@ -85,7 +85,7 @@ ul, li {
 
 .section-header {
   font-weight: bold;
-  text-decoration: underline;
+  font-style: italic;
   padding: 20px 0 5px;
 }
 
