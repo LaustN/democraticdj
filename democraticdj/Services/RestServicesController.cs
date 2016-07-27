@@ -83,9 +83,8 @@ namespace Democraticdj.Services
     {
       using (User currentUser = StateManager.CurrentUser)
       {
-        var game = StateManager.Db.GetGame(gameid);
         GameLogic.UpdateGameState(gameid);
-
+        var game = StateManager.Db.GetGame(gameid);
         StateManager.UpdateGameTick(game);
 
         var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId);

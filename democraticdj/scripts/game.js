@@ -150,9 +150,10 @@
     $votingCountdownHolder.html("" + Game.GameState.SecondsUntillVoteCloses + " seconds untill voting closes");
     if (Game.GameState.SecondsUntillVoteCloses<0) {
       clearInterval(Game.CountDownInterval);
-      Game.RefreshGameData();
       $votingCountdownHolder.html("");
       $(".nominees-list-js").html("counting votes");
+
+      setTimeout(Game.RefreshGameData, 500);
     }
     Game.GameState.SecondsUntillVoteCloses--;
   },
@@ -165,7 +166,6 @@
       if (Game.CountDownInterval) {
         clearInterval(Game.CountDownInterval);
       }
-      Game.Countdown();
       Game.CountDownInterval = setInterval(Game.Countdown,1000);
     }
 
