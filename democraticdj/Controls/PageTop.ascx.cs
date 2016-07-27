@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -46,21 +47,11 @@ namespace Democraticdj.Controls
 
     protected string RenderSpotifyAuthUrl()
     {
-      Uri originalUri = new Uri(Request.Url.AbsoluteUri);
+      Regex portFinder=  new Regex(":\\d+");
 
-      UriBuilder uriBuilder = new UriBuilder(Request.Url.AbsoluteUri);
-      if (originalUri.Port > 80)
-      {
-        uriBuilder.Port = 443;
-      }
-      else
-      {
-        uriBuilder.Port = 80;
-      }
+      string modifiedUrl = portFinder.Replace(Request.Url.AbsoluteUri, "");
 
-      string modifiedUrl = uriBuilder.Uri.ToString();
-
-      return Democraticdj.Services.SpotifyServices.GetAuthUrl(modifiedUrl);
+      return SpotifyServices.GetAuthUrl(modifiedUrl);
     }
   }
 }
