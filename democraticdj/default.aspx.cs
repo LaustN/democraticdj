@@ -42,7 +42,7 @@ namespace Democraticdj
         }
         else
         {
-          AuthenticatedUser.Visible = false;
+          IsAuthenticatedUser.Visible = false;
         }
       }
       DataBind();

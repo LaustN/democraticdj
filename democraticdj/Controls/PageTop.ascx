@@ -22,20 +22,20 @@
           <a href="/CreateGame.aspx">Create game</a>
         </li>
         <li class="menu-line">
-          <a href="/default.aspx">About Democratic DJ</a>
+          <a href="/about.aspx">About Democratic DJ</a>
         </li>
         <asp:PlaceHolder runat="server" ID="LoggedInUser" Visible="False">
+          <asp:PlaceHolder runat="server" ID="SpotifyReauthentication" Visible="False">
+            <li class="menu-line">
+              <a href="<%# RenderSpotifyAuthUrl()%>">Spotify login</a>
+            </li>
+          </asp:PlaceHolder>
           <li class="menu-line">
             <a href="/UserManagement.aspx">Profile</a>
           </li>
           <li class="menu-line">
             <asp:Image runat="server" ID="UserAvatar" CssClass="tiny-avatar" />
           </li>
-          <asp:PlaceHolder runat="server" ID="SpotifyReauthentication" Visible="False">
-            <li class="menu-line">
-              <a href="<%# RenderSpotifyAuthUrl()%>">Spotify login</a>
-            </li>
-          </asp:PlaceHolder>
         </asp:PlaceHolder>
         <asp:PlaceHolder runat="server" ID="UnknownUser" Visible="False">
           <li class="menu-line">

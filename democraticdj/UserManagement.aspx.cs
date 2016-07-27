@@ -227,7 +227,7 @@ namespace Democraticdj
         var hashEngine = MD5.Create();
         foreach (var verifiedEmail in Emails.Where(email => email.IsVerified))
         {
-          byte[] data = hashEngine.ComputeHash(Encoding.UTF8.GetBytes(verifiedEmail.Address));
+          byte[] data = hashEngine.ComputeHash(Encoding.Default.GetBytes(verifiedEmail.Address));
           StringBuilder sBuilder = new StringBuilder();
           for (int i = 0; i < data.Length; i++)
           {
