@@ -40,7 +40,7 @@ namespace Democraticdj.Logic
             game.Nominees.Add(new Nominee
             {
               TrackId = selectedTrack,
-              NominatingPlayerIds = new List<string> {player.UserId}
+              NominatingPlayerIds = new List<string> { player.UserId }
             });
           }
         }
@@ -150,7 +150,7 @@ namespace Democraticdj.Logic
           game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
 
           //add vote to matching track
-          game.Votes.Add(new Vote {PlayerId = playerId, TrackId = trackId});
+          game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
 
           if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
           {
@@ -179,7 +179,7 @@ namespace Democraticdj.Logic
 
         if (selectingPlayer == null)
         {
-          selectingPlayer = new Player {UserId = userId};
+          selectingPlayer = new Player { UserId = userId };
           game.Players.Add(selectingPlayer);
         }
 
@@ -196,6 +196,7 @@ namespace Democraticdj.Logic
     }
 
     private static readonly object _updateGameStateLock = new object();
+    private static readonly Random LocalRandom = new Random();
     public static bool UpdateGameState(string gameId)
     {
       lock (_updateGameStateLock)
@@ -204,6 +205,29 @@ namespace Democraticdj.Logic
         if (game == null)
           return false;
 
+        long updateStartTicks = DateTime.UtcNow.Ticks;
+        int randomizedIdOfThisThread = LocalRandom.Next();
+
+        if (game.GameUpdateLock != null && (game.GameUpdateLock.UpdatingStartedTicks + 10000000 * 5) > updateStartTicks)
+        {
+          return false;
+        }
+        
+        game.GameUpdateLock = new GameUpdateLock
+        {
+          UpdatingStartedTicks = updateStartTicks,
+          UpdatingThreadRandomizedId = randomizedIdOfThisThread
+        };
+
+        StateManager.Db.SaveGame(game);
+
+        Model.Game verificationGame = StateManager.Db.GetGame(gameId);
+
+        if (verificationGame.GameUpdateLock == null ||
+            verificationGame.GameUpdateLock.UpdatingThreadRandomizedId != randomizedIdOfThisThread)
+        {
+          return false;
+        }
 
 
         bool result = false;
@@ -223,6 +247,13 @@ namespace Democraticdj.Logic
           CreateBallot(gameId);
           result = true;
 
+        }
+
+        if (result)
+        {
+          game = StateManager.Db.GetGame(gameId);
+          game.GameUpdateLock = null;
+          StateManager.Db.SaveGame(game);
         }
 
         StateManager.UpdateGameTick(game);

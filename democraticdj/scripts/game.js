@@ -148,12 +148,13 @@
     console.log(Game.GameState.SecondsUntillVoteCloses);
     var $votingCountdownHolder = $(".voting-countdown-js");
     $votingCountdownHolder.html("" + Game.GameState.SecondsUntillVoteCloses + " seconds untill voting closes");
-    Game.GameState.SecondsUntillVoteCloses--;
-    if (Game.GameState.SecondsUntillVoteCloses<1) {
+    if (Game.GameState.SecondsUntillVoteCloses<0) {
       clearInterval(Game.CountDownInterval);
       Game.RefreshGameData();
       $votingCountdownHolder.html("");
+      $(".nominees-list-js").html("counting votes");
     }
+    Game.GameState.SecondsUntillVoteCloses--;
   },
 
   RenderLists: function (data) {

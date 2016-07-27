@@ -17,6 +17,8 @@ namespace Democraticdj.Model
     public DateTime? BallotCreationTime { get; set; }
     public DateTime? MinimumVotesCastTime { get; set; }
 
+    public GameUpdateLock GameUpdateLock { get; set; }
+
     private List<Nominee> _nominees;
     public List<Nominee> Nominees
     {
