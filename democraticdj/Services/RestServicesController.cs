@@ -63,11 +63,8 @@ namespace Democraticdj.Services
       DateTime initialTime = DateTime.Now;
       while ((DateTime.Now - initialTime).TotalMinutes < 1.0)
       {
-        var game = StateManager.Db.GetGame(gameid);
-        if (GameLogic.UpdateGameState(gameid))
-        {
-          StateManager.Db.SaveGame(game);
-        }
+        GameLogic.UpdateGameState(gameid);
+
         long currentTick = StateManager.GetGameTick(gameid);
         if (currentTick != 0 && currentTick != initialTick)
         {
