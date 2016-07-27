@@ -30,27 +30,32 @@
           <h2>
             <asp:Label runat="server" ID="GameID" /></h2>
           <br />
-          <div class="leaderboard">
+          <div class="leaderboard section">
             <div class="section-header">
               Leaderboard
             </div>
-            <div class="player-scores-js" />
+            <div class="player-scores-js"></div>
           </div>
-          <div class="ballot">
+          <div class="ballot section">
             <div class="section-header">
               Voting ballot
+              <div class=" section-header legend">
+                <span class="current-vote">Your current vote (click a track to vote)</span>
+                <span class="players-selection">Your candidate (vote on some other track)</span>
+              </div>
             </div>
-            <div class="voting-countdown-js"></div>
+
+            <div class="voting-countdown voting-countdown-js"></div>
             <div class="nominees-list-js"></div>
           </div>
           <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">
-            <div class="mylist">
+            <div class="mylist section">
               <div class="section-header">
                 My candidates
               </div>
               <div class="player-list-js"></div>
             </div>
-            <div class="search">
+            <div class="search section">
               <div class="section-header">
                 Search for tracks
               </div>
@@ -64,14 +69,17 @@
               If you log in, you can add songs to the voting ballot
             </div>
           </asp:PlaceHolder>
-          <div>
+          <div class="section">
             <div class="section-header">
               <a href="<%# CurrentGame.SpotifyPlaylistUri %>">Click here to launch the playlist in Spotify</a>
             </div>
           </div>
-          <div class="winners">
+          <div class="winners section">
             <div class="section-header">
-              Winning tracks of this game <span class="players-winner">(Your winning tracks)</span>
+              Winning tracks of this game 
+              <div class=" section-header legend">
+                <span class="players-winner">Your winning tracks</span>
+              </div>
             </div>
             <div class="winners-list-js">None yet</div>
           </div>

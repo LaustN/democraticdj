@@ -83,11 +83,23 @@ ul, li {
   font-size: 1.2em;
 }
 
+.section {
+  padding: 2%;
+}
+
+.section:nth-child(even) {
+  background-color: #004d00;
+}
+
 .section-header {
   font-weight: bold;
   font-style: italic;
-  padding: 20px 0 5px;
+  padding: 5px;
+  width: 100%;
+  display: inline-block;
+  clear: both;
 }
+
 
 .track {
   display: inline-block;
@@ -115,6 +127,21 @@ ul, li {
     text-overflow: ellipsis;
   }
 
+.voting-countdown {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.legend {
+  float: right;
+}
+
+.legend span {
+    display: inline-block;
+    margin: 0 0 1% 1%;
+    padding: 1%;
+}
 
 .current-vote {
   background-color: #38d664;
@@ -125,7 +152,8 @@ ul, li {
 }
 
 .players-selection {
-  background-color: #898989;
+  background-color: #575757;
+  color: #7f7f7f;
 }
 
 img {
@@ -142,11 +170,6 @@ img {
   margin: 2%;
 }
 
-.section-header {
-  width: 100%;
-  display: block;
-  clear: both;
-}
 
 .track-name {
 }
@@ -233,9 +256,9 @@ input[type='text'], input[type='password'] {
   background-color: #38d664;
 }
 
-.existing-list a {
-  text-decoration: none;
-}
+  .existing-list a {
+    text-decoration: none;
+  }
 
 .existing-list-name {
   text-align: center;
@@ -244,10 +267,11 @@ input[type='text'], input[type='password'] {
   margin: 5px;
   display: table;
 }
+
 .existing-list-name-verticalizer {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
 
 .existing-list-image {
@@ -290,13 +314,13 @@ input[type='text'], input[type='password'] {
   }
 
   .track {
-    max-width: 300px;
+    max-width: 288px;
     clear: both;
     vertical-align: top;
   }
 
   .player {
-    max-width: 300px;
+    max-width: 288px;
     clear: both;
     vertical-align: top;
   }
@@ -305,7 +329,7 @@ input[type='text'], input[type='password'] {
 
   .existing-list {
     width: 20%;
-    margin: 2%
+    margin: 2%;
   }
   /* end "create game"*/
 }

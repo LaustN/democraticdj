@@ -103,7 +103,8 @@ namespace Democraticdj.Services
     {
       get
       {
-        return "http://" + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx";
+        
+        return (HttpContext.Current.Request.IsSecureConnection? "https://" : "http://") + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx";
       }
     }
 

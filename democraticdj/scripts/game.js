@@ -97,8 +97,10 @@
     Game.SearchSelectionTimeout = setTimeout(function () {
       Game.SearchSelectionTimeout = null;
 
-      var clickedTrackId = $(event.target).closest(".track").data("trackid");
+      var $clickedTrack = $(event.target).closest(".track");
+      var clickedTrackId = $clickedTrack.data("trackid");
 
+      $clickedTrack.addClass("spinner");
       $.ajax({
         url: "/api/select",
         contentType: "application/json",
@@ -107,11 +109,12 @@
           gameid: $(document.forms[0]).data("gameid")
         }),
         method: "POST",
-        success: Game.RefreshGameData
-      }
+        success: function () {
+            Game.RefreshGameData();
+            $clickedTrack.remove();
+          }
+        }
       );
-      $(".search-result-js").html("");
-      $(".search-box-js").val("");
 
     }, 500);
   },
