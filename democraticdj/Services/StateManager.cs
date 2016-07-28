@@ -126,15 +126,15 @@ namespace Democraticdj.Services
     public static void UpdateGameTick(Model.Game game)
     {
       long newTick = 0;
-      if (game.BallotCreationTime.HasValue && game.MinimumVotesCastTime.HasValue)
+      if (game.GameStateUpdateTime.HasValue && game.MinimumVotesCastTime.HasValue)
       {
-        newTick = (game.BallotCreationTime.Value > game.MinimumVotesCastTime.Value
-          ? game.BallotCreationTime.Value
+        newTick = (game.GameStateUpdateTime.Value > game.MinimumVotesCastTime.Value
+          ? game.GameStateUpdateTime.Value
           : game.MinimumVotesCastTime.Value).Ticks;
       }
-      else if (game.BallotCreationTime.HasValue)
+      else if (game.GameStateUpdateTime.HasValue)
       {
-        newTick = game.BallotCreationTime.Value.Ticks;
+        newTick = game.GameStateUpdateTime.Value.Ticks;
       }
       else if(game.MinimumVotesCastTime.HasValue)
       {

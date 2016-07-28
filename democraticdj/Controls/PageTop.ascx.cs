@@ -32,15 +32,6 @@ namespace Democraticdj.Controls
         {
           UnknownUser.Visible = true;
         }
-
-        if (!string.IsNullOrWhiteSpace(currentUser.AvatarUrl))
-        {
-          UserAvatar.ImageUrl = currentUser.AvatarUrl;
-        }
-        else
-        {
-          UserAvatar.ImageUrl = "/graphics/mediaplayer.png";
-        }
       }
       DataBind();
     }

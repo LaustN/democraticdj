@@ -12,12 +12,12 @@
         <a href="/">Democratic DJ
         </a>
       </li>
-      <li class="burger js-burger">burger</li>
+      <li class="burger js-burger"><img src="/graphics/burger-menu.svg"/></li>
     </ul>
 
     <div class="menu js-burger-target hidden">
       <ul class="inner-burger">
-        <li class="antiburger js-burger">antiburger</li>
+        <li class="antiburger js-burger"><img src="/graphics/cross.svg"/></li>
         <li class="menu-line" runat="server" id="CreateGameLink" visible="False">
           <a href="/CreateGame.aspx">Create game</a>
         </li>
@@ -31,10 +31,7 @@
             </li>
           </asp:PlaceHolder>
           <li class="menu-line">
-            <a href="/UserManagement.aspx">Profile</a>
-          </li>
-          <li class="menu-line">
-            <asp:Image runat="server" ID="UserAvatar" CssClass="tiny-avatar" />
+            <a href="/UserManagement.aspx">Your details</a>
           </li>
         </asp:PlaceHolder>
         <asp:PlaceHolder runat="server" ID="UnknownUser" Visible="False">

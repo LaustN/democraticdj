@@ -19,7 +19,7 @@ namespace Democraticdj.Logic
         if (game == null)
           return;
 
-        game.BallotCreationTime = DateTime.UtcNow;
+        game.GameStateUpdateTime = DateTime.UtcNow;
 
         //resetting votes when a new ballot is created
         game.MinimumVotesCastTime = null;
@@ -151,6 +151,7 @@ namespace Democraticdj.Logic
 
           //add vote to matching track
           game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
+          game.GameStateUpdateTime = DateTime.UtcNow;
 
           if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
           {
@@ -166,7 +167,7 @@ namespace Democraticdj.Logic
 
     private static readonly object _selectTrackLock = new object();
 
-    public static bool SelectTrack(string gameId, string userId, string trackId)
+    public static bool SelectTrack(string gameId, string userId, string trackId, bool unselect = false)
     {
       lock (_selectTrackLock)
       {
@@ -187,8 +188,10 @@ namespace Democraticdj.Logic
         {
           selectingPlayer.SelectedTracks.Remove(trackId);
         }
-        selectingPlayer.SelectedTracks.Insert(0, trackId);
-
+        if (!unselect)
+        {
+          selectingPlayer.SelectedTracks.Insert(0, trackId);
+        }
         StateManager.Db.SaveGame(game);
 
         return UpdateGameState(gameId);

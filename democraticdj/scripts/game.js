@@ -2,6 +2,7 @@
   SearchSelectionTimeout: null,
   SearchDelayTimeout: null,
   Search: function (event) {
+    event.preventDefault();
     if (Game.SearchDelayTimeout != null) {
       clearTimeout(Game.SearchDelayTimeout);
       Game.SearchDelayTimeout = null;
@@ -206,7 +207,12 @@
 
     //render the winners list
     Game.RenderLeaderBoard();
-
+    var $votesCastHolder = $(".votes-cast-js");
+    if (data.VotesCastCount > 0) {
+      $votesCastHolder.html("Votes cast: " + data.VotesCastCount);
+    } else {
+      $votesCastHolder.html("");
+    }
   },
 
   CurrentVote: null,
@@ -256,6 +262,73 @@
     } else {
       $winnersList.html("the winners will be rendered here");
     }
+  },
+
+  PlayerListClick: function(event) {
+    var $clickedElement = $(event.target);
+    var $clickedTrack = $clickedElement.closest(".track");
+    var clickedTrackId = $clickedTrack.data("trackid");
+
+    var $button = $clickedElement.closest(".js-button");
+    if($button.length == 1) {
+      var commandExecuting = false;
+      if ($button.hasClass("remove")) {
+        $.ajax({
+          url: "/api/unselect",
+          contentType: "application/json",
+          data: JSON.stringify({
+            trackid: clickedTrackId,
+            gameid: $(document.forms[0]).data("gameid")
+          }),
+          method: "POST",
+          success: function () {
+            Game.RefreshGameData();
+          }
+        }
+        );
+
+        commandExecuting = true;
+      }
+
+      if ($button.hasClass("top")) {
+        $.ajax({
+            url: "/api/select",
+            contentType: "application/json",
+            data: JSON.stringify({
+              trackid: clickedTrackId,
+              gameid: $(document.forms[0]).data("gameid")
+            }),
+            method: "POST",
+            success: function () {
+              Game.RefreshGameData();
+            }
+          }
+        );
+
+        commandExecuting = true;
+      }
+
+      if (commandExecuting) {
+        //add spinner
+        $clickedTrack.addClass("spinner");
+      }
+    }
+
+
+    var $buttonsHolder = $clickedTrack.find(".js-buttons");
+    if ($buttonsHolder.length == 0) {
+      $(".player-list-js").find(".js-buttons").remove();
+
+      //insert buttons control
+      $clickedTrack
+        .append("<div class='js-buttons'><div class='js-button top'><img src='/graphics/start.svg' alt='Move to the top of the list' title='Move to the top of the list' /></div><div class='js-button remove'><img src='/graphics/cross.svg' alt='Remove from the list' title='Remove from the list' /></div></div>");
+    } else {
+      $(".player-list-js").find(".js-buttons").remove();
+
+      //remove buttons holder after each click
+      $buttonsHolder.remove();
+    }
+
   },
 
   Players: {},
@@ -316,12 +389,21 @@
     });
     Game.RenderLeaderBoard();
   },
+  PreventPostback: function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  },
 
   Init: function () {
 
     $(".search-box-js").keyup(Game.Search);
+    $(".search-box-js").keydown(Game.PreventPostback);
     $(".search-result-js").click(Game.SearchResultSelection);
     $(".nominees-list-js").click(Game.PlaceVote);
+    $(".player-list-js").click(Game.PlayerListClick);
 
     Game.RefreshGameData();
     Game.AutoRefresh();

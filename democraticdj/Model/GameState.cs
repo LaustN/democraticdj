@@ -10,6 +10,8 @@ namespace Democraticdj.Model
     public string CurrentVote { get; set; }
     public string PlayersSelection { get; set; }
 
+    public int VotesCastCount;
+
     private List<string> _playersWinners;
     public List<string> PlayersWinners
     {

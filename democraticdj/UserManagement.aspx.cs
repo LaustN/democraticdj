@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Democraticdj.Model;
 using Democraticdj.Services;
-
-using Reachmail.Easysmtp;
-using Reachmail.Easysmtp.Post.Request;
 
 namespace Democraticdj
 {
@@ -152,6 +145,7 @@ namespace Democraticdj
           var newPassword = Request.Form["newPassword"];
           if (!string.IsNullOrWhiteSpace(newUserEmail) && !string.IsNullOrWhiteSpace(newUserName) && !string.IsNullOrWhiteSpace(newPassword))
           {
+            newUserEmail = newUserEmail.ToLower();
             var existingUser =
               StateManager.Db.FindExistingUser(newUserEmail) ??
               StateManager.Db.FindExistingUser(newUserName);
@@ -164,6 +158,9 @@ namespace Democraticdj
               user.UserName = newUserName;
               user.Password = newPassword;
               user.Emails.Add(new UserEmail { Address = newUserEmail });
+
+              RestServicesController controller = new RestServicesController();
+              controller.VerifyEmail(new VerifyEmailRequest {Email = newUserEmail});
             }
           }
         }

@@ -125,7 +125,7 @@
           <asp:Repeater runat="server" ID="ExistingGamesRepeater" ItemType="Democraticdj.Model.Game" DataSource="<%# ExistingGames %>">
             <ItemTemplate>
               <div>
-                <a href="Game.aspx?gameid=<%# Item.GameId %>">
+                <a class="existing-game" href="Game.aspx?gameid=<%# Item.GameId %>">
                   <%# Item.GameName %> - Game ID: <%# Item.GameId %>
                 </a>
               </div>

@@ -97,9 +97,13 @@
     <Content Include="Controls\HeaderContent.ascx" />
     <Content Include="Controls\PageTop.ascx" />
     <Content Include="Game.aspx" />
+    <Content Include="graphics\burger-menu.svg" />
+    <Content Include="graphics\cross.svg" />
+    <Content Include="graphics\down.svg" />
     <Content Include="graphics\mediaplayer.png" />
     <Content Include="graphics\spinner.gif" />
     <Content Include="graphics\spinner.svg" />
+    <Content Include="graphics\start.svg" />
     <Content Include="scripts\userManagement.js" />
     <Content Include="scripts\game.js" />
     <Content Include="scripts\PageTop.js" />

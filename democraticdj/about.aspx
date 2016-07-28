@@ -27,6 +27,14 @@
       <p>You also need at least 3 participants. Democratic DJ will not determine a winner until 3 votes have been cast</p>
     </div>
     <div class="section">
+      <div class="section-header">How do I play this game?</div>
+        Once logged in, you create a list of candidates for the playlist. <br />
+        Your list is created by searching Spotify, then selecting from the search result. <br />
+        Each round, the topmost item on your list will be moved to the candidates list.<br />
+        The candidate that receives the most votes wins, and is moved to the playlist.<br />
+        The other candidates are moved back to their respective player's lists
+    </div>
+    <div class="section">
       <div class="section-header">Where do I submit feedback?</div>
         You can tweet <a href="https://twitter.com/NLaust" target="_blank">@NLaust</a>, since he (I) made this. Any feedback appreciated, especially the constructive kind.
     </div>

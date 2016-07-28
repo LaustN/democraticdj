@@ -95,12 +95,14 @@ namespace Democraticdj.Services
           Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList(),
           PlayersWinners = game.PreviousWinners.Where(previousWinner => previousWinner.SelectingPlayerIds.Contains(currentUser.UserId)).Select(winner => winner.TrackId).ToList(),
           Scores = game.Players
+            .Where(aPlayer =>aPlayer.Points>0)
             .OrderBy(aPlayer => -aPlayer.Points)
             .Select(aPlayer=> new PlayerScore
             {
               PlayerId = aPlayer.UserId,Points = aPlayer.Points
             })
-            .ToList()
+            .ToList(),
+            VotesCastCount = game.Votes.Count
         };
         var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
 
@@ -142,13 +144,30 @@ namespace Democraticdj.Services
 
     [HttpPost]
     [Route("select")]
-    public void SelectFromSearchResult([FromBody]SelectRequest request)
+    public void SelectTrack([FromBody]SelectRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
       bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
         tickShouldBeUpdated = GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId);
+      }
+
+      if (tickShouldBeUpdated)
+      {
+        StateManager.UpdateGameTick(game);
+      }
+    }
+
+    [HttpPost]
+    [Route("unselect")]
+    public void UnselectTrack([FromBody]SelectRequest request)
+    {
+      var game = StateManager.Db.GetGame(request.GameId);
+      bool tickShouldBeUpdated;
+      using (var user = StateManager.CurrentUser)
+      {
+        tickShouldBeUpdated = GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId, true);
       }
 
       if (tickShouldBeUpdated)

@@ -31,10 +31,12 @@ ul, li {
 
     .page-top ul li.burger {
       float: right;
+      width: 32px;
     }
 
     .page-top ul li.antiburger {
-      width: 100%;
+      float: right;
+      width: 32px;
       text-align: right;
     }
 
@@ -49,6 +51,7 @@ ul, li {
   position: fixed;
   top: 0;
   right: 0;
+  z-index: 5000;
 }
 
   .page-top .menu.hidden {
@@ -57,7 +60,7 @@ ul, li {
 
 .page-top .inner-burger {
   width: 65vw;
-  background-color: #334200;
+  background-color: #38d664;
 }
 
 .page-top .menu-line {
@@ -87,9 +90,9 @@ ul, li {
   padding: 2%;
 }
 
-.section:nth-child(even) {
-  background-color: #004d00;
-}
+  .section:nth-child(even) {
+    background-color: #004d00;
+  }
 
 .section-header {
   font-weight: bold;
@@ -117,6 +120,23 @@ ul, li {
     left: 0;
   }
 
+  .track .js-buttons {
+    width: 50%;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: #38d664;
+    border-radius: 10px 10px;
+  }
+
+    .track .js-buttons .js-button {
+      width: 40%;
+      margin: 5%;
+      display: inline-block;
+    }
+
   .track .track-album,
   .track .track-artist,
   .track .track-name {
@@ -127,7 +147,7 @@ ul, li {
     text-overflow: ellipsis;
   }
 
-.voting-countdown {
+.voting-countdown, .votes-cast {
   text-align: center;
   font-size: 1.5em;
   font-weight: bold;
@@ -137,18 +157,18 @@ ul, li {
   float: right;
 }
 
-.legend span {
+  .legend span {
     display: inline-block;
     margin: 0 0 1% 1%;
     padding: 1%;
-}
+  }
 
 .current-vote {
   background-color: #38d664;
 }
 
 .players-winner {
-  background-color: #405200;
+  background-color: #38d664;
 }
 
 .players-selection {
@@ -199,7 +219,7 @@ input[type='text'], input[type='password'] {
 
 .fake-button {
   display: inline-block;
-  background-color: #525752;
+  background-color: #38d664;
   padding: 0.3em;
   margin: 5px;
   border-radius: 0.3em;
@@ -226,6 +246,14 @@ input[type='text'], input[type='password'] {
   .iconoptions .icon-option.active {
     background-color: #38d664;
   }
+
+.existing-games .existing-game {
+  margin: 7px;
+  padding: 5px;
+  font-weight: bold;
+  background-color: #38d664;
+  display: inline-block;
+}
 
 .player-icon {
   float: left;

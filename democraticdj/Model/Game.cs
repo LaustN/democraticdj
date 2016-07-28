@@ -14,7 +14,7 @@ namespace Democraticdj.Model
     public string SpotifyPlaylistUri;
     public string GameId;
     public string GameName;
-    public DateTime? BallotCreationTime { get; set; }
+    public DateTime? GameStateUpdateTime { get; set; }
     public DateTime? MinimumVotesCastTime { get; set; }
 
     public GameUpdateLock GameUpdateLock { get; set; }
