@@ -110,7 +110,6 @@
     setTimeout(function() {
         $clickedNominee.css("height", "0");
       },1);
-
     var $clickedButton = $clickedElement.closest(".nominee-button");
 
     if ($clickedButton.length == 1) {

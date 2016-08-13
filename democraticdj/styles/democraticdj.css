@@ -115,6 +115,7 @@ ul, li {
   margin: 0 5% 0 5%;
   transition: height 0.5s;
   overflow: hidden;
+  float: left;
 }
 
   .nominee .nominee-button {
