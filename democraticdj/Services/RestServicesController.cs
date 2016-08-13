@@ -20,40 +20,6 @@ namespace Democraticdj.Services
   [RoutePrefix("api")]
   public class RestServicesController : ApiController
   {
-    private static bool _flag = false;
-
-    [HttpGet]
-    [Route("")]
-    public string Get()
-    {
-      DateTime start = DateTime.Now;
-      while (!_flag)
-      {
-        Thread.Sleep(20);
-      }
-      _flag = false;
-      DateTime stop = DateTime.Now;
-      return "gotten " + (stop - start);
-    }
-
-    [HttpPost]
-    [Route("")]
-    //public string Post([FromBody]string value)
-    public string Post()
-    {
-      using (Session session = StateManager.CurrentSession)
-      {
-        System.Diagnostics.Debug.WriteLine("Session id was " + session.SessionId);
-      }
-
-      using (User currentUser = StateManager.CurrentUser)
-      {
-        System.Diagnostics.Debug.WriteLine("Spotify tokes was " + Newtonsoft.Json.JsonConvert.SerializeObject(currentUser.SpotifyAuthTokens));
-      }
-
-      _flag = true;
-      return "posted";
-    }
 
     [HttpGet]
     [Route("game/isupdated")]
@@ -63,8 +29,6 @@ namespace Democraticdj.Services
       DateTime initialTime = DateTime.Now;
       while ((DateTime.Now - initialTime).TotalMinutes < 1.0)
       {
-        GameLogic.UpdateGameState(gameid);
-
         long currentTick = StateManager.GetGameTick(gameid);
         if (currentTick != 0 && currentTick != initialTick)
         {
@@ -72,8 +36,6 @@ namespace Democraticdj.Services
         }
         Thread.Sleep(1000);
       }
-
-
       return false;
     }
 
@@ -83,46 +45,49 @@ namespace Democraticdj.Services
     {
       using (User currentUser = StateManager.CurrentUser)
       {
-        GameLogic.UpdateGameState(gameid);
         var game = StateManager.Db.GetGame(gameid);
         StateManager.UpdateGameTick(game);
 
         var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId);
+
+        var winningTracks = game.Nominees
+          .Where(nominee => (nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count) > nominee.DownVotes.Count).ToArray();
+
+        var scoresDictionary = new Dictionary<string, PlayerScore>();
+        foreach (Nominee winningTrack in winningTracks)
+        {
+          foreach (var nominatingPlayerId in winningTrack.NominatingPlayerIds)
+          {
+            if (scoresDictionary.ContainsKey(nominatingPlayerId))
+            {
+              scoresDictionary[nominatingPlayerId].Points++;
+            }
+            else
+            {
+              scoresDictionary.Add(nominatingPlayerId, new PlayerScore { PlayerId = nominatingPlayerId, Points = 1 });
+            }
+          }
+        }
+
+        var otherPlayersNominees = game.Nominees.Where(nominee => !nominee.UpVotes.Contains(player.UserId) && !nominee.DownVotes.Contains(player.UserId) && !nominee.NominatingPlayerIds.Contains(player.UserId)).ToList();
+        var thisPlayersNominees = game.Nominees.Where(nominee => nominee.NominatingPlayerIds.Contains(player.UserId) ).ToList();
+
         var gameState = new GameState
         {
-          Nominees = game.Nominees.Select(nominee => nominee.TrackId).ToList(),
-          PlayerSelectionList = player != null ? player.SelectedTracks.ToList() : null,
-          Winners = game.PreviousWinners.Select(winner => winner.TrackId).ToList(),
-          PlayersWinners = game.PreviousWinners.Where(previousWinner => previousWinner.SelectingPlayerIds.Contains(currentUser.UserId)).Select(winner => winner.TrackId).ToList(),
-          Scores = game.Players
-            .Where(aPlayer =>aPlayer.Points>0)
-            .OrderBy(aPlayer => -aPlayer.Points)
-            .Select(aPlayer=> new PlayerScore
-            {
-              PlayerId = aPlayer.UserId,Points = aPlayer.Points
-            })
-            .ToList(),
-            VotesCastCount = game.Votes.Count
+          PlayerSelectionList = player != null ? thisPlayersNominees.Select(nominee=>nominee.TrackId).ToList() : null,
+          Winners = winningTracks.Select(winner => winner.TrackId).ToList(),
+          PlayersWinners = winningTracks.Where(nomineee => nomineee.NominatingPlayerIds.Contains(player.UserId)).Select(winner => winner.TrackId).ToList(),
+          Scores = scoresDictionary.Values.OrderByDescending(score=>score.Points).ToList(),
         };
-        var playersVote = game.Votes.FirstOrDefault(vote => vote.PlayerId == currentUser.UserId);
 
-        var playerSelectedNominee = game.Nominees.FirstOrDefault(nominee => nominee.NominatingPlayerIds.Contains(currentUser.UserId));
-
-        if (playerSelectedNominee != null)
+        Random random = new Random();
+        while (otherPlayersNominees.Count>0)
         {
-          gameState.PlayersSelection = playerSelectedNominee.TrackId;
+          int selectedIndex = random.Next(0, otherPlayersNominees.Count);
+          gameState.Nominees.Add(otherPlayersNominees[selectedIndex].TrackId);
+          otherPlayersNominees.RemoveAt(selectedIndex);
         }
-
-        if (playersVote != null)
-        {
-          gameState.CurrentVote = playersVote.TrackId;
-        }
-
-        gameState.SecondsUntillVoteCloses = game.MinimumVotesCastTime.HasValue
-          ? (int)(game.MinimumVotesCastTime.Value.AddSeconds(game.VoteClosingDelay) - DateTime.UtcNow).TotalSeconds
-          : -1;
         return gameState;
-
       }
     }
 
@@ -147,16 +112,11 @@ namespace Democraticdj.Services
     public void SelectTrack([FromBody]SelectRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
-      bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        tickShouldBeUpdated = GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId);
+        GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId);
       }
-
-      if (tickShouldBeUpdated)
-      {
-        StateManager.UpdateGameTick(game);
-      }
+      StateManager.UpdateGameTick(game);
     }
 
     [HttpPost]
@@ -164,27 +124,22 @@ namespace Democraticdj.Services
     public void UnselectTrack([FromBody]SelectRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
-      bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        tickShouldBeUpdated = GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId, true);
+        GameLogic.SelectTrack(request.GameId, user.UserId, request.TrackId, true);
       }
 
-      if (tickShouldBeUpdated)
-      {
-        StateManager.UpdateGameTick(game);
-      }
+      StateManager.UpdateGameTick(game);
     }
 
     [HttpPost]
     [Route("vote")]
-    public void PlaceVote([FromBody]SelectRequest request)
+    public void PlaceVote([FromBody]VoteRequest request)
     {
       var game = StateManager.Db.GetGame(request.GameId);
-      bool tickShouldBeUpdated;
       using (var user = StateManager.CurrentUser)
       {
-        tickShouldBeUpdated = GameLogic.PlaceVote(request.GameId, user.UserId, request.TrackId);
+        GameLogic.PlaceVote(request.GameId, user.UserId, request.TrackId, request.IsUpVote);
       }
       StateManager.UpdateGameTick(game);
     }
@@ -210,7 +165,7 @@ namespace Democraticdj.Services
         {
           publicUser.Name = user.UserName;
         }
-        else if(user.SpotifyUser != null && !string.IsNullOrWhiteSpace(user.SpotifyUser.DisplayName))
+        else if (user.SpotifyUser != null && !string.IsNullOrWhiteSpace(user.SpotifyUser.DisplayName))
         {
           publicUser.Name = user.SpotifyUser.DisplayName;
         }
@@ -232,9 +187,9 @@ namespace Democraticdj.Services
         {
           string newVerificationId = Guid.NewGuid().ToString("N");
           userEmail.PendingVerificationId = newVerificationId;
-          
 
-          string handlerUrl =  "http://" + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx?emailverification=" + newVerificationId;
+
+          string handlerUrl = "http://" + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx?emailverification=" + newVerificationId;
 
           string mailBodyTemplate = @"
 <html>
@@ -269,6 +224,18 @@ Hi {0},<br/>
 
     [JsonProperty("trackid")]
     public string TrackId { get; set; }
+  }
+
+  public class VoteRequest
+  {
+    [JsonProperty("gameid")]
+    public string GameId { get; set; }
+
+    [JsonProperty("trackid")]
+    public string TrackId { get; set; }
+
+    [JsonProperty("isupvote")]
+    public bool IsUpVote { get; set; }
   }
 
   public class SearchRequest

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Democraticdj.Model;
 using Democraticdj.Services;
+using User = Reachmail.Administration.Users.Current.Get.Response.User;
 
 namespace Democraticdj.Logic
 {
@@ -11,123 +12,7 @@ namespace Democraticdj.Logic
   {
     public static object GameLogicLock = new object();
 
-    public static void CreateBallot(string gameId)
-    {
-      lock (GameLogicLock)
-      {
-        Model.Game game = StateManager.Db.GetGame(gameId);
-        if (game == null)
-          return;
-
-        game.GameStateUpdateTime = DateTime.UtcNow;
-
-        //resetting votes when a new ballot is created
-        game.MinimumVotesCastTime = null;
-        game.Votes = new List<Vote>();
-
-        game.Nominees = new List<Nominee>();
-        foreach (Player player in game.Players.Where(player => player.SelectedTracks.Any()))
-        {
-          var selectedTrack = player.SelectedTracks[0];
-          player.SelectedTracks.Remove(selectedTrack);
-          Nominee nominee = game.Nominees.FirstOrDefault(existingNominee => existingNominee.TrackId == selectedTrack);
-          if (nominee != null)
-          {
-            nominee.NominatingPlayerIds.Add(player.UserId);
-          }
-          else
-          {
-            game.Nominees.Add(new Nominee
-            {
-              TrackId = selectedTrack,
-              NominatingPlayerIds = new List<string> { player.UserId }
-            });
-          }
-        }
-
-        Random random = new Random();
-        for (int shuffleCount = 0; shuffleCount < game.Nominees.Count; shuffleCount++)
-        {
-          int pickedIndex = random.Next(game.Nominees.Count);
-          var pickedNominee = game.Nominees[pickedIndex];
-          game.Nominees.RemoveAt(pickedIndex);
-          game.Nominees.Add(pickedNominee);
-        }
-        StateManager.Db.SaveGame(game);
-      }
-    }
-
-    public static void ResolveRound(string gameId)
-    {
-      lock (GameLogicLock)
-      {
-        Model.Game game = StateManager.Db.GetGame(gameId);
-        if (game == null)
-          return;
-
-        //find the track with the most votes
-        Dictionary<string, List<string>> votesTally = game.Nominees.ToDictionary(nominee => nominee.TrackId,
-          nominee => new List<string>(nominee.NominatingPlayerIds));
-
-        foreach (Vote vote in game.Votes)
-        {
-          votesTally[vote.TrackId].Add(vote.PlayerId);
-        }
-
-        string bestTrackId = string.Empty;
-        int bestTrackVotes = 0;
-        foreach (var trackId in votesTally.Keys)
-        {
-          if (votesTally[trackId].Count > bestTrackVotes)
-          {
-            bestTrackVotes = votesTally[trackId].Count;
-            bestTrackId = trackId;
-          }
-        }
-
-        //add track to game history with playerIds + votes
-        var winner = new Winner
-        {
-          SelectingPlayerIds = game.Nominees.First(nominee => nominee.TrackId == bestTrackId).NominatingPlayerIds,
-          TrackId = bestTrackId
-        };
-        game.PreviousWinners.Add(winner);
-
-        //add that track to the playlist
-        SpotifyServices.AppendTrackToPlaylist(game, bestTrackId);
-
-        //add all other tracks back onto the end of their nominators lists
-        foreach (Nominee nominee in game.Nominees)
-        {
-          if (nominee.TrackId == bestTrackId)
-            continue;
-          foreach (var nominatingPlayerId in nominee.NominatingPlayerIds)
-          {
-            game.Players.First(player => player.UserId == nominatingPlayerId).SelectedTracks.Add(nominee.TrackId);
-          }
-        }
-
-        //award points for selected tracks
-        foreach (var nominee in game.Nominees)
-        {
-          var currentNominee = nominee;
-
-          var playersThatNominatedThisNominee =
-            game.Players.Where(player => currentNominee.NominatingPlayerIds.Contains(player.UserId));
-
-          foreach (Player player in playersThatNominatedThisNominee)
-          {
-            player.Points += votesTally[nominee.TrackId].Count;
-          }
-        }
-
-        game.Nominees = null;
-        game.Votes = null;
-        StateManager.Db.SaveGame(game);
-      }
-    }
-
-    public static bool PlaceVote(string gameId, string playerId, string trackId)
+    public static bool PlaceVote(string gameId, string playerId, string trackId, bool isUpVote)
     {
       lock (GameLogicLock)
       {
@@ -144,21 +29,17 @@ namespace Democraticdj.Logic
           {
             return false;
           }
-          int oldVoteCount = game.Votes.Count;
-
-          //remove previous votes by same player, if any
-          game.Votes.RemoveAll(vote => vote.PlayerId == playerId);
-
-          //add vote to matching track
-          game.Votes.Add(new Vote { PlayerId = playerId, TrackId = trackId });
+          if (isUpVote && !trackToUpvote.UpVotes.Contains(playerId))
+          {
+            trackToUpvote.UpVotes.Add(playerId);
+          }
+          if (!isUpVote && !trackToUpvote.DownVotes.Contains(playerId))
+          {
+            trackToUpvote.DownVotes.Add(playerId);
+          }
           game.GameStateUpdateTime = DateTime.UtcNow;
 
-          if (oldVoteCount < game.MinimumVotes && game.Votes.Count == game.MinimumVotes)
-          {
-            game.MinimumVotesCastTime = DateTime.UtcNow;
-          }
           StateManager.Db.SaveGame(game);
-          return UpdateGameState(gameId);
         }
 
         return false;
@@ -166,14 +47,13 @@ namespace Democraticdj.Logic
     }
 
     private static readonly object _selectTrackLock = new object();
-
-    public static bool SelectTrack(string gameId, string userId, string trackId, bool unselect = false)
+    public static void SelectTrack(string gameId, string userId, string trackId, bool unselect = false)
     {
       lock (_selectTrackLock)
       {
         Model.Game game = StateManager.Db.GetGame(gameId);
         if (game == null)
-          return false;
+          return;
 
 
         Player selectingPlayer = game.Players.FirstOrDefault(player => player.UserId == userId);
@@ -184,85 +64,52 @@ namespace Democraticdj.Logic
           game.Players.Add(selectingPlayer);
         }
 
-        if (selectingPlayer.SelectedTracks.Contains(trackId))
-        {
-          selectingPlayer.SelectedTracks.Remove(trackId);
-        }
-        if (!unselect)
-        {
-          selectingPlayer.SelectedTracks.Insert(0, trackId);
-        }
-        StateManager.Db.SaveGame(game);
+        var existingNominee = game.Nominees.FirstOrDefault(nominee => nominee.TrackId == trackId);
 
-        return UpdateGameState(gameId);
+        if (existingNominee != null)
+        {
+          if (unselect)
+          {
+            existingNominee.NominatingPlayerIds.Remove(userId);
+            if (existingNominee.NominatingPlayerIds.Count == 0)
+            {
+              if (existingNominee.UpVotes.Count > 0)
+              {
+                existingNominee.NominatingPlayerIds.AddRange(existingNominee.UpVotes);
+                existingNominee.UpVotes = null;
+              }
+              else
+              {
+                game.Nominees.Remove(existingNominee);
+              }
+            }
+          }
+          else
+          {
+            //selecting only allowed for tracks not currently voted on
+            if (!existingNominee.UpVotes.Contains(userId) && !existingNominee.DownVotes.Contains(userId))
+            {
+              existingNominee.NominatingPlayerIds.Add(userId);
+            }
+          }
+        }
+        else
+        {
+          if (!unselect)
+          {
+            var newNominee = new Nominee { TrackId = trackId };
+            newNominee.NominatingPlayerIds.Add(userId);
+            game.Nominees.Add(newNominee);
+          }
+        }
+
+        StateManager.Db.SaveGame(game);
       }
     }
 
     private static readonly object _updateGameStateLock = new object();
     private static readonly Random LocalRandom = new Random();
-    public static bool UpdateGameState(string gameId)
-    {
-      lock (_updateGameStateLock)
-      {
-        Model.Game game = StateManager.Db.GetGame(gameId);
-        if (game == null)
-          return false;
 
-        long updateStartTicks = DateTime.UtcNow.Ticks;
-        int randomizedIdOfThisThread = LocalRandom.Next();
-
-        if (game.GameUpdateLock != null && (game.GameUpdateLock.UpdatingStartedTicks + 10000000 * 5) > updateStartTicks)
-        {
-          return false;
-        }
-        
-        game.GameUpdateLock = new GameUpdateLock
-        {
-          UpdatingStartedTicks = updateStartTicks,
-          UpdatingThreadRandomizedId = randomizedIdOfThisThread
-        };
-
-        StateManager.Db.SaveGame(game);
-
-        Model.Game verificationGame = StateManager.Db.GetGame(gameId);
-
-        if (verificationGame.GameUpdateLock == null ||
-            verificationGame.GameUpdateLock.UpdatingThreadRandomizedId != randomizedIdOfThisThread)
-        {
-          return false;
-        }
-
-
-        bool result = false;
-        //if enough votes have been cast and enough time has passed, resolve winner
-        if (game.Votes.Count >= game.MinimumVotes
-            && game.MinimumVotesCastTime.HasValue
-            && (DateTime.UtcNow - game.MinimumVotesCastTime.Value).TotalSeconds >= game.VoteClosingDelay
-          )
-        {
-          ResolveRound(gameId);
-          result = true;
-        }
-
-        //if no ballot exists and 2 tracks can be chosen from, make a new ballot
-        if (game.Players.Count(player => player.SelectedTracks.Any()) >= 2 && game.Nominees.Count == 0)
-        {
-          CreateBallot(gameId);
-          result = true;
-
-        }
-
-        if (result)
-        {
-          game = StateManager.Db.GetGame(gameId);
-          game.GameUpdateLock = null;
-          StateManager.Db.SaveGame(game);
-        }
-
-        StateManager.UpdateGameTick(game);
-        return result;
-      }
-    }
 
   }
 }

@@ -159,7 +159,6 @@
     </Compile>
     <Compile Include="IconOption.cs" />
     <Compile Include="Logic\GameLogic.cs" />
-    <Compile Include="Model\GameUpdateLock.cs" />
     <Compile Include="Model\GameUpdateTick.cs" />
     <Compile Include="Model\Nominee.cs" />
     <Compile Include="Model\Player.cs" />

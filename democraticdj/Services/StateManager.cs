@@ -120,30 +120,16 @@ namespace Democraticdj.Services
       if (FakeGameTicks.ContainsKey(gameId))
         return FakeGameTicks[gameId];
       return 0;
-
-      //return Db.GetGameUpdateTick(gameId);
     }
     public static void UpdateGameTick(Model.Game game)
     {
       long newTick = 0;
-      if (game.GameStateUpdateTime.HasValue && game.MinimumVotesCastTime.HasValue)
-      {
-        newTick = (game.GameStateUpdateTime.Value > game.MinimumVotesCastTime.Value
-          ? game.GameStateUpdateTime.Value
-          : game.MinimumVotesCastTime.Value).Ticks;
-      }
-      else if (game.GameStateUpdateTime.HasValue)
+      if (game.GameStateUpdateTime.HasValue)
       {
         newTick = game.GameStateUpdateTime.Value.Ticks;
       }
-      else if(game.MinimumVotesCastTime.HasValue)
-      {
-        newTick = game.MinimumVotesCastTime.Value.Ticks;
-      }
-
+      
       FakeGameTicks[game.GameId] = newTick;
-      return;
-      //Db.SetGameUpdateTick(game.GameId,newTick);
     }
   }
 }

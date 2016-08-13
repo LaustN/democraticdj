@@ -38,8 +38,6 @@ namespace Democraticdj.Model
       set { _playerSelectionList = value; }
     }
 
-    public int SecondsUntillVoteCloses;
-
     public List<PlayerScore> Scores
     {
       get { return _scores??(_scores = new List<PlayerScore>()); }

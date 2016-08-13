@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Democraticdj.Model;
 using Democraticdj.Services;
 
@@ -25,20 +21,19 @@ namespace Democraticdj
 
         if (CurrentGame != null)
         {
-          this.GameFoundPlaceholder.Visible = true;
+          GameFoundPlaceholder.Visible = true;
           MainForm.Attributes.Add("data-gameid", gameid);
           GameTitle.Text = CurrentGame.GameName;
           GameID.Text = CurrentGame.GameId;
 
           if (!CurrentGame.Players.Any(player => player.UserId == currentUser.UserId))
           {
-            CurrentGame.Players.Add(new Player{Points = 0,UserId = currentUser.UserId});
+            CurrentGame.Players.Add(new Player{UserId = currentUser.UserId});
           }
-
         }
         else
         {
-          this.GameNotKnownPlaceholder.Visible = true;
+          GameNotKnownPlaceholder.Visible = true;
         }
       }
 
