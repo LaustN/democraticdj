@@ -37,14 +37,8 @@
           </div>
           <div class="ballot section">
             <div class="section-header">
-              Current playlist candidates (one candidate from each contributing player)
-              <div class=" section-header legend">
-                <span class="current-vote">Your current vote (click a track to vote)</span>
-                <span class="players-selection">Your candidate (vote on some other track)</span>
-              </div>
+              Like this track?
             </div>
-            <div class="votes-cast votes-cast-js"></div>
-            <div class="voting-countdown voting-countdown-js"></div>
             <div class="nominees-list-js"></div>
           </div>
           <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">

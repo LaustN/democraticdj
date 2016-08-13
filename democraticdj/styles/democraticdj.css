@@ -103,6 +103,43 @@ ul, li {
   clear: both;
 }
 
+.nominees-list-js {
+  overflow: hidden;
+  height: 0;
+  padding-bottom: 54%;
+}
+
+.nominee {
+  display: inline-block;
+  width: 90%;
+  margin: 0 5% 0 5%;
+  transition: height 0.5s;
+  overflow: hidden;
+}
+
+  .nominee .nominee-button {
+    display: inline-block;
+    vertical-align: top;
+    font-weight: bold;
+    font-size: 7vw;
+    width: 30%;
+    text-align: center;
+    padding-top: 12vw;
+    padding-bottom: 1em;
+    cursor: pointer;
+  }
+
+  .nominee .nominee-image {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .nominee .nominee-label {
+    text-align: center;
+    margin: 2%;
+    font-size: 3vw;
+  }
 
 .track {
   display: inline-block;

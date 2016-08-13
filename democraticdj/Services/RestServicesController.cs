@@ -78,15 +78,9 @@ namespace Democraticdj.Services
           Winners = winningTracks.Select(winner => winner.TrackId).ToList(),
           PlayersWinners = winningTracks.Where(nomineee => nomineee.NominatingPlayerIds.Contains(player.UserId)).Select(winner => winner.TrackId).ToList(),
           Scores = scoresDictionary.Values.OrderByDescending(score=>score.Points).ToList(),
+          Nominees = otherPlayersNominees.Select(nominee=>nominee.TrackId).ToList()
         };
 
-        Random random = new Random();
-        while (otherPlayersNominees.Count>0)
-        {
-          int selectedIndex = random.Next(0, otherPlayersNominees.Count);
-          gameState.Nominees.Add(otherPlayersNominees[selectedIndex].TrackId);
-          otherPlayersNominees.RemoveAt(selectedIndex);
-        }
         return gameState;
       }
     }

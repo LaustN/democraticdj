@@ -70,23 +70,65 @@
     return "";
   },
 
-  PlaceVote: function (event) {
-    var $clickedTrack = $(event.target).closest(".track");
-    var clickedTrackId = $clickedTrack.data("trackid");
-    $clickedTrack.addClass("spinner");
+  RenderNominees: function (nominees) {
+    if (nominees) {
+      var renderBuffer = [];
+      $.each(nominees, function (index, nominee) {
+        renderBuffer.push("<div class=\"nominee\" data-nomineeid=\"" + nominee.id + "\">");
 
-    $.ajax({
-      url: "/api/vote",
-      contentType: "application/json",
-      data: JSON.stringify({
-        trackid: clickedTrackId,
-        gameid: $(document.forms[0]).data("gameid")
-      }),
-      method: "POST",
-      success: Game.RefreshGameData
+        renderBuffer.push("<div class=\"nominee-button js-no\" >No</div>");
+
+        if (nominee.album && nominee.album.images && nominee.album.images.length > 0) {
+          renderBuffer.push("<div class=\"nominee-image\"><img src=\"" + nominee.album.images[0].url + "\"></div>");
+        }
+        renderBuffer.push("<div class=\"nominee-button js-yes\" >Yes</div>");
+
+        renderBuffer.push("<div class=\"nominee-label\">" + nominee.name + "</div>");
+
+        if (nominee.album) {
+          renderBuffer.push("<div class=\"nominee-label\">" + nominee.album.name + "</div>");
+        }
+
+        if (nominee.artists) {
+          renderBuffer.push("<div class=\"nominee-label\">" + nominee.artists[0].name + "</div>");
+        }
+        renderBuffer.push("</div>");
+
+      });
+
+      return renderBuffer.join("");
     }
-    );
+    return "";
+  },
 
+  PlaceVote: function (event) {
+    var $clickedElement = $(event.target);
+    var $clickedNominee = $clickedElement.closest(".nominee");
+    var clickedNomineeId = $clickedNominee.data("nomineeid");
+
+    $clickedNominee.css("height", $clickedNominee.height() + "px");
+    setTimeout(function() {
+        $clickedNominee.css("height", "0");
+      },1);
+
+    var $clickedButton = $clickedElement.closest(".nominee-button");
+
+    if ($clickedButton.length == 1) {
+      var isUpvote = $clickedButton.hasClass("js-yes");
+
+      $.ajax({
+          url: "/api/vote",
+          contentType: "application/json",
+          data: JSON.stringify({
+            trackid: clickedNomineeId,
+            gameid: $(document.forms[0]).data("gameid"),
+            isupvote: isUpvote
+          }),
+          method: "POST",
+          success: Game.RefreshGameData
+        }
+      );
+    }
   },
 
   SearchResultSelection: function (event) {
@@ -144,31 +186,9 @@
 
   GameState: {},
 
-  CountDownInterval: 0,
-  Countdown : function() {
-    console.log(Game.GameState.SecondsUntillVoteCloses);
-    var $votingCountdownHolder = $(".voting-countdown-js");
-    $votingCountdownHolder.html("" + Game.GameState.SecondsUntillVoteCloses + " seconds untill voting closes");
-    if (Game.GameState.SecondsUntillVoteCloses<0) {
-      clearInterval(Game.CountDownInterval);
-      $votingCountdownHolder.html("");
-      $(".nominees-list-js").html("counting votes");
-
-      setTimeout(Game.RefreshGameData, 500);
-    }
-    Game.GameState.SecondsUntillVoteCloses--;
-  },
-
   RenderLists: function (data) {
 
     Game.GameState = data;
-
-    if (Game.GameState.SecondsUntillVoteCloses > 0) {
-      if (Game.CountDownInterval) {
-        clearInterval(Game.CountDownInterval);
-      }
-      Game.CountDownInterval = setInterval(Game.Countdown,1000);
-    }
 
     $.ajax({
       url: "/api/tracks",
@@ -221,18 +241,10 @@
     var $nominees = $(".nominees-list-js");
     if (data && data.tracks) {
 
-      var idToClassMap = {};
-      if (Game.GameState.CurrentVote) {
-        idToClassMap[Game.GameState.CurrentVote] = "current-vote";
-      }
-      if (Game.GameState.PlayersSelection) {
-        idToClassMap[Game.GameState.PlayersSelection] = "players-selection";
-      }
-
-      var result = Game.RenderTracklist(data.tracks, idToClassMap);
+      var result = Game.RenderNominees(data.tracks);
       $nominees.html(result);
     } else {
-      $nominees.html("once enough players have nominated a track, the list of nominees will render here");
+      $nominees.html("Here you may upvote or downvote nominees from other players");
     }
   },
   UpdatePlayerList: function (data) {

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Democraticdj.Model;
 using Democraticdj.Services;
-using User = Reachmail.Administration.Users.Current.Get.Response.User;
 
 namespace Democraticdj.Logic
 {
@@ -102,14 +99,11 @@ namespace Democraticdj.Logic
             game.Nominees.Add(newNominee);
           }
         }
+        game.GameStateUpdateTime = DateTime.UtcNow;
 
         StateManager.Db.SaveGame(game);
       }
     }
-
-    private static readonly object _updateGameStateLock = new object();
-    private static readonly Random LocalRandom = new Random();
-
 
   }
 }
