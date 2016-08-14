@@ -53,20 +53,12 @@ namespace Democraticdj.Services
                         WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientSecret];
       client.Headers.Add("Authorization", "Basic " + Base64Encode(idAndSecret));
 
-      try
-      {
-        var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
-        string decoded = client.Encoding.GetString(result);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
+      var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
+      string decoded = client.Encoding.GetString(result);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
 
-        return deserialized;
+      return deserialized;
 
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
     }
 
     public static SpotifyTokens RenewSpotifyTokens(SpotifyTokens oldTokens)
@@ -81,22 +73,14 @@ namespace Democraticdj.Services
                         WebConfigurationManager.AppSettings[Constants.ConfigurationKeys.SpotifyClientSecret];
       client.Headers.Add("Authorization", "Basic " + Base64Encode(idAndSecret));
 
-      try
-      {
-        var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
-        string decoded = client.Encoding.GetString(result);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
+      var result = client.UploadValues(new Uri("https://accounts.spotify.com/api/token"), values);
+      string decoded = client.Encoding.GetString(result);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyTokens>(decoded);
 
-        deserialized.RefreshToken = oldTokens.RefreshToken;
-        deserialized.ReceivedTime = DateTime.UtcNow;
-        return deserialized;
+      deserialized.RefreshToken = oldTokens.RefreshToken;
+      deserialized.ReceivedTime = DateTime.UtcNow;
+      return deserialized;
 
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
     }
 
     public static string RedirectUrl
@@ -126,18 +110,9 @@ namespace Democraticdj.Services
         Constants.SpotifyUrls.SpotifyTracksUrl,
         trackidsJoined
         );
-      try
-      {
-        var result = client.DownloadString(tracksUrl);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyGetTracksResponse>(result);
-        return deserialized;
-
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
+      var result = client.DownloadString(tracksUrl);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyGetTracksResponse>(result);
+      return deserialized;
 
 
     }
@@ -156,18 +131,10 @@ namespace Democraticdj.Services
         HttpUtility.UrlEncode(query)
         );
 
-      try
-      {
-        var result = client.DownloadString(searchUrl);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifySearchResponse>(result);
-        return deserialized;
+      var result = client.DownloadString(searchUrl);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifySearchResponse>(result);
+      return deserialized;
 
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
     }
 
 
@@ -185,18 +152,9 @@ namespace Democraticdj.Services
       var serializedRequest = JsonConvert.SerializeObject(request);
       var urlToCall = string.Format(Constants.SpotifyUrls.SpotifyUsersPlaylistsUrlWithPlaceholder, userId);
 
-      try
-      {
-        var result = client.UploadString(urlToCall, serializedRequest);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<Playlist>(result);
-        return deserialized;
-
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
+      var result = client.UploadString(urlToCall, serializedRequest);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<Playlist>(result);
+      return deserialized;
     }
 
     public static SpotifyPlaylistsResponse GetPlaylists(SpotifyTokens spotifyTokens)
@@ -204,18 +162,9 @@ namespace Democraticdj.Services
       var client = GetClient();
       client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
 
-      try
-      {
-        var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMyPlaylistsUrl);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyPlaylistsResponse>(result);
-        return deserialized;
-
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
+      var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMyPlaylistsUrl);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyPlaylistsResponse>(result);
+      return deserialized;
     }
 
     public static IEnumerable<Track> GetTracksFromPlaylist(Playlist playlist, SpotifyTokens spotifyTokens)
@@ -227,16 +176,11 @@ namespace Democraticdj.Services
       client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
 
       PlaylistTracksResponse deserialized = null;
-      try
-      {
-        var url = string.Format(Constants.SpotifyUrls.SpotifyGetTracksFromPlaylistUrl, playlist.Owner.Id, playlist.Id);
-        var result = client.DownloadString(url);
-        deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaylistTracksResponse>(result);
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
+
+      var url = string.Format(Constants.SpotifyUrls.SpotifyGetTracksFromPlaylistUrl, playlist.Owner.Id, playlist.Id);
+      var result = client.DownloadString(url);
+      deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaylistTracksResponse>(result);
+
 
       if (deserialized != null)
       {
@@ -252,18 +196,9 @@ namespace Democraticdj.Services
       var client = GetClient();
       client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
 
-      try
-      {
-        var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMeUrl);
-        var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyUser>(result);
-        return deserialized;
-
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
-      return null;
+      var result = client.DownloadString(Constants.SpotifyUrls.SpotifyMeUrl);
+      var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<SpotifyUser>(result);
+      return deserialized;
     }
 
     private static WebClient GetClient()
@@ -292,16 +227,8 @@ namespace Democraticdj.Services
         bestTrackId
         );
 
-      try
-      {
-        var result = client.UploadData(new Uri(addTrackToPlaylistUrl), new byte[0]);
-        var stringifiedResult = client.Encoding.GetString(result);
-        return;
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
+      var result = client.UploadData(new Uri(addTrackToPlaylistUrl), new byte[0]);
+      var stringifiedResult = client.Encoding.GetString(result);
     }
 
     public static void ReOrderPlaylist(Model.Game game, string[] trackIds)
@@ -313,26 +240,17 @@ namespace Democraticdj.Services
       {
         client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken);
         spotifyUserId = user.SpotifyUser.Id;
-
       }
 
       var addTrackToPlaylistUrl = string.Format(
         Constants.SpotifyUrls.SpotifyReorderPlaylistUrl,
         spotifyUserId,
         game.SpotifyPlaylistId,
-        string.Join(",", trackIds.Where(id=> !string.IsNullOrWhiteSpace(id)).Select(id => "spotify:track:" + id))
+        string.Join(",", trackIds.Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => "spotify:track:" + id))
         );
 
-      try
-      {
-        var result = client.UploadData(new Uri(addTrackToPlaylistUrl),"PUT", new byte[0]);
-        var stringifiedResult = client.Encoding.GetString(result);
-        return;
-      }
-      catch (Exception e)
-      {
-        System.Diagnostics.Debug.WriteLine(e.ToString());
-      }
+      var result = client.UploadData(new Uri(addTrackToPlaylistUrl), "PUT", new byte[0]);
+      var stringifiedResult = client.Encoding.GetString(result);
     }
   }
 }
