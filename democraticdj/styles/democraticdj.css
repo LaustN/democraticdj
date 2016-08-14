@@ -101,6 +101,7 @@ ul, li {
   width: 100%;
   display: inline-block;
   clear: both;
+  text-align: center;
 }
 
 .nominees-list-js {

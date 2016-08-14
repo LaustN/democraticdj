@@ -55,7 +55,7 @@ namespace Democraticdj
             var game = new Model.Game
             {
               GameId = newGameId,
-              SpotifyPlaylistId = createFromListId,
+              SpotifyPlaylistId = playlist.Id,
               SpotifyPlaylistUri = playlist.Uri,
               UserId = user.UserId,
               GameName = playlist.Name

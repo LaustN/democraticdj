@@ -51,7 +51,7 @@
             </div>
             <div class="mylist section">
               <div class="section-header">
-                Your candidates (click a track to move it up or remove it)
+                Your candidates 
               </div>
               <div class="player-list-js"></div>
             </div>
