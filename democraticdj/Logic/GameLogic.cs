@@ -37,6 +37,7 @@ namespace Democraticdj.Logic
           game.GameStateUpdateTime = DateTime.UtcNow;
 
           StateManager.Db.SaveGame(game);
+          UpdateSpotifyList(game);
         }
 
         return false;
@@ -100,9 +101,22 @@ namespace Democraticdj.Logic
           }
         }
         game.GameStateUpdateTime = DateTime.UtcNow;
+        UpdateSpotifyList(game);
 
         StateManager.Db.SaveGame(game);
       }
+    }
+
+    private static void UpdateSpotifyList(Model.Game game)
+    {
+      string[] trackIds = game.Nominees
+        .Where(nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count > nominee.DownVotes.Count)
+        .OrderByDescending(
+          nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count - nominee.DownVotes.Count)
+        .Select(nominee => nominee.TrackId)
+        .ToArray();
+      SpotifyServices.ReOrderPlaylist(game,trackIds);
+
     }
 
   }

@@ -60,6 +60,11 @@ namespace Democraticdj
               UserId = user.UserId,
               GameName = playlist.Name
             };
+
+            foreach (var track in SpotifyServices.GetTracksFromPlaylist(playlist,user.SpotifyAuthTokens))
+            {
+              game.Nominees.Add(new Nominee{TrackId = track.Id,NominatingPlayerIds = new List<string>{user.UserId}});
+            }
             StateManager.Db.SaveGame(game);
             Response.Redirect("/Game.aspx?gameid=" + game.GameId);
           }

@@ -20,6 +20,14 @@ namespace Democraticdj.Model
       public const string SpotifyAuthUrlTemplate = "https://accounts.spotify.com/authorize/?client_id={0}&response_type=code&redirect_uri={1}&scope={2}&state={3}";
 
       public const string SpotifyMyPlaylistsUrl = "https://api.spotify.com/v1/me/playlists";
+      
+      /// <summary>
+      /// placeholders in SpotifyGetTracksFromPlaylistUrl :
+      /// 0 = user_id
+      /// 1 = playlist_id
+      /// </summary>
+      public const string SpotifyGetTracksFromPlaylistUrl = "https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks";
+
       public const string SpotifyUsersPlaylistsUrlWithPlaceholder = "https://api.spotify.com/v1/users/{0}/playlists";
       public const string SpotifyMeUrl = "https://api.spotify.com/v1/me";
       public const string SpotifySearchUrl = "https://api.spotify.com/v1/search?type=track&q={0}";
@@ -33,6 +41,8 @@ namespace Democraticdj.Model
       /// 2 = the track id
       /// </summary>
       public const string SpotifyAddToPlaylistUrl = "https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks?uris=spotify:track:{2}";
+      
+      public const string SpotifyReorderPlaylistUrl = "https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks?uris={2}";
     }
 
     public struct ConfigurationKeys

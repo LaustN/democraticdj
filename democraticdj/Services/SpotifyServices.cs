@@ -103,8 +103,8 @@ namespace Democraticdj.Services
     {
       get
       {
-        
-        return (HttpContext.Current.Request.IsSecureConnection? "https://" : "http://") + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx";
+
+        return (HttpContext.Current.Request.IsSecureConnection ? "https://" : "http://") + HttpContext.Current.Request.Url.Host + "/usermanagement.aspx";
       }
     }
 
@@ -116,9 +116,15 @@ namespace Democraticdj.Services
         return null;
       }
 
+      var trackidsJoined = string.Join(",", trackIds.Where(trackId => !string.IsNullOrWhiteSpace(trackId)));
+      if (string.IsNullOrWhiteSpace(trackidsJoined))
+      {
+        return null;
+      }
+
       var tracksUrl = string.Format(
         Constants.SpotifyUrls.SpotifyTracksUrl,
-        string.Join(",", trackIds.Where(trackId=>!string.IsNullOrWhiteSpace(trackId)))
+        trackidsJoined
         );
       try
       {
@@ -211,6 +217,36 @@ namespace Democraticdj.Services
       }
       return null;
     }
+
+    public static IEnumerable<Track> GetTracksFromPlaylist(Playlist playlist, SpotifyTokens spotifyTokens)
+    {
+      if (playlist == null || playlist.Owner == null || playlist.Owner.Id == null || playlist.Id == null)
+        yield break;
+
+      var client = GetClient();
+      client.Headers.Add("Authorization", "Bearer " + spotifyTokens.AccessToken);
+
+      PlaylistTracksResponse deserialized = null;
+      try
+      {
+        var url = string.Format(Constants.SpotifyUrls.SpotifyGetTracksFromPlaylistUrl, playlist.Owner.Id, playlist.Id);
+        var result = client.DownloadString(url);
+        deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaylistTracksResponse>(result);
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+
+      if (deserialized != null)
+      {
+        foreach (var track in deserialized.Tracks)
+        {
+          yield return track.Track;
+        }
+      }
+    }
+
     public static SpotifyUser GetAuthenticatedUser(SpotifyTokens spotifyTokens)
     {
       var client = GetClient();
@@ -249,7 +285,6 @@ namespace Democraticdj.Services
 
       }
 
-
       var addTrackToPlaylistUrl = string.Format(
         Constants.SpotifyUrls.SpotifyAddToPlaylistUrl,
         spotifyUserId,
@@ -260,6 +295,37 @@ namespace Democraticdj.Services
       try
       {
         var result = client.UploadData(new Uri(addTrackToPlaylistUrl), new byte[0]);
+        var stringifiedResult = client.Encoding.GetString(result);
+        return;
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine(e.ToString());
+      }
+    }
+
+    public static void ReOrderPlaylist(Model.Game game, string[] trackIds)
+    {
+      var client = GetClient();
+
+      string spotifyUserId = null;
+      using (User user = StateManager.Db.GetUser(game.UserId))
+      {
+        client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken);
+        spotifyUserId = user.SpotifyUser.Id;
+
+      }
+
+      var addTrackToPlaylistUrl = string.Format(
+        Constants.SpotifyUrls.SpotifyReorderPlaylistUrl,
+        spotifyUserId,
+        game.SpotifyPlaylistId,
+        string.Join(",", trackIds.Where(id=> !string.IsNullOrWhiteSpace(id)).Select(id => "spotify:track:" + id))
+        );
+
+      try
+      {
+        var result = client.UploadData(new Uri(addTrackToPlaylistUrl),"PUT", new byte[0]);
         var stringifiedResult = client.Encoding.GetString(result);
         return;
       }

@@ -54,4 +54,45 @@ namespace Democraticdj.Model.Spotify
     [JsonProperty("public")]
     public bool Public { get; set; }
   }
+
+  public class PlaylistTracksResponse
+  {
+    [JsonProperty("href")]
+    public string FullResultHref { get; set; }
+
+    [JsonProperty("items")]
+    public PlaylistTrackObject[] Tracks { get; set; }
+
+    [JsonProperty("limit")]
+    public int Limit { get; set; }
+
+    [JsonProperty("next")]
+    public string NextResultHref { get; set; }
+
+    [JsonProperty("offset")]
+    public int Offset { get; set; }
+
+    [JsonProperty("previous")]
+    public string PreviousResultHref { get; set; }
+
+    [JsonProperty("total")]
+    public int Total { get; set; }
+
+  }
+
+  public class PlaylistTrackObject
+  {
+    [JsonProperty("added_at")]
+    public string AddedAt { get; set; }
+
+    [JsonProperty("added_by")]
+    public SpotifyUser AddedBy { get; set; }
+
+    [JsonProperty("is_local")]
+    public bool IsLocal { get; set; }
+
+    [JsonProperty("track")]
+    public Track Track { get; set; }
+
+  }
 }

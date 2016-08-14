@@ -48,10 +48,12 @@ namespace Democraticdj.Services
         var game = StateManager.Db.GetGame(gameid);
         StateManager.UpdateGameTick(game);
 
-        var player = game.Players.FirstOrDefault(playerScan => playerScan.UserId == currentUser.UserId);
+        var playerId = currentUser.UserId;
 
         var winningTracks = game.Nominees
-          .Where(nominee => (nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count) > nominee.DownVotes.Count).ToArray();
+          .Where(nominee => (nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count) > nominee.DownVotes.Count)
+          .OrderByDescending(nominee => (nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count) - nominee.DownVotes.Count)
+          .ToArray();
 
         var scoresDictionary = new Dictionary<string, PlayerScore>();
         foreach (Nominee winningTrack in winningTracks)
@@ -69,14 +71,14 @@ namespace Democraticdj.Services
           }
         }
 
-        var otherPlayersNominees = game.Nominees.Where(nominee => !nominee.UpVotes.Contains(player.UserId) && !nominee.DownVotes.Contains(player.UserId) && !nominee.NominatingPlayerIds.Contains(player.UserId)).ToList();
-        var thisPlayersNominees = game.Nominees.Where(nominee => nominee.NominatingPlayerIds.Contains(player.UserId) ).ToList();
+        var otherPlayersNominees = game.Nominees.Where(nominee => !nominee.UpVotes.Contains(playerId) && !nominee.DownVotes.Contains(playerId) && !nominee.NominatingPlayerIds.Contains(playerId)).ToList();
+        var thisPlayersNominees = game.Nominees.Where(nominee => nominee.NominatingPlayerIds.Contains(playerId) ).ToList();
 
         var gameState = new GameState
         {
-          PlayerSelectionList = player != null ? thisPlayersNominees.Select(nominee=>nominee.TrackId).ToList() : null,
+          PlayerSelectionList = thisPlayersNominees.Select(nominee=>nominee.TrackId).ToList() ,
           Winners = winningTracks.Select(winner => winner.TrackId).ToList(),
-          PlayersWinners = winningTracks.Where(nomineee => nomineee.NominatingPlayerIds.Contains(player.UserId)).Select(winner => winner.TrackId).ToList(),
+          PlayersWinners = winningTracks.Where(nomineee => nomineee.NominatingPlayerIds.Contains(playerId)).Select(winner => winner.TrackId).ToList(),
           Scores = scoresDictionary.Values.OrderByDescending(score=>score.Points).ToList(),
           Nominees = otherPlayersNominees.Select(nominee=>nominee.TrackId).ToList()
         };
