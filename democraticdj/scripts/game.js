@@ -71,34 +71,49 @@
   },
 
   RenderNominees: function (nominees) {
+    var $nomineesList = $(".nominees-list-js");
+
+    $nomineesList.find(".nominee").addClass("notinupdate");
+
     if (nominees) {
       var renderBuffer = [];
-      $.each(nominees, function (index, nominee) {
-        renderBuffer.push("<div class=\"nominee\" data-nomineeid=\"" + nominee.id + "\">");
+      $.each(nominees,
+        function (index, nominee) {
 
-        renderBuffer.push("<div class=\"nominee-button js-no\" >No</div>");
+          var $preExistingNominee = $nomineesList.find(".nominee[data-nomineeid=\"" + nominee.id + "\"]");
+          $preExistingNominee.removeClass("notinupdate");
 
-        if (nominee.album && nominee.album.images && nominee.album.images.length > 0) {
-          renderBuffer.push("<div class=\"nominee-image\"><img src=\"" + nominee.album.images[0].url + "\"></div>");
-        }
-        renderBuffer.push("<div class=\"nominee-button js-yes\" >Yes</div>");
+          if ($preExistingNominee.length === 0) {
+            renderBuffer.push("<div class=\"nominee\" data-nomineeid=\"" + nominee.id + "\">");
 
-        renderBuffer.push("<div class=\"nominee-label\">" + nominee.name + "</div>");
+            renderBuffer.push("<audio><source src=\"" + nominee.preview_url + "\" type=\"audio/mpeg\" /></audio>");
 
-        if (nominee.album) {
-          renderBuffer.push("<div class=\"nominee-label\">" + nominee.album.name + "</div>");
-        }
+            console.log(nominee);
 
-        if (nominee.artists) {
-          renderBuffer.push("<div class=\"nominee-label\">" + nominee.artists[0].name + "</div>");
-        }
-        renderBuffer.push("</div>");
+            renderBuffer.push("<div class=\"nominee-button js-no\" >No</div>");
 
-      });
+            if (nominee.album && nominee.album.images && nominee.album.images.length > 0) {
+              renderBuffer.push("<div class=\"nominee-image\"><img src=\"" + nominee.album.images[0].url + "\"></div>");
+            }
+            renderBuffer.push("<div class=\"nominee-button js-yes\" >Yes</div>");
 
-      return renderBuffer.join("");
+            renderBuffer.push("<div class=\"nominee-label\">" + nominee.name + "</div>");
+
+            if (nominee.album) {
+              renderBuffer.push("<div class=\"nominee-label\">" + nominee.album.name + "</div>");
+            }
+
+            if (nominee.artists) {
+              renderBuffer.push("<div class=\"nominee-label\">" + nominee.artists[0].name + "</div>");
+            }
+            renderBuffer.push("</div>");
+          }
+        });
+
+      $nomineesList.find(".notinupdate").remove();
+      var renderedHtml = renderBuffer.join("");
+      $nomineesList.append(renderedHtml);
     }
-    return "";
   },
 
   PlaceVote: function (event) {
@@ -106,27 +121,44 @@
     var $clickedNominee = $clickedElement.closest(".nominee");
     var clickedNomineeId = $clickedNominee.data("nomineeid");
 
-    $clickedNominee.css("height", $clickedNominee.height() + "px");
-    setTimeout(function() {
-        $clickedNominee.css("height", "0");
-      },1);
     var $clickedButton = $clickedElement.closest(".nominee-button");
+    var voteCast = false;
 
     if ($clickedButton.length == 1) {
+      voteCast = true;
+      $clickedNominee.css("height", $clickedNominee.height() + "px");
+      setTimeout(function () {
+        $clickedNominee.css("height", "0");
+      }, 1);
+
       var isUpvote = $clickedButton.hasClass("js-yes");
 
       $.ajax({
-          url: "/api/vote",
-          contentType: "application/json",
-          data: JSON.stringify({
-            trackid: clickedNomineeId,
-            gameid: $(document.forms[0]).data("gameid"),
-            isupvote: isUpvote
-          }),
-          method: "POST",
-          success: Game.RefreshGameData
-        }
+        url: "/api/vote",
+        contentType: "application/json",
+        data: JSON.stringify({
+          trackid: clickedNomineeId,
+          gameid: $(document.forms[0]).data("gameid"),
+          isupvote: isUpvote
+        }),
+        method: "POST",
+        success: Game.RefreshGameData
+      }
       );
+    }
+    var $audio = $clickedNominee.find("audio");
+    if ($audio.length > 0) {
+      var audioTag = $audio[0];
+      if (voteCast) {
+        audioTag.pause();
+      } else {
+        if (audioTag.paused) {
+          audioTag.play();
+        } else {
+          audioTag.pause();
+          audioTag.load();
+        }
+      }
     }
   },
 
@@ -152,10 +184,10 @@
         }),
         method: "POST",
         success: function () {
-            Game.RefreshGameData();
-            $clickedTrack.remove();
-          }
+          Game.RefreshGameData();
+          $clickedTrack.remove();
         }
+      }
       );
 
     }, 500);
@@ -237,18 +269,13 @@
   CurrentVote: null,
 
   UpdateNominees: function (data) {
-    var $nominees = $(".nominees-list-js");
     if (data && data.tracks) {
-
-      var result = Game.RenderNominees(data.tracks);
-      $nominees.html(result);
-    } else {
-      $nominees.html("Here you may upvote or downvote nominees from other players");
+      Game.RenderNominees(data.tracks);
     }
   },
   UpdatePlayerList: function (data) {
 
-    var $playerList = $(".player-list-js"); 
+    var $playerList = $(".player-list-js");
     if (data && data.tracks) {
       var result = Game.RenderTracklist(data.tracks);
       $playerList.html(result);
@@ -266,7 +293,7 @@
       });
     }
 
-    var $winnersList = $(".winners-list-js"); 
+    var $winnersList = $(".winners-list-js");
     if (data && data.tracks) {
       var result = Game.RenderTracklist(data.tracks, idToClassMap);
       $winnersList.html(result);
@@ -275,14 +302,13 @@
     }
   },
 
-  PlayerListClick: function(event) {
+  PlayerListClick: function (event) {
     var $clickedElement = $(event.target);
     var $clickedTrack = $clickedElement.closest(".track");
     var clickedTrackId = $clickedTrack.data("trackid");
 
     var $button = $clickedElement.closest(".js-button");
-    if($button.length == 1) {
-      var commandExecuting = false;
+    if ($button.length == 1) {
       if ($button.hasClass("remove")) {
         $.ajax({
           url: "/api/unselect",
@@ -298,31 +324,9 @@
         }
         );
 
-        commandExecuting = true;
-      }
-
-      if ($button.hasClass("top")) {
-        $.ajax({
-            url: "/api/select",
-            contentType: "application/json",
-            data: JSON.stringify({
-              trackid: clickedTrackId,
-              gameid: $(document.forms[0]).data("gameid")
-            }),
-            method: "POST",
-            success: function () {
-              Game.RefreshGameData();
-            }
-          }
-        );
-
-        commandExecuting = true;
-      }
-
-      if (commandExecuting) {
-        //add spinner
         $clickedTrack.addClass("spinner");
       }
+
     }
 
 
@@ -332,7 +336,7 @@
 
       //insert buttons control
       $clickedTrack
-        .append("<div class='js-buttons'><div class='js-button top'><img src='/graphics/start.svg' alt='Move to the top of the list' title='Move to the top of the list' /></div><div class='js-button remove'><img src='/graphics/cross.svg' alt='Remove from the list' title='Remove from the list' /></div></div>");
+        .append("<div class='js-buttons'><div class='js-button remove'><img src='/graphics/cross.svg' alt='Remove from the list' title='Remove from the list' /></div></div>");
     } else {
       $(".player-list-js").find(".js-buttons").remove();
 
@@ -344,15 +348,15 @@
 
   Players: {},
 
-  RenderLeaderBoard: function() {
+  RenderLeaderBoard: function () {
     if (Game.GameState && Game.GameState.Scores && Game.GameState.Scores.length > 0) {
       var newPlayers = [];
-      $.each(Game.GameState.Scores, function(index, item) {
+      $.each(Game.GameState.Scores, function (index, item) {
         if (!Game.Players[item.PlayerId]) {
           newPlayers.push(item.PlayerId);
         }
       });
-      if (newPlayers.length>0) {
+      if (newPlayers.length > 0) {
         $.ajax({
           url: "/api/users",
           contentType: "application/json",
@@ -394,13 +398,13 @@
     }
   },
 
-  GetUsersCallback: function(data) {
-    $.each(data, function(index, item) {
+  GetUsersCallback: function (data) {
+    $.each(data, function (index, item) {
       Game.Players[item.UserId] = item;
     });
     Game.RenderLeaderBoard();
   },
-  PreventPostback: function(event) {
+  PreventPostback: function (event) {
     if (event.keyCode == 13) {
       event.preventDefault();
       return false;

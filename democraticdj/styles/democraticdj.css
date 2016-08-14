@@ -140,6 +140,8 @@ ul, li {
     text-align: center;
     margin: 2%;
     font-size: 3vw;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
 .track {
@@ -159,7 +161,7 @@ ul, li {
   }
 
   .track .js-buttons {
-    width: 50%;
+    width: 25%;
     position: absolute;
     top: 20px;
     left: 0;
@@ -170,7 +172,7 @@ ul, li {
   }
 
     .track .js-buttons .js-button {
-      width: 40%;
+      width: 90%;
       margin: 5%;
       display: inline-block;
     }
@@ -398,4 +400,14 @@ input[type='text'], input[type='password'] {
     margin: 2%;
   }
   /* end "create game"*/
+
+  .nominee .nominee-button {
+    font-size: 300%;
+    padding-top: 2em;
+    padding-bottom: 1em;
+    cursor: pointer;
+  }
+
+
+
 }

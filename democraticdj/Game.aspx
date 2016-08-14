@@ -37,17 +37,11 @@
           </div>
           <div class="ballot section">
             <div class="section-header">
-              Like this track?
+              Like this track? - click or push image to preview
             </div>
             <div class="nominees-list-js"></div>
           </div>
           <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">
-            <div class="mylist section">
-              <div class="section-header">
-                Your candidates (click a track to move it up or remove it)
-              </div>
-              <div class="player-list-js"></div>
-            </div>
             <div class="search section">
               <div class="section-header">
                 Search for tracks, then select from the results to build your list of candidates
@@ -55,7 +49,12 @@
               <input type="text" class="search-box-js" placeholder="Search Spotify for great tracks" />
               <div class="search-result-js"></div>
             </div>
-
+            <div class="mylist section">
+              <div class="section-header">
+                Your candidates (click a track to move it up or remove it)
+              </div>
+              <div class="player-list-js"></div>
+            </div>
           </asp:PlaceHolder>
           <asp:PlaceHolder runat="server" ID="UnauthenticatedUser">
             <div>
