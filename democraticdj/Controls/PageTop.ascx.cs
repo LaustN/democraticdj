@@ -39,8 +39,8 @@ namespace Democraticdj.Controls
     protected string RenderSpotifyAuthUrl()
     {
       Regex portFinder=  new Regex(":\\d+");
-
-      string modifiedUrl = portFinder.Replace(Request.Url.AbsoluteUri, "");
+      string absoluteUrl = Request.Url.AbsoluteUri;
+      string modifiedUrl = portFinder.Replace(absoluteUrl, "");
 
       return SpotifyServices.GetAuthUrl(modifiedUrl);
     }

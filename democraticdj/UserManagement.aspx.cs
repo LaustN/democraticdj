@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Democraticdj.Model;
+using Democraticdj.Model.Spotify;
 using Democraticdj.Services;
 
 namespace Democraticdj
@@ -88,6 +89,24 @@ namespace Democraticdj
             {
               user.Password = newPassword;
             }
+
+            string newEmail = (Request.Form["newemail"] ?? string.Empty).ToLower();
+            if (!string.IsNullOrWhiteSpace(newEmail))
+            {
+              var existingUser = StateManager.Db.FindExistingUser(newEmail);
+              if (existingUser != null)
+              {
+                existingUser.ShouldAutoSave = false;
+              }
+              else
+              {
+                user.Emails.Add(new UserEmail
+                {
+                  Address = newEmail
+                });
+              }
+            }
+
           }
           else
           {
@@ -210,16 +229,40 @@ namespace Democraticdj
     {
       get
       {
-        if (!Emails.Any(email => email.IsVerified))
-          yield break;
-
         int iconIdex = 0;
+
+        using (var user = StateManager.CurrentUser)
+        {
+          user.ShouldAutoSave = false;
+          if (user.SpotifyUser != null && user.SpotifyUser.Images != null)
+          {
+            foreach (var image in  user.SpotifyUser.Images.Where(image=>!string.IsNullOrWhiteSpace(image.Url)))
+            {
+              yield return
+                new IconOption
+                {
+                  Url = image.Url,
+                  Index = iconIdex++
+                };
+            }
+          }
+        }
+
+        if (iconIdex == 0)
+        {
+          yield break;
+        }
+
         yield return
           new IconOption
           {
             Url = "/graphics/mediaplayer.png",
             Index = iconIdex++
           };
+
+        if (!Emails.Any(email => email.IsVerified))
+          yield break;
+
 
         var hashEngine = MD5.Create();
         foreach (var verifiedEmail in Emails.Where(email => email.IsVerified))

@@ -32,7 +32,9 @@
               <asp:Label runat="server" ID="GameID" /></h2>
             <br />
             <div class="section-header">
-              <a href="<%# CurrentGame!=null ?  CurrentGame.SpotifyPlaylistUri : String.Empty %>">Click here to launch the playlist in Spotify</a>
+              <a href="<%# CurrentGame!=null ?  CurrentGame.SpotifyPlaylistUri : String.Empty %>">
+                <span class="small-image"><img src="/graphics/Spotify.svg"/></span>Press play!<span class="small-image"><img src="/graphics/play.svg"/></span>
+              </a>
             </div>
           </div>
           <div class="ballot section">

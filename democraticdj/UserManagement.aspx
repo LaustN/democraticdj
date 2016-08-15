@@ -55,7 +55,7 @@
 
       <div class="known-user section" runat="server" id="KnownUser">
         <div class="section">
-          <div class="section-header">Edit your rofile</div>
+          <div class="section-header">Edit your profile</div>
           <label runat="server" id="UserNameAsLabelWrapper">
             <span class="user-label">User name</span>
             <asp:Label runat="server" ID="UserNameAsLabel" />
@@ -85,6 +85,9 @@
           </asp:Repeater>
           <asp:PlaceHolder runat="server" Visible="<%# !Emails.Any() %>">you do not have any email adresses registered
           </asp:PlaceHolder>
+          <div class="section-header">Add an email address</div>
+          <input type="email" name="newemail" placeholder="Enter your email address here"/>
+          <input type="submit" value="Add email"/>
         </div>
         <asp:PlaceHolder runat="server" Visible="<%# GravatarOptions.Any() %>">
 

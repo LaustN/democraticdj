@@ -151,12 +151,19 @@
       var audioTag = $audio[0];
       if (voteCast) {
         audioTag.pause();
+        $clickedNominee.removeClass("playing");
       } else {
         if (audioTag.paused) {
           audioTag.play();
+          $clickedNominee.addClass("playing");
+
+          audioTag.addEventListener('ended', function () {
+            $clickedNominee.removeClass("playing");
+          });
         } else {
           audioTag.pause();
           audioTag.load();
+          $clickedNominee.removeClass("playing");
         }
       }
     }
