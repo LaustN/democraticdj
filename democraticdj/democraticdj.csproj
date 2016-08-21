@@ -98,9 +98,12 @@
     <Content Include="Controls\PageTop.ascx" />
     <Content Include="Game.aspx" />
     <Content Include="graphics\burger-menu.svg" />
+    <Content Include="graphics\copy.svg" />
     <Content Include="graphics\cross.svg" />
     <Content Include="graphics\down.svg" />
+    <Content Include="graphics\envelope.svg" />
     <Content Include="graphics\mediaplayer.png" />
+    <Content Include="graphics\message.svg" />
     <Content Include="graphics\outline-pause.svg" />
     <Content Include="graphics\outline-play.svg" />
     <Content Include="graphics\play.png" />

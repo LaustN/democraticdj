@@ -33,7 +33,8 @@
             <br />
             <div class="section-header">
               <a href="<%# CurrentGame!=null ?  CurrentGame.SpotifyPlaylistUri : String.Empty %>">
-                <span class="small-image"><img src="/graphics/Spotify.svg"/></span>Press play!<span class="small-image"><img src="/graphics/play.svg"/></span>
+                <span class="small-image">
+                  <img src="/graphics/Spotify.svg" /></span>Press play!<span class="small-image"><img src="/graphics/play.svg" /></span>
               </a>
             </div>
           </div>
@@ -42,6 +43,22 @@
               Like this track? - click or push image to preview
             </div>
             <div class="nominees-list-js"></div>
+            <div class="sharethisgame">
+              <div class="section-header">
+                There is nothing for you to vote on right now. Share this game!
+              </div>
+              <div class="shareoption">
+                <div class="shareaction mail">
+                  <a href="mailto:?body=body+of+the+mail&subject=subject"><img src="/graphics/envelope.svg"/></a>
+                </div>
+                <div class="shareaction sms">
+                  <a href="sms:?body=body+of+the+mail"><img src="/graphics/message.svg"/></a>
+                </div>
+                <div class="shareinput copy">
+                  <input type="text" disabled="disabled" value="disabled" />
+                </div>
+              </div>
+            </div>
           </div>
           <asp:PlaceHolder runat="server" ID="AuthenticatedUserControls">
             <div class="search section">

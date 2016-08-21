@@ -72,10 +72,12 @@
 
   RenderNominees: function (nominees) {
     var $nomineesList = $(".nominees-list-js");
+    var $sharethisgame = $(".sharethisgame");
 
     $nomineesList.find(".nominee").addClass("notinupdate");
 
-    if (nominees) {
+    if (nominees && nominees.length > 0) {
+      $sharethisgame.addClass("hidden");
       var renderBuffer = [];
       $.each(nominees,
         function (index, nominee) {
@@ -113,6 +115,8 @@
       $nomineesList.find(".notinupdate").remove();
       var renderedHtml = renderBuffer.join("");
       $nomineesList.append(renderedHtml);
+    } else {
+      $sharethisgame.removeClass("hidden");
     }
   },
 
@@ -278,6 +282,8 @@
   UpdateNominees: function (data) {
     if (data && data.tracks) {
       Game.RenderNominees(data.tracks);
+    } else {
+      Game.RenderNominees(null);
     }
   },
   UpdatePlayerList: function (data) {
@@ -419,6 +425,18 @@
     return true;
   },
 
+  InitShareLinks: function() {
+    var location = window.location.href;
+    var smsLink = "sms:?body=" + encodeURIComponent("Build a playlist with me at " + location );
+    var mailLink = "mailto:?body=" +
+      encodeURIComponent("Build a playlist with me at " + location) + 
+      "&subject=" +
+      encodeURIComponent("Build a playlist with me at " + location);
+    $(".sharethisgame .shareaction.mail a").attr("href", mailLink);
+    $(".sharethisgame .shareaction.sms a").attr("href", smsLink);
+    $(".sharethisgame .shareinput input").val(location);
+  },
+
   Init: function () {
 
     $(".search-box-js").keyup(Game.Search);
@@ -427,6 +445,7 @@
     $(".nominees-list-js").click(Game.PlaceVote);
     $(".player-list-js").click(Game.PlayerListClick);
 
+    Game.InitShareLinks();
     Game.RefreshGameData();
     Game.AutoRefresh();
   }
