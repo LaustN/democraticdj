@@ -387,8 +387,7 @@ input[type='text'], input[type='password'], input[type='email'] {
 
 /* begin "create game" */
 .existing-list {
-  display: inline-block;
-  width: 40%;
+  width: 92%;
   margin: 4%;
   background-color: #38d664;
 }
@@ -412,7 +411,8 @@ input[type='text'], input[type='password'], input[type='email'] {
 }
 
 .existing-list-image {
-  margin: 0 20px 20px 20px;
+  margin: 0 20px;
+  padding-bottom: 20px;
 }
 /* end "create game" */
 
@@ -461,6 +461,26 @@ input[type='text'], input[type='password'], input[type='email'] {
     clear: both;
     vertical-align: top;
   }
+
+  .existing-list {
+  display: inline-block;
+  width: 40%;
+  margin: 4%;
+  background-color: #38d664;
+}
+
+  .existing-list a {
+    text-decoration: none;
+  }
+
+.existing-list-name {
+  text-align: center;
+  font-size: 150%;
+  min-height: 4em;
+  margin: 0 20px 0 20px;
+  display: table;
+}
+
 
   .nominee .nominee-button {
     font-size: 300%;
