@@ -38,17 +38,20 @@ namespace Democraticdj
         using (var user = StateManager.CurrentUser)
         {
           Playlist playlist = null;
+          Playlist selectedList = null;
+
+          string listNameToCreate = createFromListName;
 
           if (!string.IsNullOrWhiteSpace(createFromListId))
           {
-            playlist = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens)
-              .PlayLists.FirstOrDefault(playList => playList.Id == createFromListId);
+            selectedList = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens).PlayLists.FirstOrDefault(playList => playList.Id == createFromListId);
+            if (selectedList != null && string.IsNullOrWhiteSpace(listNameToCreate))
+            {
+              listNameToCreate = "DemocraticDj - " + selectedList.Name;
+            }
           }
 
-          if (!string.IsNullOrWhiteSpace(createFromListName))
-          {
-            playlist = SpotifyServices.CreatePlayList(user.SpotifyAuthTokens, user.SpotifyUser.Id, createFromListName);
-          }
+          playlist = SpotifyServices.CreatePlayList(user.SpotifyAuthTokens, user.SpotifyUser.Id, listNameToCreate);
 
           if (playlist != null)
           {
@@ -61,10 +64,14 @@ namespace Democraticdj
               GameName = playlist.Name
             };
 
-            foreach (var track in SpotifyServices.GetTracksFromPlaylist(playlist,user.SpotifyAuthTokens))
+            if (selectedList != null)
             {
-              game.Nominees.Add(new Nominee{TrackId = track.Id,NominatingPlayerIds = new List<string>{user.UserId}});
+              foreach (var track in SpotifyServices.GetTracksFromPlaylist(selectedList, user.SpotifyAuthTokens))
+              {
+                game.Nominees.Add(new Nominee { TrackId = track.Id, NominatingPlayerIds = new List<string> { user.UserId } });
+              }
             }
+
             StateManager.Db.SaveGame(game);
             Response.Redirect("/Game.aspx?gameid=" + game.GameId);
           }
@@ -80,9 +87,9 @@ namespace Democraticdj
       char[] validChars = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
       Random random = new Random();
       List<char> result = new List<char>();
-      while (result.Count<lenght)
+      while (result.Count < lenght)
       {
-        result.Add(validChars[random.Next(0,validChars.Length)]);
+        result.Add(validChars[random.Next(0, validChars.Length)]);
       }
       return string.Join("", result);
     }
@@ -97,7 +104,7 @@ namespace Democraticdj
           if (currentUser.SpotifyAuthTokens == null)
             return Enumerable.Empty<Democraticdj.Model.Spotify.Playlist>();
           var spotifyUser = SpotifyServices.GetAuthenticatedUser(currentUser.SpotifyAuthTokens);
-          results = SpotifyServices.GetPlaylists(currentUser.SpotifyAuthTokens).PlayLists.Where(playlist => playlist.IsPublic && playlist.Owner.Id == spotifyUser.Id).ToArray();
+          results = SpotifyServices.GetPlaylists(currentUser.SpotifyAuthTokens).PlayLists.ToArray();
         }
         return results;
       }

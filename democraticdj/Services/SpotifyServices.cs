@@ -28,7 +28,7 @@ namespace Democraticdj.Services
         Constants.SpotifyUrls.SpotifyAuthUrlTemplate,
         spotifyClientId,
         HttpUtility.UrlEncode(RedirectUrl),
-        "playlist-modify-public",
+        "playlist-modify-private playlist-read-private playlist-modify-public",
         HttpUtility.UrlEncode(state)
         );
       return result;

@@ -27,7 +27,7 @@
       <asp:Label runat="server" ID="Result"></asp:Label>
     </form>
 
-    <h2>Click one of your public playlists below, if you want to start a game session using that list. 
+    <h2>Click one of your playlists below, if you want to start a game session using that list. 
     </h2>
     <div class="create-game-from-existing-list">
       <asp:Repeater runat="server" ID="Playlists" DataSource="<%# PlaylistsSource %>" ItemType="Democraticdj.Model.Spotify.Playlist">

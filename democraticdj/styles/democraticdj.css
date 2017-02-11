@@ -1,4 +1,10 @@
-﻿body {
+﻿* {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box; 
+}
+
+body {
   padding: 0;
   margin: 0;
   background-color: #002200;
@@ -315,8 +321,9 @@ label {
   }
 
 input[type='text'], input[type='password'], input[type='email'] {
-  width: 25em;
+  width: 90%;
   margin: 2%;
+  font-size: 250%;
 }
 
 .fake-button {
