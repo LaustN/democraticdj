@@ -52,7 +52,7 @@
                   <a href="mailto:?body=body+of+the+mail&subject=subject"><img src="/graphics/envelope.svg"/></a>
                 </div>
                 <div class="shareaction sms">
-                  <a href="sms:?body=body+of+the+mail"><img src="/graphics/message.svg"/></a>
+                  <a href="sms:&body=body+of+the+mail"><img src="/graphics/message.svg"/></a>
                 </div>
                 <div class="shareinput copy">
                   <input type="text" disabled="disabled" value="disabled" />
