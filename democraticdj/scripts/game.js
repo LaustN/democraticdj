@@ -427,7 +427,7 @@
 
   InitShareLinks: function() {
     var location = window.location.href;
-    var smsLink = "sms:?body=" + encodeURIComponent("Build a playlist with me at " + location );
+    var smsLink = "sms:&body=" + encodeURIComponent("Build a playlist with me at " + location );
     var mailLink = "mailto:?body=" +
       encodeURIComponent("Build a playlist with me at " + location) + 
       "&subject=" +
