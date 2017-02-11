@@ -182,7 +182,7 @@ ul, li {
   position: absolute;
   left: 0;
   bottom: 0;
-  padding-bottom: 30%;
+  padding-bottom: 4%;
 }
 
 .sharethisgame.hidden {
@@ -197,7 +197,7 @@ ul, li {
     .sharethisgame .shareoption .shareaction {
       display: inline-block;
       vertical-align: top;
-      width: 4%;
+      width: 20%;
       margin: 1%;
     }
     .sharethisgame .shareoption .shareinput {
@@ -323,7 +323,7 @@ label {
 input[type='text'], input[type='password'], input[type='email'] {
   width: 90%;
   margin: 2%;
-  font-size: 250%;
+  font-size: 200%;
 }
 
 .fake-button {
