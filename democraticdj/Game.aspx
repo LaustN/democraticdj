@@ -65,7 +65,7 @@
               <div class="section-header">
                 Search for tracks, then select from the results to build your list of candidates
               </div>
-              <input type="text" class="search-box-js" placeholder="Search Spotify for great tracks" />
+              <input type="text" class="search-box-js" placeholder="Search Spotify" />
               <div class="search-result-js"></div>
             </div>
             <div class="mylist section">

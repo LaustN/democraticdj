@@ -166,5 +166,10 @@ namespace Democraticdj.Services
         GameUpdateTicks.ReplaceOne(storedGameTick => storedGameTick.GameId == gameId, gameTick);
       }
     }
+
+    public void DeleteGame(string gameToDelete)
+    {
+      bool acknowledged = Games.DeleteOne(game => game.GameId == gameToDelete).IsAcknowledged;
+    }
   }
 }

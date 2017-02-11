@@ -131,6 +131,9 @@
                 <a class="existing-game" href="Game.aspx?gameid=<%# Item.GameId %>">
                   <%# Item.GameName %> - Game ID: <%# Item.GameId %>
                 </a>
+                <a class="existing-game" href="UserManagement.aspx?deletegameid=<%# Item.GameId %>">
+                  Delete
+                </a>
               </div>
             </ItemTemplate>
           </asp:Repeater>

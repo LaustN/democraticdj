@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Democraticdj.Model;
 using Democraticdj.Services;
+using Reachmail.Lists.Post.Request;
 
 namespace Democraticdj.Logic
 {
@@ -109,13 +111,32 @@ namespace Democraticdj.Logic
 
     private static void UpdateSpotifyList(Model.Game game)
     {
-      string[] trackIds = game.Nominees
-        .Where(nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count > nominee.DownVotes.Count)
-        .OrderByDescending(
-          nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count - nominee.DownVotes.Count)
-        .Select(nominee => nominee.TrackId)
-        .ToArray();
-      SpotifyServices.ReOrderPlaylist(game,trackIds);
+      List<string> trackIds = new List<string>();
+
+      Dictionary<string, int> tracksCountPerPlayer = new Dictionary<string, int>();
+      int maxTracksPerPlayer = (int)Math.Floor(100.0 / game.Players.Count);
+
+      foreach (Nominee nominee in game.Nominees
+                                      .Where(nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count > nominee.DownVotes.Count)
+                                      .OrderByDescending(
+                                        nominee => nominee.UpVotes.Count + nominee.NominatingPlayerIds.Count - nominee.DownVotes.Count))
+      {
+        string nominatingPlayer = nominee.NominatingPlayerIds.FirstOrDefault();
+        if (tracksCountPerPlayer.ContainsKey(nominatingPlayer))
+        {
+          if (tracksCountPerPlayer[nominatingPlayer] < maxTracksPerPlayer)
+          {
+            tracksCountPerPlayer[nominatingPlayer]++;
+            trackIds.Add(nominee.TrackId);
+          }
+        }
+        else
+        {
+          tracksCountPerPlayer[nominatingPlayer] = 1;
+          trackIds.Add(nominee.TrackId);
+        }
+      }
+      SpotifyServices.ReOrderPlaylist(game, trackIds.ToArray());
 
     }
 

@@ -75,6 +75,12 @@ namespace Democraticdj
 
           }
 
+          string gameToDelete = Request.QueryString["deletegameid"];
+          if (!string.IsNullOrWhiteSpace(gameToDelete))
+          {
+            StateManager.Db.DeleteGame(gameToDelete);
+          }
+
           if (IsPostBack)
           {
             if (!string.IsNullOrWhiteSpace(NameBox.Value) && NameBox.Value != user.DisplayName)
