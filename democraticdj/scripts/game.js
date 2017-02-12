@@ -421,15 +421,57 @@
     return true;
   },
 
-  InitShareLinks: function() {
+  InitShareLinks: function () {
     var location = window.location.href;
-    var smsLink = "sms:&body=" + encodeURIComponent("Build a playlist with me at " + location );
+    var smsLink = "sms:&body=" + encodeURIComponent("Build a playlist with me at " + location);
     var mailLink = "mailto:?body=" +
-      encodeURIComponent("Build a playlist with me at " + location) + 
+      encodeURIComponent("Build a playlist with me at " + location) +
       "&subject=" +
       encodeURIComponent("Build a playlist with me at " + location);
     $(".sharethisgame .shareaction.mail a").attr("href", mailLink);
     $(".sharethisgame .shareaction.sms a").attr("href", smsLink);
+  },
+
+  LoadUserPlaylists: function () {
+    $.ajax({
+      url: "/api/currentuserplaylists",
+      contentType: "application/json",
+      method: "GET",
+      success: Game.LoadUserPlaylistsHandler
+    });
+
+  },
+
+  LoadUserPlaylistsHandler: function (data) {
+    var $myplaylists = $(".myplaylists");
+
+    var optionTags = [];
+
+    var lists = [];
+
+    $.each(data, function (index, playlist) {
+      optionTags.push(
+        "<option value='" +
+        "playlist" + playlist.id +
+        "'>" +
+        playlist.name +
+        "</option>"
+    );
+
+      lists.push("<div class='existing-playlist hidden' id='playlist" + playlist.id + "'>");
+      lists.push(Game.RenderTracklist(playlist.fetchedtracks));
+      lists.push("</div>");
+    });
+
+    $myplaylists.html("<select id='existing-playlist-select'><option>Choose tracks from your playlists</option>" + optionTags.join("") + "</select>" + lists.join(""));
+
+    $("#existing-playlist-select").change(Game.ChangeExistingPlaylistSelection);
+  },
+
+  ChangeExistingPlaylistSelection: function (event) {
+    var selectedValue = $(event.target).val();
+    $(".existing-playlist").addClass("hidden");
+    $("#" + selectedValue).removeClass("hidden");
   },
 
   Init: function () {
@@ -437,12 +479,14 @@
     $(".search-box-js").keyup(Game.Search);
     $(".search-box-js").keydown(Game.PreventPostback);
     $(".search-result-js").click(Game.SearchResultSelection);
+    $(".myplaylists").click(Game.SearchResultSelection);
     $(".nominees-list-js").click(Game.PlaceVote);
     $(".player-list-js").click(Game.PlayerListClick);
 
     Game.InitShareLinks();
     Game.RefreshGameData();
     Game.AutoRefresh();
+    Game.LoadUserPlaylists();
   }
 
 

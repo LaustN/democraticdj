@@ -49,6 +49,8 @@
               <input type="text" class="search-box-js" placeholder="Search Spotify" />
               <div class="search-result-js"></div>
             </div>
+            <div class="myplaylists section">
+            </div>
             <div class="mylist section">
               <div class="section-header">
                 Your candidates 

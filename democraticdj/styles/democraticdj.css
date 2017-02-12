@@ -320,10 +320,10 @@ label {
     display: block;
   }
 
-input[type='text'], input[type='password'], input[type='email'] {
+input[type='text'], input[type='password'], input[type='email'], select {
   width: 90%;
   margin: 2%;
-  font-size: 200%;
+  font-size: 170%;
 }
 
 .fake-button {
@@ -383,6 +383,10 @@ input[type='text'], input[type='password'], input[type='email'] {
 
 .player-name {
   margin-top: 8%;
+}
+
+.existing-playlist.hidden {
+  display: none;
 }
 
 /* begin "create game" */

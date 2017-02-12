@@ -37,6 +37,13 @@ namespace Democraticdj.Model.Spotify
 
   }
 
+  public class PlaylistWithLoadedTracks : Playlist
+  {
+    [JsonProperty("fetchedtracks")]
+    public Track[] Tracks { get; set; }
+
+  }
+
   public class SizedReference
   {
     [JsonProperty("href")]

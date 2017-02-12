@@ -11,6 +11,7 @@ using System.Web.Http;
 using Democraticdj.Logic;
 using Democraticdj.Model;
 using Democraticdj.Model.Spotify;
+using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using Newtonsoft.Json;
 
@@ -72,14 +73,14 @@ namespace Democraticdj.Services
         }
 
         var otherPlayersNominees = game.Nominees.Where(nominee => !nominee.UpVotes.Contains(playerId) && !nominee.DownVotes.Contains(playerId) && !nominee.NominatingPlayerIds.Contains(playerId)).ToList();
-        var thisPlayersNominees = game.Nominees.Where(nominee => nominee.NominatingPlayerIds.Contains(playerId) ).ToList();
+        var thisPlayersNominees = game.Nominees.Where(nominee => nominee.NominatingPlayerIds.Contains(playerId)).ToList();
 
         var gameState = new GameState
         {
-          PlayerSelectionList = thisPlayersNominees.Select(nominee=>nominee.TrackId).ToList() ,
+          PlayerSelectionList = thisPlayersNominees.Select(nominee => nominee.TrackId).ToList(),
           Winners = winningTracks.Select(winner => winner.TrackId).ToList(),
           PlayersWinners = winningTracks.Where(nomineee => nomineee.NominatingPlayerIds.Contains(playerId)).Select(winner => winner.TrackId).ToList(),
-          Scores = scoresDictionary.Values.OrderByDescending(score=>score.Points).ToList()
+          Scores = scoresDictionary.Values.OrderByDescending(score => score.Points).ToList()
         };
 
         Random random = new Random();
@@ -210,6 +211,49 @@ Hi {0},<br/>
       }
 
       return false;
+    }
+
+    [HttpGet]
+    [Route("currentuserplaylists")]
+    public IEnumerable<PlaylistWithLoadedTracks> GetCurrentUserPlaylists()
+    {
+      using (var user = StateManager.CurrentUser)
+      {
+        if (user.SpotifyAuthTokens != null)
+        {
+          List<PlaylistWithLoadedTracks> result = new List<PlaylistWithLoadedTracks>();
+          var playlistsResponse = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens);
+
+          if (playlistsResponse != null && playlistsResponse.PlayLists != null)
+          {
+            foreach (Playlist playlist in playlistsResponse.PlayLists)
+            {
+              //TODO: call these async!
+
+              result.Add(new PlaylistWithLoadedTracks
+              {
+                ExternalUrls = playlist.ExternalUrls,
+                Href = playlist.Href,
+                Id = playlist.Id,
+                Images = playlist.Images,
+                Name = playlist.Name,
+                IsCollaborative = playlist.IsCollaborative,
+                IsPublic = playlist.IsPublic,
+                Owner = playlist. Owner,
+                SizedReference = playlist.SizedReference,
+                SnapshotId = playlist.SnapshotId,
+                Tracks = SpotifyServices.GetTracksFromPlaylist(playlist,user.SpotifyAuthTokens).ToArray(),
+                Type = playlist.Type,
+                Uri = playlist.Uri
+              });
+            }
+            return result;
+          }
+        }
+      }
+
+
+      return Enumerable.Empty<PlaylistWithLoadedTracks>();
     }
   }
 
