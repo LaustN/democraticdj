@@ -22,25 +22,9 @@
           </div>
         </asp:PlaceHolder>
         <asp:Panel runat="server" ID="GameFoundPlaceholder" Visible="False" CssClass="game">
-          <div class="section">
-            <h3>Game name:</h3>
-            <h1>
-              <asp:Label runat="server" ID="GameTitle" /></h1>
-            <br />
-            <h3>Game ID:</h3>
-            <h2>
-              <asp:Label runat="server" ID="GameID" /></h2>
-            <br />
-            <div class="section-header">
-              <a href="<%# CurrentGame!=null ?  CurrentGame.SpotifyPlaylistUri : String.Empty %>">
-                <span class="small-image">
-                  <img src="/graphics/Spotify.svg" /></span>Press play!<span class="small-image"><img src="/graphics/play.svg" /></span>
-              </a>
-            </div>
-          </div>
           <div class="ballot section">
             <div class="section-header">
-              Like this track? - click or push image to preview
+              Like this track?
             </div>
             <div class="nominees-list-js"></div>
             <div class="sharethisgame">
@@ -53,9 +37,6 @@
                 </div>
                 <div class="shareaction sms">
                   <a href="sms:&body=body+of+the+mail"><img src="/graphics/message.svg"/></a>
-                </div>
-                <div class="shareinput copy">
-                  <input type="text" disabled="disabled" value="disabled" />
                 </div>
               </div>
             </div>
@@ -98,6 +79,22 @@
               </div>
             </div>
             <div class="winners-list-js">None yet</div>
+          </div>
+          <div class="section">
+            <h3>Game name:</h3>
+            <h1>
+              <asp:Label runat="server" ID="GameTitle" /></h1>
+            <br />
+            <h3>Game ID:</h3>
+            <h2>
+              <asp:Label runat="server" ID="GameID" /></h2>
+            <br />
+            <div class="section-header">
+              <a href="<%# CurrentGame!=null ?  CurrentGame.SpotifyPlaylistUri : String.Empty %>">
+                <span class="small-image">
+                  <img src="/graphics/Spotify.svg" /></span>Press play!<span class="small-image"><img src="/graphics/play.svg" /></span>
+              </a>
+            </div>
           </div>
         </asp:Panel>
 

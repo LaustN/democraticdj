@@ -101,10 +101,6 @@
 
             renderBuffer.push("<div class=\"nominee-label\">" + nominee.name + "</div>");
 
-            if (nominee.album) {
-              renderBuffer.push("<div class=\"nominee-label\">" + nominee.album.name + "</div>");
-            }
-
             if (nominee.artists) {
               renderBuffer.push("<div class=\"nominee-label\">" + nominee.artists[0].name + "</div>");
             }
@@ -434,7 +430,6 @@
       encodeURIComponent("Build a playlist with me at " + location);
     $(".sharethisgame .shareaction.mail a").attr("href", mailLink);
     $(".sharethisgame .shareaction.sms a").attr("href", smsLink);
-    $(".sharethisgame .shareinput input").val(location);
   },
 
   Init: function () {
