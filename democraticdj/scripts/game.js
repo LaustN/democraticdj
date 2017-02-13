@@ -192,7 +192,8 @@
         method: "POST",
         success: function () {
           Game.RefreshGameData();
-          $clickedTrack.remove();
+          $clickedTrack.addClass("ok");
+          $clickedTrack.removeClass("spinner");
         }
       }
       );
@@ -452,15 +453,12 @@
     $.each(data, function (index, playlist) {
       optionTags.push(
         "<option value='" +
-        "playlist" + playlist.id +
+        playlist.id +
         "'>" +
         playlist.name +
         "</option>"
     );
 
-      lists.push("<div class='existing-playlist hidden' id='playlist" + playlist.id + "'>");
-      lists.push(Game.RenderTracklist(playlist.fetchedtracks));
-      lists.push("</div>");
     });
 
     $myplaylists.html("<select id='existing-playlist-select'><option>Choose tracks from your playlists</option>" + optionTags.join("") + "</select>" + lists.join(""));
@@ -471,7 +469,32 @@
   ChangeExistingPlaylistSelection: function (event) {
     var selectedValue = $(event.target).val();
     $(".existing-playlist").addClass("hidden");
-    $("#" + selectedValue).removeClass("hidden");
+    var $existingList = $("#" + selectedValue);
+    if ($existingList.length>0) {
+      $existingList.removeClass("hidden");
+    }
+    else {
+      $.ajax({
+        url: "/api/tracksfromcurrentuserplaylist?listId=" + selectedValue,
+        contentType: "application/json",
+        method: "GET",
+        success: Game.LoadTracksFromCurrentUserPlaylist
+      });
+
+    }
+  },
+
+  LoadTracksFromCurrentUserPlaylist: function (data) {
+    var list = [];
+
+    list.push("<div class='existing-playlist' id='" + data.playlistId + "'>");
+    list.push(Game.RenderTracklist(data.tracks));
+    list.push("</div>");
+
+    var $myplaylists = $(".myplaylists");
+
+    $myplaylists.append(list.join(""));
+
   },
 
   Init: function () {

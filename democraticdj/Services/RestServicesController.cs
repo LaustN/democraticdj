@@ -215,47 +215,44 @@ Hi {0},<br/>
 
     [HttpGet]
     [Route("currentuserplaylists")]
-    public IEnumerable<PlaylistWithLoadedTracks> GetCurrentUserPlaylists()
+    public IEnumerable<Playlist> GetCurrentUserPlaylists()
     {
       using (var user = StateManager.CurrentUser)
       {
         if (user.SpotifyAuthTokens != null)
         {
-          List<PlaylistWithLoadedTracks> result = new List<PlaylistWithLoadedTracks>();
           var playlistsResponse = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens);
-
           if (playlistsResponse != null && playlistsResponse.PlayLists != null)
           {
-            foreach (Playlist playlist in playlistsResponse.PlayLists)
-            {
-              //TODO: call these async!
-
-              result.Add(new PlaylistWithLoadedTracks
-              {
-                ExternalUrls = playlist.ExternalUrls,
-                Href = playlist.Href,
-                Id = playlist.Id,
-                Images = playlist.Images,
-                Name = playlist.Name,
-                IsCollaborative = playlist.IsCollaborative,
-                IsPublic = playlist.IsPublic,
-                Owner = playlist. Owner,
-                SizedReference = playlist.SizedReference,
-                SnapshotId = playlist.SnapshotId,
-                Tracks = SpotifyServices.GetTracksFromPlaylist(playlist,user.SpotifyAuthTokens).ToArray(),
-                Type = playlist.Type,
-                Uri = playlist.Uri
-              });
-            }
-            return result;
+            return playlistsResponse.PlayLists;
           }
         }
       }
-
-
       return Enumerable.Empty<PlaylistWithLoadedTracks>();
     }
+
+    [HttpGet]
+    [Route("tracksfromcurrentuserplaylist")]
+    public GetTracksFromCurrentUserPlaylistResponse GetTracksFromCurrentUserPlaylist(string listId)
+    {
+      GetTracksFromCurrentUserPlaylistResponse response = new GetTracksFromCurrentUserPlaylistResponse
+      {
+        PlaylistId = listId
+      };
+      using (var user = StateManager.CurrentUser)
+      {
+        var playlistsResponse = SpotifyServices.GetPlaylists(user.SpotifyAuthTokens);
+
+        var playlist = playlistsResponse.PlayLists.FirstOrDefault(list => list.Id == listId);
+        if (playlist != null)
+        {
+          response.Tracks =  SpotifyServices.GetTracksFromPlaylist(playlist,user.SpotifyAuthTokens).ToArray();
+        }
+      }
+      return response;
+    }
   }
+
 
   public class VerifyEmailRequest
   {
@@ -303,4 +300,12 @@ Hi {0},<br/>
     public string[] Tracks { get; set; }
   }
 
+  public class GetTracksFromCurrentUserPlaylistResponse
+  {
+    [JsonProperty("playlistId")]
+    public string PlaylistId { get; set; }
+
+    [JsonProperty("tracks")]
+    public Track[] Tracks { get; set; }
+  }
 }
