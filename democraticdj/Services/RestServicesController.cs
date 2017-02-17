@@ -84,11 +84,14 @@ namespace Democraticdj.Services
         };
 
         Random random = new Random();
-        while (otherPlayersNominees.Any())
+        int candidatesPerRequest = 3;
+        int selectedCandidates = 0;
+        while (otherPlayersNominees.Any() && selectedCandidates <= candidatesPerRequest)
         {
           int itemToGet = random.Next(0, otherPlayersNominees.Count);
           gameState.Nominees.Add(otherPlayersNominees[itemToGet].TrackId);
           otherPlayersNominees.RemoveAt(itemToGet);
+          selectedCandidates++;
         }
 
         return gameState;

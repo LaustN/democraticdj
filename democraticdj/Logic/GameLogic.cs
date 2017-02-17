@@ -102,6 +102,8 @@ namespace Democraticdj.Logic
             game.Nominees.Add(newNominee);
           }
         }
+        game.Nominees = game.Nominees.Where(nominee => !string.IsNullOrWhiteSpace(nominee.TrackId)).ToList();
+
         game.GameStateUpdateTime = DateTime.UtcNow;
         UpdateSpotifyList(game);
 

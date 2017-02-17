@@ -13,7 +13,7 @@
 
   <div class="body-sizer">
     <uc1:PageTop runat="server" ID="PageTop" />
-    <form id="MainForm" runat="server">
+    <form id="MainForm" runat="server" >
       <div>
         <asp:PlaceHolder runat="server" ID="GameNotKnownPlaceholder" Visible="False">
           <h1>Oh no!</h1>
@@ -60,12 +60,14 @@
           </asp:PlaceHolder>
           <asp:PlaceHolder runat="server" ID="UnauthenticatedUser">
             <div>
-              <div class="section-header">Log in to participate</div>
-              <p>If you log in, you can build a list of candidates for the playlist. </p>
-              <p>Each round, the topmost item on your list will be moved to the candidates list.</p>
-              <p>The candidate that receives the most votes wins, and is moved to the playlist.</p>
-              <p>The other candidates are moved back to their respective player's lists</p>
-            </div>
+              <div class="section-header">Participate</div>
+              <p>For the best experience, you should <a href="<%# RenderSpotifyAuthUrl() %>">log in with Spotify by clicking here!</a></p>
+              <br/>
+              <p>Alternatively, you can just create a new user</p>
+              <input name="newplayername" placeholder="Set your player name"/>
+              <input type="submit" value="Set my name!"/>
+              <p>After you set your player name, you can add candidates to be voted on and gain points!</p>
+              </div>
           </asp:PlaceHolder>
           <div class="leaderboard section">
             <div class="section-header">

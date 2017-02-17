@@ -100,7 +100,10 @@ namespace Democraticdj.Services
         return null;
       }
 
-      var trackidsJoined = string.Join(",", trackIds.Where(trackId => !string.IsNullOrWhiteSpace(trackId)));
+      var trackidsJoined = string.Join(",", trackIds
+        .Where(trackId => !string.IsNullOrWhiteSpace(trackId))
+        .Take(50) //API is limited to 50 tracks per request
+        );
       if (string.IsNullOrWhiteSpace(trackidsJoined))
       {
         return null;

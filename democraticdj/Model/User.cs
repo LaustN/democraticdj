@@ -44,11 +44,7 @@ namespace Democraticdj.Model
       {
         return SpotifyAuthTokens != null
               || Emails.Any(email => email.IsVerified)
-              || !(
-                  string.IsNullOrWhiteSpace(UserName)
-                  ||
-                  string.IsNullOrWhiteSpace(Password)
-                  );
+              || !string.IsNullOrWhiteSpace(UserName);
 
       }
     }

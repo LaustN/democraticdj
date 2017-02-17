@@ -104,7 +104,9 @@
     <Content Include="graphics\envelope.svg" />
     <Content Include="graphics\mediaplayer.png" />
     <Content Include="graphics\message.svg" />
-    <Content Include="graphics\ok.svg" />
+    <Content Include="graphics\ok.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="graphics\outline-pause.svg" />
     <Content Include="graphics\outline-play.svg" />
     <Content Include="graphics\play.png" />

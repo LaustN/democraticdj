@@ -74,8 +74,6 @@
     var $nomineesList = $(".nominees-list-js");
     var $sharethisgame = $(".sharethisgame");
 
-    $nomineesList.find(".nominee").addClass("notinupdate");
-
     if (nominees && nominees.length > 0) {
       $sharethisgame.addClass("hidden");
       var renderBuffer = [];
@@ -83,12 +81,20 @@
         function (index, nominee) {
 
           var $preExistingNominee = $nomineesList.find(".nominee[data-nomineeid=\"" + nominee.id + "\"]");
-          $preExistingNominee.removeClass("notinupdate");
 
           if ($preExistingNominee.length === 0) {
-            renderBuffer.push("<div class=\"nominee\" data-nomineeid=\"" + nominee.id + "\">");
+            renderBuffer.push("<div class=\"nominee");
+            if (nominee.preview_url) {
+              renderBuffer.push(" haspreview");
+            }
+            else {
+              renderBuffer.push(" nopreview");
+            }
+            renderBuffer.push("\" data-nomineeid=\"" + nominee.id + "\">");
 
-            renderBuffer.push("<audio><source src=\"" + nominee.preview_url + "\" type=\"audio/mpeg\" /></audio>");
+            if (nominee.preview_url) {
+              renderBuffer.push("<audio><source src=\"" + nominee.preview_url + "\" type=\"audio/mpeg\" /></audio>");
+            }
 
             console.log(nominee);
 
@@ -108,7 +114,6 @@
           }
         });
 
-      $nomineesList.find(".notinupdate").remove();
       var renderedHtml = renderBuffer.join("");
       $nomineesList.append(renderedHtml);
     } else {
@@ -445,25 +450,28 @@
 
   LoadUserPlaylistsHandler: function (data) {
     var $myplaylists = $(".myplaylists");
+    if (data && data.length > 0) {
+      var optionTags = [];
 
-    var optionTags = [];
+      var lists = [];
 
-    var lists = [];
+      $.each(data, function(index, playlist) {
+        optionTags.push(
+          "<option value='" +
+          playlist.id +
+          "'>" +
+          playlist.name +
+          "</option>"
+        );
 
-    $.each(data, function (index, playlist) {
-      optionTags.push(
-        "<option value='" +
-        playlist.id +
-        "'>" +
-        playlist.name +
-        "</option>"
-    );
+      });
 
-    });
+      $myplaylists.html("<select id='existing-playlist-select'><option>Choose tracks from your playlists</option>" + optionTags.join("") + "</select>" + lists.join(""));
 
-    $myplaylists.html("<select id='existing-playlist-select'><option>Choose tracks from your playlists</option>" + optionTags.join("") + "</select>" + lists.join(""));
-
-    $("#existing-playlist-select").change(Game.ChangeExistingPlaylistSelection);
+      $("#existing-playlist-select").change(Game.ChangeExistingPlaylistSelection);
+    } else {
+      $myplaylists.remove();
+    }
   },
 
   ChangeExistingPlaylistSelection: function (event) {
