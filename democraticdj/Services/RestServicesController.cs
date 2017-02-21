@@ -59,15 +59,16 @@ namespace Democraticdj.Services
         var scoresDictionary = new Dictionary<string, PlayerScore>();
         foreach (Nominee winningTrack in winningTracks)
         {
+          int trackScore = winningTrack.NominatingPlayerIds.Count + winningTrack.UpVotes.Count - winningTrack.DownVotes.Count;
           foreach (var nominatingPlayerId in winningTrack.NominatingPlayerIds)
           {
             if (scoresDictionary.ContainsKey(nominatingPlayerId))
             {
-              scoresDictionary[nominatingPlayerId].Points++;
+              scoresDictionary[nominatingPlayerId].Points += trackScore;
             }
             else
             {
-              scoresDictionary.Add(nominatingPlayerId, new PlayerScore { PlayerId = nominatingPlayerId, Points = 1 });
+              scoresDictionary.Add(nominatingPlayerId, new PlayerScore { PlayerId = nominatingPlayerId, Points = trackScore });
             }
           }
         }
