@@ -95,7 +95,13 @@ namespace Democraticdj.Services
     public static SpotifyGetTracksResponse GetTracks(Model.Game game, string[] trackIds)
     {
       var client = GetClient();
-      if (trackIds == null || trackIds.Length == 0)
+
+	    using (var user = StateManager.Db.GetUser(game.UserId))
+	    {
+		    client.Headers.Add("Authorization", "Bearer " + user.SpotifyAuthTokens.AccessToken);
+	    }
+
+	    if (trackIds == null || trackIds.Length == 0)
       {
         return null;
       }
